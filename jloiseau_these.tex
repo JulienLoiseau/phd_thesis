@@ -1,0 +1,156 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+% Thesis title
+%\title{Energy Efficiency, Exascale and Complex Systems}
+\title{Vers l'Exascale: Des Probl\`emes Th\'eoriques aux Probl\`emes Appliqu\'es\\
+The Way to Exascale: From Theorics to Applied Problems}
+% Author
+\author{Julien Loiseau}
+% Date 
+\date{\today}
+
+\makeindex
+
+\begin{document}
+
+\thispagestyle{empty}
+
+{%%%
+\sffamily
+\centering
+
+{
+\includegraphics[scale=1]{figures/style/logo_urca_front_page.jpg}
+\vspace{0.5cm}
+}
+
+{
+UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
+\vspace{0.5cm}
+INFORMATIQUE\\
+\vspace{0.5cm}
+\'Ecole Doctorale Sciences Technologie Sant\'e
+}
+
+\vspace{1.0cm}
+{\hrule height 2pt\vspace{2pt}}
+
+\Large
+
+% Title 
+{\huge 
+\vspace{1cm}
+The Way to Exascale: From Theorics to Applied Problems
+}
+
+% Subtitle 
+{
+\vspace{0.5cm}
+Vers l'Exascale: Des Probl\`emes Th\'eoriques aux Probl\`emes Appliqu\'es\\
+}
+
+\vspace{1.0cm}
+\hrule
+
+\vspace{2.5cm}
+
+{\LARGE
+par \textbf{Julien Loiseau}
+}
+
+\vspace{2.5cm}
+
+{
+Th\`ese de doctorat d'Informatique
+}
+
+\vspace{2.5cm}
+
+{
+Sous la direction de : \textbf{M. Michaël KRAJECKI, Professeur des Universités}
+}
+\vspace{0.5cm}
+
+\vspace{\fill}
+
+{\normalsize
+\begin{tabular}{l l l}
+\textbf{JURY} &  & \\
+&&\\
+?? & ?? & Rapporteur\\
+?? & ?? & Rapporteur\\
+Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Examinateur \\
+Guillaume Colin de Verdière & Ingénieur au CEA & Examinateur\\
+Michaël KRAJECKI & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
+Christophe JAILLET & Maître de Conférence à l'Université de Reims Champagne-Ardenne & Co-directeur \\
+François ALIN & Maître de Conférence à l'Université de Reims Champagne-Ardenne & Encadrant \\
+\end{tabular}
+
+\vspace{0.5cm}
+
+\hrule
+
+\vspace{0.5cm}
+
+Centre de Recherche en STIC équipe CASH
+
+}
+
+%%%
+}%%%
+
+% Empty page after title 
+\thispagestyle{empty}
+
+% Setup numbering for beginning 
+\frontmatter
+
+% Acknoledgments, thanks everybody !
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\input{chapters/acknoledgments}
+
+% Add the tableofcontentes in itself
+\addcontentsline{toc}{chapter}{Contents}
+\tableofcontents
+
+% Table of figures
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+
+% Table of tables
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+\mainmatter
+% Introduction
+\addcontentsline{toc}{chapter}{Introduction}
+\input{chapters/introduction}
+% Chapter One
+\input{chapters/1_HPC}
+% Chapter Two 
+\input{chapters/2_cplx}
+% Chapter Three 
+\input{chapters/3_application}
+% Conclusion
+\addcontentsline{toc}{chapter}{Conclusion}
+\input{chapters/conclusion}
+
+% Annexes
+`\addcontentsline{toc}{chapter}{Annexes}
+\input{chapters/annexes}
+
+
+% Bibliography
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{alpha}
+\nocite{*}
+\bibliography{biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_misc}
+
+\end{document}

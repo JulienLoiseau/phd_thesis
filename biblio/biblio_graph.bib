@@ -1,0 +1,300 @@
+
+@misc{nvidia2008programming,
+  title={Programming guide},
+  author={Nvidia, CUDA},
+  year={2008}
+}
+
+@inproceedings{fu2014parallel,
+  title={Parallel breadth first search on GPU clusters},
+  author={Fu, Zhisong and Dasari, Harish Kumar and Bebee, Bradley and Berzins, Martin and Thompson, Bradley},
+  booktitle={Big Data (Big Data), 2014 IEEE International Conference on},
+  pages={110--118},
+  year={2014},
+  organization={IEEE}
+}
+
+
+
+@article{harish_large_2009,
+	title = {Large graph algorithms for massively multithreaded architectures},
+	url = {http://web2py.iiit.ac.in/publications/default/download/article.pdf.96b5c3ada11bc251.706177616e30394772617068416c676f726974686d732e706466.pdf},
+	urldate = {2016-01-15TZ},
+	journal = {International Institute of Information Technology Hyderabad, Tech. Rep. IIIT/TR/2009/74},
+	author = {Harish, Pawan and Vineet, Vibhav and Narayanan, P. J.},
+	year = {2009}
+}
+
+
+@inproceedings{lee2012qube,
+  title={Qube: a quick algorithm for updating betweenness centrality},
+  author={Lee, Min-Joong and Lee, Jungmin and Park, Jaimie Yejean and Choi, Ryan Hyun and Chung, Chin-Wan},
+  booktitle={Proceedings of the 21st international conference on World Wide Web},
+  pages={351--360},
+  year={2012},
+  organization={ACM}
+}
+
+
+@inproceedings{mclaughlin_scalable_2014,
+	title = {Scalable and high performance betweenness centrality on the {GPU}},
+	url = {http://dl.acm.org/citation.cfm?id=2683656},
+	urldate = {2016-01-21TZ},
+	booktitle = {Proceedings of the {International} {Conference} for {High} {Performance} {Computing}, {Networking}, {Storage} and {Analysis}},
+	publisher = {IEEE Press},
+	author = {McLaughlin, Adam and Bader, David A.},
+	year = {2014},
+	pages = {572--583}
+}
+
+
+@inproceedings{djidjev_efficient_2014,
+	title = {Efficient {Multi}-{GPU} {Computation} of {All}-{Pairs} {Shortest} {Paths}},
+	doi = {10.1109/IPDPS.2014.46},
+	abstract = {We describe a new algorithm for solving the all-pairs shortest-path (APSP) problem for planar graphs and graphs with small separators that exploits the massive on-chip parallelism available in today's Graphics Processing Units (GPUs). Our algorithm, based on the Floyd-War shall algorithm, has near optimal complexity in terms of the total number of operations, while its matrix-based structure is regular enough to allow for efficient parallel implementation on the GPUs. By applying a divide-and-conquer approach, we are able to make use of multi-node GPU clusters, resulting in more than an order of magnitude speedup over the fastest known Dijkstra-based GPU implementation and a two-fold speedup over a parallel Dijkstra-based CPU implementation.},
+	booktitle = {Parallel and {Distributed} {Processing} {Symposium}, 2014 {IEEE} 28th {International}},
+	author = {Djidjev, H. and Thulasidasan, S. and Chapuis, G. and Andonov, R. and Lavenier, D.},
+	year = {2014},
+	keywords = {APSP problem, Approximation algorithms, Central Processing Unit, Complexity theory, Floyd-Warshall algorithm, Partitioning algorithms, all-pairs shortest path computation, computational complexity, divide and conquer methods, divide-and-conquer approach, graph theory, graphics processing units, mathematics computing, matrix-based structure, multiGPU computation, multinode GPU clusters, near optimal complexity, on-chip parallelism, parallel implementation, parallel processing, planar graphs},
+	pages = {360--369}
+}
+
+
+@inproceedings{soman_fast_2011,
+	title = {Fast {Community} {Detection} {Algorithm} with {GPUs} and {Multicore} {Architectures}},
+	doi = {10.1109/IPDPS.2011.61},
+	abstract = {In this paper, we present the design of a novel scalable parallel algorithm for community detection optimized for multi-core and GPU architectures. Our algorithm is based on label propagation, which works solely on local information, thus giving it the scalability advantage over conventional approaches. We also show that weighted label propagation can overcome typical quality issues in communities detected with label propagation. Experimental results on well known massive scale graphs such as Wikipedia (100M edges) and also on RMAT graphs with 10M 40M edges, demonstrate the superior performance and scalability of our algorithm compared to the well known approaches for community detection. On the hep-th graph (352K edges) and the wikipedia graph (100M edges), using Power 6 architecture with 32 cores, our algorithm achieves one to two orders of magnitude better performance compared to the best known prior results on parallel architectures with similar number of CPUs. Further, our GPGPU based algorithm achieves 8× improvement over the Power 6 performance on 40M edge R-MAT graph. Alongside, we achieve high quality (modularity) of communities detected, with experimental evidence from well-known graphs such as Zachary karate club, Dolphin network and Football club, where we achieve modularity that is close to the best known alternatives. To the best of our knowledge these are best known results for community detection on massive graphs (100M edges) in terms of performance and also quality vs. performance trade-off. This is also a unique work on community detection on GPGPUs with scalable performance.},
+	booktitle = {Parallel {Distributed} {Processing} {Symposium} ({IPDPS}), 2011 {IEEE} {International}},
+	author = {Soman, J. and Narang, A.},
+	year = {2011},
+	keywords = {Algorithm design and analysis, Clustering algorithms, Communities, Detection algorithms, Dolphin network, Football club, GPGPU, Graphics processing unit, Image edge detection, Parallel algorithms, Partitioning algorithms, Power 6 architecture, RMAT graph, Wikipedia graph, Zachary karate club, community detection algorithm, graph theory, hep-th graph, multicore architectures, multiprocessing systems, parallel algorithm, parallel architectures, weighted label propagation},
+	pages = {568--579}
+}
+
+@inproceedings{mclaughlin2014revisiting,
+  title={Revisiting edge and node parallelism for dynamic GPU graph analytics},
+  author={McLaughlin, Adam and Bader, David A},
+  booktitle={Parallel \& Distributed Processing Symposium Workshops (IPDPSW), 2014 IEEE International},
+  pages={1396--1406},
+  year={2014},
+  organization={IEEE}
+}
+
+
+@inproceedings{willcock_unifying_2015,
+	title = {A {Unifying} {Programming} {Model} for {Parallel} {Graph} {Algorithms}},
+	doi = {10.1109/IPDPSW.2015.79},
+	abstract = {Abstractions and programming models simplify the writing of programs by providing a clear mental framework for reasoning about problem domains and for isolating program expression from irrelevant implementation details. This paper focuses on the domain of graph algorithms, where there are several classes of details that we would like to hide from the programmer, including execution model, granularity of decomposition, and data representation. Most current systems expose some or all of these issues at the same level as their graph abstractions, constraining portability and extensibility while also negatively impacting programmer productivity. To address these challenges, this paper presents a unifying generalized SIMD-like programming model (and corresponding C++ implementation) that can be used to uniformly express graph and other irregular applications on a wide range of types of parallelism, decompositions, and data representations. With respect to these issues, we develop a detailed analysis of our approach and compare it to a number of popular alternatives.},
+	booktitle = {Parallel and {Distributed} {Processing} {Symposium} {Workshop} ({IPDPSW}), 2015 {IEEE} {International}},
+	author = {Willcock, J. and Lumsdaine, A.},
+	year = {2015},
+	keywords = {Algorithm design and analysis, C++ implementation, Computational modeling, Data models, Libraries, Parallel algorithms, Programming, abstraction models, algorithms, computer languages, data representation, data structures, decomposition granularity, distributed processing, execution model, extensibility, generalized SIMD-like programming model, graph abstractions, graph theory, parallel graph algorithms, parallel processing, parallel programming, portability, program writing, programmer productivity, reasoning about problem, reasoning about programs, software portability, unifying programming model},
+	pages = {831--840}
+}
+
+@inproceedings{wang2015gunrock,
+  title={Gunrock: A high-performance graph processing library on the GPU},
+  author={Wang, Yangzihao and Davidson, Andrew and Pan, Yuechao and Wu, Yuduo and Riffel, Andy and Owens, John D},
+  booktitle={ACM SIGPLAN Notices},
+  volume={50},
+  number={8},
+  pages={265--266},
+  year={2015},
+  organization={ACM}
+}
+
+@article{soman2010fast,
+  title={A fast GPU algorithm for graph connectivity},
+  author={Soman, Jyothish and Kishore, Kothapalli and Narayanan, PJ},
+  year={2010},
+  publisher={IEEE}
+}
+
+@inproceedings{geisberger2008better,
+  title={Better approximation of betweenness centrality},
+  author={Geisberger, Robert and Sanders, Peter and Schultes, Dominik},
+  booktitle={Proceedings of the Meeting on Algorithm Engineering \& Expermiments},
+  pages={90--100},
+  year={2008},
+  organization={Society for Industrial and Applied Mathematics}
+}
+
+@article{beamer2013direction,
+  title={Direction-optimizing breadth-first search},
+  author={Beamer, Scott and Asanovi{\'c}, Krste and Patterson, David},
+  journal={Scientific Programming},
+  volume={21},
+  number={3-4},
+  pages={137--148},
+  year={2013},
+  publisher={Hindawi Publishing Corporation}
+}
+
+
+@article{shi_fast_2011,
+	title = {Fast network centrality analysis using {GPUs}},
+	volume = {12},
+	issn = {1471-2105},
+	url = {http://dx.doi.org/10.1186/1471-2105-12-149},
+	doi = {10.1186/1471-2105-12-149},
+	abstract = {With the exploding volume of data generated by continuously evolving high-throughput technologies, biological network analysis problems are growing larger in scale and craving for more computational power. General Purpose computation on Graphics Processing Units (GPGPU) provides a cost-effective technology for the study of large-scale biological networks. Designing algorithms that maximize data parallelism is the key in leveraging the power of GPUs.},
+	urldate = {2016-01-21TZ},
+	journal = {BMC Bioinformatics},
+	author = {Shi, Zhiao and Zhang, Bing},
+	year = {2011},
+	pages = {149}
+}
+
+@inproceedings{pande2011computing,
+  title={Computing betweenness centrality for small world networks on a GPU},
+  author={Pande, P and Bader, David A},
+  booktitle={15th Annual High Performance Embedded Computing Workshop (HPEC)},
+  year={2011}
+}
+
+@inproceedings{davidson2014work,
+  title={Work-efficient parallel GPU methods for single-source shortest paths},
+  author={Davidson, Andrew and Baxter, Sean and Garland, Michael and Owens, John D},
+  booktitle={Parallel and Distributed Processing Symposium, 2014 IEEE 28th International},
+  pages={349--359},
+  year={2014},
+  organization={IEEE}
+}
+
+@inproceedings{malewicz2010pregel,
+  title={Pregel: a system for large-scale graph processing},
+  author={Malewicz, Grzegorz and Austern, Matthew H and Bik, Aart JC and Dehnert, James C and Horn, Ilan and Leiser, Naty and Czajkowski, Grzegorz},
+  booktitle={Proceedings of the 2010 ACM SIGMOD International Conference on Management of data},
+  pages={135--146},
+  year={2010},
+  organization={ACM}
+}
+
+
+@article{brandes2001faster,
+  title={A faster algorithm for betweenness centrality*},
+  author={Brandes, Ulrik},
+  journal={Journal of mathematical sociology},
+  volume={25},
+  number={2},
+  pages={163--177},
+  year={2001},
+  publisher={Taylor \& Francis}
+}
+
+
+@article{brandes2007centrality,
+  title={Centrality estimation in large networks},
+  author={Brandes, Ulrik and Pich, Christian},
+  journal={International Journal of Bifurcation and Chaos},
+  volume={17},
+  number={07},
+  pages={2303--2318},
+  year={2007},
+  publisher={World Scientific}
+}
+
+@inproceedings{bader2006parallel,
+  title={Parallel algorithms for evaluating centrality indices in real-world networks},
+  author={Bader, David A and Madduri, Kamesh},
+  booktitle={Parallel Processing, 2006. ICPP 2006. International Conference on},
+  pages={539--550},
+  year={2006},
+  organization={IEEE}
+}
+
+@article{krebs2002mapping,
+  title={Mapping networks of terrorist cells},
+  author={Krebs, Valdis E},
+  journal={Connections},
+  volume={24},
+  number={3},
+  pages={43--52},
+  year={2002}
+}
+
+@inproceedings{jin2010novel,
+  title={A novel application of parallel betweenness centrality to power grid contingency analysis},
+  author={Jin, Shuangshuang and Huang, Zhenyu and Chen, Yousu and Chavarr{\'\i}a-Miranda, Daniel and Feo, John and Wong, Pak Chung},
+  booktitle={Parallel \& Distributed Processing (IPDPS), 2010 IEEE International Symposium on},
+  pages={1--7},
+  year={2010},
+  organization={IEEE}
+}
+
+@inproceedings{sariyuce2013betweenness,
+  title={Betweenness centrality on GPUs and heterogeneous architectures},
+  author={Sariy{\"u}ce, Ahmet Erdem and Kaya, Kamer and Saule, Erik and {\c{C}}ataly{\"u}rek, {\"U}mit V},
+  booktitle={Proceedings of the 6th Workshop on General Purpose Processor Using Graphics Processing Units},
+  pages={76--85},
+  year={2013},
+  organization={ACM}
+}
+
+@INPROCEEDINGS{6468459, 
+author={F. Checconi and F. Petrini and J. Willcock and A. Lumsdaine and A. R. Choudhury and Y. Sabharwal}, 
+booktitle={High Performance Computing, Networking, Storage and Analysis (SC), 2012 International Conference for}, 
+title={Breaking the speed and scalability Barriers for Graph exploration on distributed-memory machines}, 
+year={2012}, 
+pages={1-12}, 
+keywords={distributed memory systems;graph theory;search problems;BFS;blue gene machines;blue gene/p;blue gene/q;breadth first search algorithms;distributed memory machines;graph exploration;Algorithm design and analysis;Benchmark testing;Communities;Computer architecture;Prediction algorithms;Program processors;Software algorithms}, 
+doi={10.1109/SC.2012.25}, 
+ISSN={2167-4329}, 
+month={Nov},}
+
+@article{leskovec2010kronecker,
+  title={Kronecker graphs: An approach to modeling networks},
+  author={Leskovec, Jure and Chakrabarti, Deepayan and Kleinberg, Jon and Faloutsos, Christos and Ghahramani, Zoubin},
+  journal={The Journal of Machine Learning Research},
+  volume={11},
+  pages={985--1042},
+  year={2010},
+  publisher={JMLR. org}
+}
+
+@article{merrill2015high,
+  title={High-Performance and Scalable GPU Graph Traversal},
+  author={Merrill, Duane and Garland, Michael and Grimshaw, Andrew},
+  journal={ACM Transactions on Parallel Computing},
+  volume={1},
+  number={2},
+  pages={14},
+  year={2015},
+  publisher={ACM}
+}
+
+@inproceedings{fu2014parallel,
+  title={Parallel breadth first search on GPU clusters},
+  author={Fu, Zhisong and Dasari, Harish Kumar and Bebee, Bradley and Berzins, Martin and Thompson, Bradley},
+  booktitle={Big Data (Big Data), 2014 IEEE International Conference on},
+  pages={110--118},
+  year={2014},
+  organization={IEEE}
+}
+
+@article{dean2008mapreduce,
+  title={MapReduce: simplified data processing on large clusters},
+  author={Dean, Jeffrey and Ghemawat, Sanjay},
+  journal={Communications of the ACM},
+  volume={51},
+  number={1},
+  pages={107--113},
+  year={2008},
+  publisher={ACM}
+}
+
+
+@article{low2014graphlab,
+  title={Graphlab: A new framework for parallel machine learning},
+  author={Low, Yucheng and Gonzalez, Joseph E and Kyrola, Aapo and Bickson, Danny and Guestrin, Carlos E and Hellerstein, Joseph},
+  journal={arXiv preprint arXiv:1408.2041},
+  year={2014}
+}
+
+@inproceedings{gonzalez2012powergraph,
+  title={Powergraph: Distributed graph-parallel computation on natural graphs},
+  author={Gonzalez, Joseph E and Low, Yucheng and Gu, Haijie and Bickson, Danny and Guestrin, Carlos},
+  booktitle={Presented as part of the 10th USENIX Symposium on Operating Systems Design and Implementation (OSDI 12)},
+  pages={17--30},
+  year={2012}
+}
