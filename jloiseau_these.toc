@@ -1,0 +1,46 @@
+\select@language {english}
+\contentsline {chapter}{Acknowledgements}{i}
+\contentsline {chapter}{Contents}{i}
+\contentsline {chapter}{List of Figures}{iv}
+\contentsline {chapter}{List of Tables}{v}
+\contentsline {chapter}{Introduction}{1}
+\contentsline {chapter}{\numberline {1}HPC and Exascale}{3}
+\contentsline {section}{\numberline {1.1}Introduction}{3}
+\contentsline {section}{\numberline {1.2}Parallelism}{3}
+\contentsline {subsection}{\numberline {1.2.1}Flynn taxonomy}{3}
+\contentsline {subsection}{\numberline {1.2.2}Goals}{3}
+\contentsline {subsubsection}{Speedup}{3}
+\contentsline {subsection}{\numberline {1.2.3}Bottlenecks}{3}
+\contentsline {subsection}{\numberline {1.2.4}Amdahl and Gustafson}{3}
+\contentsline {section}{\numberline {1.3}Hardware}{4}
+\contentsline {subsection}{\numberline {1.3.1}Classical CPU}{4}
+\contentsline {subsection}{\numberline {1.3.2}GPU}{4}
+\contentsline {subsection}{\numberline {1.3.3}FPGA and ASICS}{4}
+\contentsline {section}{\numberline {1.4}Clusters and Exascale}{4}
+\contentsline {subsection}{\numberline {1.4.1}Benchmarking}{4}
+\contentsline {subsubsection}{TOP500}{4}
+\contentsline {subsection}{\numberline {1.4.2}Composition and usage}{4}
+\contentsline {subsection}{\numberline {1.4.3}Interconnection}{4}
+\contentsline {section}{\numberline {1.5}Languages}{4}
+\contentsline {subsection}{\numberline {1.5.1}Accelerators}{4}
+\contentsline {subsection}{\numberline {1.5.2}Runtimes}{4}
+\contentsline {section}{\numberline {1.6}Optimization}{4}
+\contentsline {subsubsection}{Memory locality}{4}
+\contentsline {subsubsection}{Vectorization}{4}
+\contentsline {subsection}{\numberline {1.6.1}CPU specifications}{4}
+\contentsline {subsection}{\numberline {1.6.2}GPUs specifications}{4}
+\contentsline {subsection}{\numberline {1.6.3}Communications}{4}
+\contentsline {section}{\numberline {1.7}Conclusion}{4}
+\contentsline {chapter}{\numberline {2}Complex systems}{5}
+\contentsline {section}{\numberline {2.1}Introduction}{5}
+\contentsline {section}{\numberline {2.2}Combinatorial problems}{5}
+\contentsline {subsection}{\numberline {2.2.1}Combinatorial search}{5}
+\contentsline {subsection}{\numberline {2.2.2}Combinatorial optimization}{5}
+\contentsline {section}{\numberline {2.3}A case study, the Langford problem}{5}
+\contentsline {section}{\numberline {2.4}Complex systems as a benchmark}{5}
+\contentsline {section}{\numberline {2.5}GRAPH500}{5}
+\contentsline {section}{\numberline {2.6}Conclusion}{5}
+\contentsline {chapter}{\numberline {3}Application}{7}
+\contentsline {chapter}{Conclusion}{7}
+\contentsline {chapter}{Annexes}{9}
+\contentsline {chapter}{Bibliography}{11}

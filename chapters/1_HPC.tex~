@@ -36,12 +36,6 @@ Speedup = \frac{1}{Seq + \frac{Par}{n}}
 
 Where $Seq + Par = 1$ and $Seq$ and $Par$ respectively the sequential and parallel ratio of a program. 
 
-On plot XXX, a representation of the perfect speedup is represented.
-This law does not take every cases in acount. 
-Indeed the speedup can be much better if we grow the amount of work to be done in the same time as the number of processes that execute the program. 
-
-This is proposed by the Gustafson law presented in. 
-
 \section{Hardware}
 
 \subsection{Classical CPU}

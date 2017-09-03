@@ -1,0 +1,57 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.6)
+The top-level auxiliary file: jloiseau_these.aux
+The style file: alpha.bst
+Database file #1: biblio/biblio_langford.bib
+Database file #2: biblio/biblio_graph.bib
+Database file #3: biblio/biblio_sph.bib
+Database file #4: biblio/biblio_hpc.bib
+Warning--empty booktitle in ASS_LGF
+Warning--can't use both volume and number fields in ihmsen2011parallel
+Warning--empty journal in ihmsen2014sph
+Warning--empty journal in larsen2009counting
+Warning--can't use both volume and number fields in lauterbach2009fast
+Warning--empty journal in CUDAguide
+Warning--empty journal in soman2010fast
+Warning--can't use both volume and number fields in wang2015gunrock
+You've used 67 entries,
+            2543 wiz_defined-function locations,
+            962 strings with 16239 characters,
+and the built_in function-call counts, 29718 in all, are:
+= -- 3033
+> -- 1356
+< -- 55
++ -- 476
+- -- 464
+* -- 2046
+:= -- 4675
+add.period$ -- 221
+call.type$ -- 67
+change.case$ -- 437
+chr.to.int$ -- 65
+cite$ -- 75
+duplicate$ -- 1268
+empty$ -- 2201
+format.name$ -- 536
+if$ -- 6293
+int.to.chr$ -- 3
+int.to.str$ -- 0
+missing$ -- 63
+newline$ -- 337
+num.names$ -- 195
+pop$ -- 487
+preamble$ -- 1
+purify$ -- 510
+quote$ -- 0
+skip$ -- 1050
+stack$ -- 0
+substring$ -- 1634
+swap$ -- 327
+text.length$ -- 55
+text.prefix$ -- 23
+top$ -- 0
+type$ -- 524
+warning$ -- 8
+while$ -- 285
+width$ -- 71
+write$ -- 877
+(There were 8 warnings)
