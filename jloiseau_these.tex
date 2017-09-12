@@ -1,11 +1,15 @@
-\documentclass[10pt,a4paper]{book}
+\documentclass[11pt,a4paper]{book}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{url}
+\usepackage{python}
+\usepackage{algpseudocode,algorithm}
+
+\usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2.5cm]{geometry}
 
 % Thesis title
 %\title{Energy Efficiency, Exascale and Complex Systems}
@@ -20,12 +24,13 @@ The Way to Exascale: From Theorics to Applied Problems}
 
 \begin{document}
 
+
+\newgeometry{left=0.5cm,right=0.5cm,top=2.0cm,bottom=1.5cm}
+%% Title page -------------------------------------------------------
 \thispagestyle{empty}
-
 {%%%
-\sffamily
+%
 \centering
-
 {
 \includegraphics[scale=1]{figures/style/logo_urca_front_page.jpg}
 \vspace{0.5cm}
@@ -47,31 +52,31 @@ INFORMATIQUE\\
 % Title 
 {\huge 
 \vspace{1cm}
-The Way to Exascale: From Theorics to Applied Problems
+Hybrids Architectures to Reach Exascale
 }
 
 % Subtitle 
 {
 \vspace{0.5cm}
-Vers l'Exascale: Des Probl\`emes Th\'eoriques aux Probl\`emes Appliqu\'es\\
+Les Architectures Hybrides pour Atteindre l'Exascale 
 }
 
 \vspace{1.0cm}
 \hrule
 
-\vspace{2.5cm}
+\vspace{1.5cm}
 
 {\LARGE
 par \textbf{Julien Loiseau}
 }
 
-\vspace{2.5cm}
+\vspace{2cm}
 
 {
 Th\`ese de doctorat d'Informatique
 }
 
-\vspace{2.5cm}
+\vspace{2cm}
 
 {
 Sous la direction de : \textbf{M. Michaël KRAJECKI, Professeur des Universités}
@@ -87,10 +92,11 @@ Sous la direction de : \textbf{M. Michaël KRAJECKI, Professeur des Universités
 ?? & ?? & Rapporteur\\
 ?? & ?? & Rapporteur\\
 Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Examinateur \\
-Guillaume Colin de Verdière & Ingénieur au CEA & Examinateur\\
-Michaël KRAJECKI & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
-Christophe JAILLET & Maître de Conférence à l'Université de Reims Champagne-Ardenne & Co-directeur \\
-François ALIN & Maître de Conférence à l'Université de Reims Champagne-Ardenne & Encadrant \\
+Guillaume Colin de Verdiere & Ingénieur au CEA, France & Examinateur\\
+Michaël Krajecki & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
+François Alin & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur  \\
+Christophe Jaillet & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Encadrant \\
+
 \end{tabular}
 
 \vspace{0.5cm}
@@ -99,13 +105,15 @@ François ALIN & Maître de Conférence à l'Université de Reims Champagne-Arde
 
 \vspace{0.5cm}
 
-Centre de Recherche en STIC équipe CASH
+Centre de Recherche en Sciences et Technologies de l'Information et de la Communication de l'URCA EA3804\\ 
+\'Equipe Calcul et Autonomie dans les Systèmes Hétérogènes
 
 }
 
 %%%
 }%%%
-
+\clearpage 
+\newgeometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.5cm}
 % Empty page after title 
 \thispagestyle{empty}
 
@@ -115,6 +123,9 @@ Centre de Recherche en STIC équipe CASH
 % Acknoledgments, thanks everybody !
 \addcontentsline{toc}{chapter}{Acknowledgements}
 \input{chapters/acknoledgments}
+
+\addcontentsline{toc}{chapter}{Abstract}
+\input{chapters/abstract}
 
 % Add the tableofcontentes in itself
 \addcontentsline{toc}{chapter}{Contents}

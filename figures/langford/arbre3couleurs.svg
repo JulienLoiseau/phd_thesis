@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg5671"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="arbre3couleurs.svg">
+  <defs
+     id="defs5673">
+    <linearGradient
+       id="linearGradient3893">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop3895" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3897" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3893"
+       id="linearGradient3899"
+       x1="680.76727"
+       y1="487.90723"
+       x2="533.96338"
+       y2="696.59906"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.69480424"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1336"
+     inkscape:window-height="735"
+     inkscape:window-x="131"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5676">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.2677)">
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="891.09259"
+       y="507.40707"
+       id="text5679"
+       sodipodi:linespacing="125%"
+       transform="scale(0.97240368,1.0283795)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5681"
+         x="891.09259"
+         y="507.40707"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">Positions of both</tspan><tspan
+         sodipodi:role="line"
+         x="891.09259"
+         y="537.40704"
+         id="tspan5683"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"> color 1 cubes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="172.97075"
+       y="509.84152"
+       id="text5685"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5687"
+         x="172.97075"
+         y="509.84152">(1,3)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5689"
+       y="507.80664"
+       x="568.55096"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="507.80664"
+         x="568.55096"
+         id="tspan5691"
+         sodipodi:role="line">(2,4)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="716.29871"
+       y="507.80667"
+       id="text5693"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5695"
+         x="716.29871"
+         y="507.80667">(4,6)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5697"
+       y="624.37213"
+       x="118.17389"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="624.37213"
+         x="118.17389"
+         id="tspan5699"
+         sodipodi:role="line">(1,4)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="260.52023"
+       y="624.37213"
+       id="text5701"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5703"
+         x="260.52023"
+         y="624.37213">(2,5)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5705"
+       y="624.37213"
+       x="402.86655"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="624.37213"
+         x="402.86655"
+         id="tspan5707"
+         sodipodi:role="line">(3,6)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5709"
+       y="695.14587"
+       x="76.490074"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="695.14587"
+         x="76.490074"
+         id="tspan5711"
+         sodipodi:role="line">(1,5)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="147.25299"
+       y="695.14587"
+       id="text5713"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5715"
+         x="147.25299"
+         y="695.14587">(2,6)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="288.77887"
+       y="695.14587"
+       id="text5717"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5719"
+         x="288.77887"
+         y="695.14587">(2,6)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5721"
+       y="695.14587"
+       x="218.01595"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="695.14587"
+         x="218.01595"
+         id="tspan5723"
+         sodipodi:role="line">(1,5)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5725"
+       y="695.14587"
+       x="430.30472"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="695.14587"
+         x="430.30472"
+         id="tspan5727"
+         sodipodi:role="line">(2,6)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="359.54178"
+       y="695.14587"
+       id="text5729"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5731"
+         x="359.54178"
+         y="695.14587">(1,5)</tspan></text>
+    <text
+       transform="scale(0.97240368,1.0283795)"
+       sodipodi:linespacing="125%"
+       id="text5733"
+       y="598.90552"
+       x="888.99933"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         y="598.90552"
+         x="888.99933"
+         id="tspan5735"
+         sodipodi:role="line">Positions of both</tspan><tspan
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="tspan5737"
+         y="628.90552"
+         x="888.99933"
+         sodipodi:role="line"> color 2 cubes</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="893.18591"
+       y="684.36249"
+       id="text5739"
+       sodipodi:linespacing="125%"
+       transform="scale(0.97240368,1.0283795)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5741"
+         x="893.18591"
+         y="684.36249"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">Positions of both</tspan><tspan
+         sodipodi:role="line"
+         x="893.18591"
+         y="714.36249"
+         id="tspan5743"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"> color 3 cubes</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 135.28991,312.31819 48.93464,-80.59824 89.23377,82.03749"
+       id="path5745"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 184.22455,230.28069 220.20591,83.47675"
+       id="path5747"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 96.430039,385.72016 34.542101,-41.73838 34.54211,40.29912"
+       id="path5749"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 237.47696,695.42711 31.6636,-38.85987 34.5421,40.29913"
+       id="path5751"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 369.88836,388.59867 41.73837,-46.05614 27.34584,43.17763"
+       id="path5753"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="540.65594"
+       y="620.20197"
+       id="text5755"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5757"
+         x="540.65594"
+         y="620.20197">(1,4)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="730.09174"
+       y="620.20197"
+       id="text5763"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5765"
+         x="730.09174"
+         y="620.20197">(3,6)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="498.97211"
+       y="690.97571"
+       id="text5767"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5769"
+         x="498.97211"
+         y="690.97571">(1,5)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5771"
+       y="690.97571"
+       x="569.73505"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="690.97571"
+         x="569.73505"
+         id="tspan5773"
+         sodipodi:role="line">(2,6)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="757.52991"
+       y="690.97571"
+       id="text5783"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96581135,1.0353989)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5785"
+         x="757.52991"
+         y="690.97571">(2,6)</tspan></text>
+    <text
+       transform="scale(0.96581135,1.0353989)"
+       sodipodi:linespacing="125%"
+       id="text5787"
+       y="690.97571"
+       x="686.76697"
+       style="font-size:23.99999989px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="690.97571"
+         x="686.76697"
+         id="tspan5789"
+         sodipodi:role="line">(1,5)</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path5791"
+       d="m 504.46796,689.6701 34.5421,-41.73838 34.54211,40.29912"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path5795"
+       d="m 685.92628,692.54861 41.73837,-46.05614 27.34584,43.17763"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 189.98157,188.54232 453.36511,44.616884 567.0662,189.98157"
+       id="path5801"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 450.4866,43.17763 700.91685,185.66381"
+       id="path5803"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       x="616.00085"
+       y="519.83807"
+       id="text5805"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan5807"
+         x="616.00085"
+         y="519.83807">.....</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 572.82322,236.03771 -31.6636,67.64495"
+       id="path5809"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text5811"
+       y="639.2962"
+       x="601.27191"
+       style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr"
+       xml:space="preserve"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         y="639.2962"
+         x="601.27191"
+         id="tspan5813"
+         sodipodi:role="line">.....</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 572.82322,237.47696 149.68245,73.40197"
+       id="path5817"
+       inkscape:connector-curvature="0"
+       transform="translate(0,308.2677)"
+       inkscape:export-filename="/Users/francois/Dropbox/COMCA 2014/Images/arbre3couleurs.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>
