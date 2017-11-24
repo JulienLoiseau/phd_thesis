@@ -8,7 +8,7 @@ all: $(FILE).pdf
 clean:
 	rm -rf *~ *.idx *.lot *.toc *.lof *.aux *.blg *.out *.bbl *.log *.pdf
 
-$(FILE).pdf: $(FILE).tex
+$(FILE).pdf: $(FILE).tex chapters/*.tex
 	pdflatex $(FILE)
 	pdflatex $(FILE)
 	bibtex $(FILE)
