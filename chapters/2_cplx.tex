@@ -1,32 +1,14 @@
-\chapter{Complex systems}
+\part{Complex systems}
+
+\chapter{Computationally heavy}
 
 \section{Introduction}
 
-\section{Combinatorial problems}
+\section{Background}
 
-\subsection{Combinatorial search}
+Present here the combinatorial problems and the ways to solve them. 
 
-\subsection{Combinatorial optimization}
-
-\section{A case study, the Langford problem}
-
-\subsection*{Introduction}
-
-For many years now, GPUs usage has increased in the field of High Performance Computing.
-The TOP500 list of the world's most powerful supercomputers contains more than about 52 systems powered by NVIDIA Kepler GPUs. In the latest list the number of hybrid machines is a fourfold increase compared with just one year before.\\
-Since 2007, NVIDIA has offered a general GPUs programming interface: \textit{Compute Unified Device Architecture} (CUDA). This study is based on this physical and logical architecture which requires massively parallel programming and a new vision for the implementation of resolution algorithms. 
- 
-The Langford pairing problem is a very irregular combinatorial problem and thus is a bad candidate for GPU computation which requires vectorized and regularized tasks. 
-Hopefully there are many ways to regularize the computation in order to take advantage of the multiGPU cluster architectures. 
-
-This paper is structured as follows: we first present the background with the Langford problem and multiGPU cluster. 
-The next section describes our method concerning the Miller algorithm on such architectures.
-Then we expose our multiGPU solution to solve the Langford problem based on the Godfrey algorithm. 
-Finally we expose some concluding remarks and perspectives. 
-
-\subsection{Background}
-
-\subsubsection{Langford problem}
+\subsection{Langford problem}
 
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
 While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.
@@ -783,11 +765,15 @@ As a near-term prospect, we want to scale and show that it is possible to use th
 The next step of this work is to generalize the method to optimization problems. This adds an order of complexity since shared information has to be maintained over a multiGPU cluster. 
 
  
-\section{Complex systems as a benchmark} 
 
 
 
-\subsection{Introduction}
+
+\chapter{Complex systems as a benchmark} 
+
+
+
+\section{Introduction}
 The most commonly used search algorithms for graphs are Breadth First Search (BFS) and Depth First Search (DFS).
 Many graph analysis methods, such as the finding of shortest path for unweighted graphs and centrality, are based on BFS. 
 
