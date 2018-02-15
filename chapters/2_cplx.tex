@@ -8,7 +8,7 @@
 
 Present here the combinatorial problems and the ways to solve them. 
 
-\subsection{Langford problem}
+\subsection{The Langford problem}
 
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
 While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.
@@ -1144,16 +1144,6 @@ GPUDirect can be used coupled with this library. In the last version we used thi
 
 \subsubsection{Working environment}
 
-All the tests were led on the ROMEO cluster available at the University of Reims Champagne-Ardenne (France).
-It provides 130 nodes, each composed of 2 Ivy Bridge CPUs (8 cores), 2.6GHz and 2 Tesla K20Xm GPUs.
-
-We used the nodes as two independent machines with one eight core CPU and one GPU attached, linked by PCIe-v3.
-This allows having 260 machines for computation, each containing 32GB RAM memory and linked with QDR InfiniBand (up to 10 Gbps).
-The nodes are connected with a FatTree topology. 
-A K20Xm GPU has 6GB memory, 250GB/s bandwidth, 2688 CUDA cores including 896 double precision cores.
-
-The supercomputer supports MPI with GPU Aware and GPUDirect. 
-The developments were made using MVAPICH-GDR 2.2a with CUDA 7.5 \cite{nvidia2008programming} and OpenMP for the CPU implementation.
 
 \subsubsection{CPU and GPU comparison}
 

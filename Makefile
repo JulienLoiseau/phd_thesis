@@ -3,6 +3,11 @@ FILE=jloiseau_these
 
 all: $(FILE).pdf
 
+view: $(FILE).pdf display
+
+display:
+	open $(FILE).pdf
+
 .PHONY: clean
 
 clean:
@@ -14,3 +19,11 @@ $(FILE).pdf: $(FILE).tex chapters/*.tex
 	bibtex $(FILE)
 	pdflatex $(FILE)
 	pdflatex $(FILE)
+
+chapter_1: chapters_alone/chapter_1.tex
+	cd chapters_alone
+	pdflatex $<
+	pdflatex $<
+	bibtex $<
+	pdflatex $<
+	pdflatex $<

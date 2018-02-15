@@ -1,27 +1,44 @@
 \part{HPC and Exascale}
 \chapter*{Introduction}
 
+High Performance Computing, HPC, does not find a strict definition. 
+HPC became a dedicated field of research. 
+
+Since supercomputer creation, dedicated for balistic purposes, domain scientists and nowaday computer scientists
+
+Computer scientists interested in HPC will have to focus on several domains. 
+\begin{itemize}
+\item The energy consumption, mainly directed by the hardware producers. 
+\item The computational power, how to take advantages of the ressources ? 
+\item The communication, because such machines are constructed over several machines or nodes. 
+\end{itemize}
+
+Domain scientists are also involved directly in HPC with their software and redefining the structure based on their needs and usages. 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %																	%
 %	CHAPTER ONE, THEORY of HPC										%
 %																	%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Theory of HPC and performaces}
+\chapter{Theory of HPC and performances}
+
+\section{Introduction}
+High Performance Computing (HPC)
+HPC focus on performance 
+
+This first chapter will present the different laws and rules that comes from HPC theory and observations. 
 
 The general idea of parallelism is to achieve performance. 
 And thus we need to define what performance imply in HPC. 
-- Reducing total time = Latency 
-- Reducing rate of task = Throughput 
-- Reducing 
-
-\section{Introduction}
-The world of nowaday HPC is managed by some fondamental rules that gives the main direction in the researches. 
-This first chapter will present the different laws and rules that comes from HPC theory and observations. 
-
+\begin{itemize}
+\item Reducing total time = Latency 
+\item Reducing rate of task = Throughput 
+\item Reducing \todo{WHAT ?} 
+\end{itemize}
 
 \section{Speedup, efficiency and scalability}
-
 
 \subsection{Speedup and efficiency}
 Calling latency the time to computer a time, unit of time. 
@@ -35,6 +52,9 @@ The speedup can be defined using the latency by the formula:
 \text{speedup} = S_n =  \frac{T_1}{T_n}
 \end{equation}
 
+
+\begin{figure}
+\centering 
 \begin{tikzpicture}
   \draw[->] (-.5,0) -- (4,0) node[right] {$n$};
   \draw[->] (0,-.5) -- (0,2.5) node[above] {$speepup$};
@@ -42,13 +62,32 @@ The speedup can be defined using the latency by the formula:
   \draw (0,0) .. controls (3.5,1.3) .. (4.,1.2) node[right] {\text{Typical Speedup}} ;
   \draw (0,0) .. controls (3.5,2.2) .. (4.,2.2) node[above] {\text{Hyperlinear speedup}} ;
 \end{tikzpicture}
+\caption{Observed speedup}
+\label{fig:1_HPC:speedup_obs}
+\end{figure}
+
+As shown on figure \ref{fig:1_HPC:speedup_obs} several kind of speedup can be observed. 
+\paragraph{Linear}
+The linear speedup usually represent the target for every programs in HPC. 
+Indeed having the speedup growing exactly as the number of processors grows is the ideal case. 
+Codes fall typical into two cases. 
+\paragraph{Typical speedup}
+This represents the most common observed speedup. 
+As the number of processors grows, the program face several of the HPC walls, the hardest being communications.
+So the increasing number of computational power is reduiced to the sequential pqrt or lose time in exchanges. 
+\paragraph{Hyperlinear speedup}
+In some cases we can observe an hyperlinear speedup, meaning that the results in parallel are even better than the ideal case. 
+Several explainations can be given. 
+The program can fit exactly in memory for less data on each processors or even fir perfectly for the cache utilization. 
+The parallel algorithm can also be way more efficient than the sequential one. 
 
 And the efficiency is defined by the speedup devided by the number of workers: 
 \begin{equation}
 \text{efficiency} = \frac{S_n}{n} = \frac{T_1}{nT_n}
 \end{equation}
 
-Is the algorithm executes $P$ times faster using $P$ processes, it is then called $superlinear$
+The efficiency, usually expressed in percent, represent the evolution of the code stability to growing number of processors. 
+
 
 \subsection{Scalability}
 
@@ -68,9 +107,76 @@ Extracted from the Amdahl paper the law can be writen as:
 Speedup = \frac{1}{Seq + \frac{Par}{n}}
 \end{equation}
 
-Where $Seq + Par = 1$ and $Seq$ and $Par$ respectively the sequential and parallel ratio of a program. 
+Where $Seq + Par = 1$ and $Seq$ and $Par$ respectively the sequential and parallel ratio of a program.
+
+This is also called strong scaling.  
+
+And the efficiency become:
+\begin{equation}
+Efficiency = \frac{n}{Seq + \frac{Par}{n}}
+\end{equation}
 
 \subsection{Gustafson's law}
+
+The Amdhal's law is focused on problem with the same memory size. 
+John L. Gustafson's idea is that using more computational units, the problem size can grow accordingly. 
+He considered a constant computation time with evolving problem size. 
+With this point of view using more computational units leads to better results 
+
+The speedup:
+\begin{equation}
+Speedup = Seq + Par \times n
+\end{equation}
+
+\section{Von Neumann Model}
+
+First computers in early 19th were built using vacuum tubes instead of transistors making them very huge. 
+One of the previous, ENIAC, was based on decimal and one of the first binary was construct around 1944, the Electric Discrete Variable Automatic Computer (EDVAC). 
+In the EDVAC team, a physists described the logical model of this computer and provide a model on which every computing device is based nowadays. 
+John Von Neumann published its \textit{First Draft of a Report on the EDVAC}~\cite{von1993first} in 1945. 
+Every devices are now built around this model with optimizations on size, clock speed, memory, etc. 
+
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+	\draw (3,0) rectangle (8,4);
+	\draw (3.1,2) [fill=red!40] rectangle (7.9,3.9);
+	\node at (5.3,3.5) {Central Processing Unit};
+
+	\draw (3.2,2.1) [fill=white] rectangle (7.8,2.6) node[pos=.5] {Arithmetic/Logic Unit};
+	\draw (3.2,2.7) [fill=white] rectangle (7.8,3.2) node[pos=.5] {Control Unit};
+
+	\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
+	\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
+	\draw [->] (2.5,2) -- (3,2);
+	\draw [->] (8,2) -- (8.5,2);
+
+	\draw (3.2,.2) rectangle (7.8,.8) node[pos=.5] {Memory};
+	\draw [->] (4,2) -- (4,.8);
+	\draw [->] (7,.8) -- (7,2);
+  %\draw[-] (-.5,0) -- (4,0) node[right] {$n$};
+  %\draw[-] (0,-.5) -- (0,2.5) node[above] {$speepup$};
+  %\draw (0,0) -- (4,2) node[right] {\text{Linear Speedup}};
+  %\draw (0,0) .. controls (3.5,1.3) .. (4.,1.2) node[right] {\text{Typical Speedup}} ;
+  %\draw (0,0) .. controls (3.5,2.2) .. (4.,2.2) node[above] {\text{Hyperlinear speedup}} ;
+\end{tikzpicture}
+\caption{Von Neumann model}
+\label{fig:1_HPC:von_neumann_model}
+\end{figure}
+
+This model is presented on Fig.~\ref{fig:1_HPC:von_neumann_model}.
+The input device and output device are devices use to store in a read/write way data.
+Inside the main box in the figure we find the memory, for the most common nowaday architecture we can consider it as a Random Access Memory (RAM). Several kind of memory exists and will be discussed later. 
+The Central Processing Unit, CPU, is composed of several elements in this model. 
+On one hand, the Arithmetic and Logic Unit, ALU, which take as input one or two values and apply an operation on those data. 
+They can be either logics like AND, OR, XOR, etc. or arithmetique like ADD, MUL, SUB, etc.
+On the other hand, the Control Unit, CU, which control the data carriage to the ALU from the memory on one way and the other. 
+
+This is the basic model, some ones add another layer in the CPU called registers, to store the local data of the ALU. 
+
+\begin{figure}
+
+\end{figure}
 
 \section{Flynn taxonomy and executions models}
 
@@ -107,6 +213,9 @@ This last model can correspond to a pipeline but even in this case the data are 
 The most common memory models for shared memory are: 
 \subsection{UMA}
 \subsection{NUMA}
+
+Non Unified Memory Access, 
+
 \subsection{COMA}
 
 \subsection{DRAM and PRAM}
@@ -122,8 +231,26 @@ The most common memory models for shared memory are:
 
 \section{Introduction}
 
+Optimization can't be done without a good knowledge of the machine architecture. 
+Indeed, nowaday software and API try to take care of most of the cases but the last percent of gain have to be architecture dependent. 
+In this chapter we will describe the most important devices architecures from classical Central Processing Units (CPUs), General Purpose Graphics Processing Units (GPGPUs), Field Programmable Gate Arrays (FPGAs) and Application-specific integrated circuits (ASICs).
+Then those independants elements are use together in order to build supercomputers. 
+The way they are arranged and the nodes interconnection is something that really matter at large scale.  
+
 \section{Architectures}
 \subsection{Classical CPU}
+
+The CPU, as we know it today, begin its history with \textit{Texas Instruments Inc} and the first patent describing a CPU is "Computing systems cpu" proposed by \textit{Gary Boone} and published in 1973.
+This first fonctional processing unit on chip and is based on the Von Neumann Model.
+Before that vacuum tubes were used instead of transistors making the space used very high.
+
+The Von Neumann model can be extracted for the first time by the physists John Von Neumann and its team in \cite{} 
+The Electric Discrete Variable Automatic Computer (EDVAC) presented in this paper was one of the first binary computer built with vacuum tubes. Von Neumann came in the project and summarized the logical aspects of this machine. 
+This model is presented on Fig.~\ref{}.
+since, every devices can be represented based on that model with optimizations in term of number of cores, memory accesses and bus. 
+
+
+
 
 Talk about the ARM architecture 
 
@@ -150,11 +277,11 @@ We will describe here the Kepler architecture, this is the one we worked
 \setlength\fboxrule{0.25pt}
 \includegraphics[scale=0.6]{figures/chap1/smx}
 \caption{NVIDIA GPU and CUDA architecture overview}
- \label{fig:gpu}
+ \label{fig:chap1_gpu}
 %\vspace{-0.8cm} 
 \end{figure*}
 
-As presented in Fig.\ref{fig:gpu}, NVIDIA GPUs include many \emph{Streaming Multiprocessors} (SM), each of which is composed of many \emph{Streaming Processors} (SP). In the Kepler architecture, the SM new generation is called SMX.
+As presented in Fig.\ref{fig:chap1_gpu}, NVIDIA GPUs include many \emph{Streaming Multiprocessors} (SM), each of which is composed of many \emph{Streaming Processors} (SP). In the Kepler architecture, the SM new generation is called SMX.
 %
 %In the CUDA programing model~\cite{cuda}, the GPU works as a SIMT co-processor of a conventional CPU. 
 Grouped into \emph{blocks}, \textit{threads} execute \emph{kernel} functions synchronously.
@@ -178,16 +305,29 @@ This is the reason why test-based applications, like combinatorial problems that
 %This is particularly true with regard to combinatorial problems resolution. 
 Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
 
+\subsubsection{Details on K20Xm}
+
+\todo{Describe K20Xm, 2688 cores}
+
 \subsection{FPGA and ASICS}
 
 \section{Clusters and interconnection}
 \subsection{TOP500 remarquable clusters}
 \subsubsection{Sunway Taihulight}
 
-This is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. (VERIFIER INFO)
-A recent report from Jack Dongarra, a figure in HPC, decrypt all the architecture of this supercomputer\cite{dongarra2016report}. 
+Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. \todo{(VERIFIER)}
+A recent report from Jack Dongarra, a figure in HPC, decrypt the architecture of this supercomputer\cite{dongarra2016report}. 
 The most interessant point is the conception of this machine, completely done in China. 
-The Sunway CPUs were invented and built in China and have a specific architecture. 
+The Sunway CPUs were invented and built in China, the Vendor is the Shanghai High Performance IC Design Center. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=1]{figures/Chap1/report_sunway_CPE}
+\caption{Sunway Taihulight node architecture from \textit{Report on the Sunway TaihuLight System}, Jack Dongarra, June 24, 2016.}
+\label{fig:chap1_report_sunway_CPE}
+\end{figure}
+
+The SW26010, a many core architecture, features 260 cores based on RISC architecture and a specific conception depicted on Fig.\ref{fig:chap1_report_sunway_CPE}.
 
 
 \subsubsection{Titan}
@@ -195,9 +335,32 @@ The Sunway CPUs were invented and built in China and have a specific architectur
 \subsubsection{Sequoia}
 \section{ROMEO Supercomputer}
 
-\begin{equation}
-\frac{1}{sin(x)}
-\end{equation}
+The ROMEO supercomputer center is the computation center of the Champagne-Ardenne region in France. 
+Hosted since 2002 by the University of Reims Champagne-Ardenne, this so called meso-center (French name for software and hardware architectures) is used for HPC for theoric research and domain science like applied mathematics, physics, biophysics and chemistry. 
+
+This project is support by the Champagne-Ardenne region and the CEA (French Alternative Energies and Atomic Energy Commission), aim to host research and production codes of the region for industrial, research and academics purposes. 
+
+We are currently working on the third version of ROMEO, installed in 2013. 
+As many of our tests in this study have been done on this machine, we will carefully describe its architecture. 
+
+This supercomputer was ranked 151st in the TOP500 and 5th in the GREEN500 list. 
+
+\subsection{ROMEO hardware architecture}
+ROMEO is a Bull/Atos supercomputer composed of 130 BullX R421 computing nodes. 
+
+Each node is composed of two processors Intel Ivy Bridge 8 coeurs @ 2,6 GHz. 
+Each processor have access to 16GB of memory for a total of 32GB per node, the total memory if 4.160TB. 
+Each processor if linked, using PCIe-v3, to an NVIDIA Tesla K20Xm GPGPU. 
+This cluster provide then 260 processors for a total of 2080 CPU cores and 260 GPGPU providing 698880 GPU cores. 
+The computation nodes are interconnected with an Infiniband QDR non-blocking network structured as a FatTree. 
+The Infiniband is a QDR providing 10GB/s. 
+
+The storage for users is 57 TB and the cluster also provide 195 GB of Lustre and 88TB of parallel scratch filesystem. 
+
+In addition to the 130 computations nodes, the cluster provides a visualization node NVIDIA GRID with two K2 cards and 250GB of DDR3 RAM. 
+The old machine, renamed Clovis, is always available but does not features GPUs. 
+
+The supercomputer supports MPI with GPU Aware and GPUDirect. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %																	%
