@@ -2,9 +2,8 @@
 \chapter*{Introduction}
 
 High Performance Computing, HPC, does not find a strict definition. 
-HPC became a dedicated field of research. 
-
-Since supercomputer creation, dedicated for balistic purposes, domain scientists and nowaday computer scientists
+Since computer creation, first dedicated for balistic purposes, domain scientists developped their tool to perform computations. 
+Then, in front of the complexity of building such machines, HPC became a dedicated field of research. 
 
 Computer scientists interested in HPC will have to focus on several domains. 
 \begin{itemize}
@@ -15,7 +14,6 @@ Computer scientists interested in HPC will have to focus on several domains.
 
 Domain scientists are also involved directly in HPC with their software and redefining the structure based on their needs and usages. 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %																	%
 %	CHAPTER ONE, THEORY of HPC										%
@@ -25,20 +23,226 @@ Domain scientists are also involved directly in HPC with their software and rede
 \chapter{Theory of HPC and performances}
 
 \section{Introduction}
-High Performance Computing (HPC)
-HPC focus on performance 
 
-This first chapter will present the different laws and rules that comes from HPC theory and observations. 
+In order to understand and talk about supercomputers and HPC, some knowledge on theory is require. 
+This part describe the generic model of computer on which every nowadays machine is built.
+The Von Neumann model is presented along the Flynn taxonomy. 
+Base on those elements we present the differents memory models. 
 
-The general idea of parallelism is to achieve performance. 
+
+We then give more details on what is and how to reach performances though parallelism. 
 And thus we need to define what performance imply in HPC. 
 \begin{itemize}
 \item Reducing total time = Latency 
 \item Reducing rate of task = Throughput 
-\item Reducing \todo{WHAT ?} 
 \end{itemize}
 
+The Amhdal's and Gustafson's laws are presented and detailed and thus the Strong and Weak scailing used in our study. 
+
+\section{Von Neumann Model}
+
+First computers in early 19th were built using vacuum tubes instead of transistors making them very huge and hard to maintain. 
+The most famous of first vacuum tubes supercomputers, The ENIAC, was based on decimal and one of the first binary one was constructed around 1944 and is called the Electric Discrete Variable Automatic Computer (EDVAC). 
+In the EDVAC team, a physists described the logical model of this computer and provide a model on which every nowadays computing device is based. 
+John Von Neumann published its \textit{First Draft of a Report on the EDVAC}~\cite{von1993first} in 1945. 
+Extracted from this work, the model know as the Von Neumann model or more generally Von Neumann Machine appears. 
+A representation is presented on Fig.~\ref{fig:1_HPC:von_neumann_model}.
+
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+	\draw (3,0) rectangle (8,4);
+	\draw (3.1,2) [fill=red!40] rectangle (7.9,3.9);
+	\node at (5.3,3.5) {Central Processing Unit};
+
+	\draw (3.2,2.1) [fill=white] rectangle (7.8,2.6) node[pos=.5] {Arithmetic/Logic Unit};
+	\draw (3.2,2.7) [fill=white] rectangle (7.8,3.2) node[pos=.5] {Control Unit};
+
+	\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
+	\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
+	\draw [->] (2.5,2) -- (3,2);
+	\draw [->] (8,2) -- (8.5,2);
+
+	\draw (3.2,.2) [fill=blue!20] rectangle (7.8,.8) node[pos=.5] {Memory};
+	\draw [->] (4,2) -- (4,.8);
+	\draw [->] (7,.8) -- (7,2);
+\end{tikzpicture}
+\caption{Von Neumann model}
+\label{fig:1_HPC:von_neumann_model}
+\end{figure}
+
+On that figure we can identify several three parts, the input and output devices and in the middle the computational device itself. 
+The input device and output device are used to store in a read/write way data. 
+It can be represented by hard drives or solid state drives.
+Inside the computational device we find the memory, for the most common nowadays architectures it can be considered as a Random Access Memory (RAM). 
+Several kind of memory exists and will be discussed later. 
+The Central Processing Unit, CPU, is composed of several elements in this model. 
+On one hand, the Arithmetic and Logic Unit, ALU, which takes as input one or two values and apply an operation on those data. 
+They can be either logics with operations such as AND, OR, XOR, etc. or arithmetique with operations such as ADD, MUL, SUB, etc.
+On the other hand, the Control Unit, CU, which control the data carriage to the ALU from the memory and the operation to be perform on data.
+
+This is the basic model, some representation add another layer in the CPU called Registers, to store the local data of the ALU and CU. 
+Of course, the links between those elements are important and called Buses and can be separated between data buses, control buses and adresses buses. 
+
+Every devices or machines we will describe in the next chapter will have the same architecture using a CPU or several of them with memory. 
+
+\section{Flynn taxonomy and executions models}
+
+The Von Neumann model gives us a generic idea of how a computational unit is fashioned. 
+But the technology keep evoluating and, at some point in early twentieth century, IBM proposed the first multi-core processor on the same die, the Power4.
+in addition to the classical model, several arrangements are possible between the computational cores and the data to handle. 
+
+A right characterization is then essential to be able to target the right architecture for the right purpose. 
+The flynn taxonomy presents a hierarchical organization of computation machine and executions models.
+In this classification~\cite{flynn1972some}, Michael J. Flynn present the SIMD, SISI, MISD and MIMD models.
+
+\begin{center}
+\[\arraycolsep=1.4pt\def\arraystretch{2.2}
+\begin{tabular}{| l | l | l |}
+\hline
+Instructions / Data	& Single Data (SD) 	& Multiple Data (MD) \\
+\hline
+Single Instruction (SI)		&  SISD			& SIMD \\
+\hline
+Multiple Instructions (MI) 	& 	MISD		& MIMD \\
+\hline
+\end{tabular}
+\]
+\end{center}
+
+\subsection{Single Instruction, Single Data: SISD}
+This is the model corresponding to a single core CPU with no data parallelism. 
+This sequential model is one instruction operate on one data which is then store and the process continue over. 
+SISD is important to consider and can dominate the execution time due to the Amdahl's law, describe in next part. 
+
+\subsection{Single Instruction, Multiple Data: SIMD}
+This is the execution model corresponding to a many-core architecture like a GPU. 
+In the same clock, the same operation is executed on every process on different data. 
+The best example stay the work on matrices like a stencil. 
+SIMD can be extended from 2 to 16 elements for classical CPUs to hundreds and even thousands of core for GPGPUs. 
+
+\subsection{Multiple Instructions, Multiple Data: MIMD}
+Every element executes its own instructions on its own data set. 
+This can represent the behavior of a CPU using several cores, threads or even the differents nodes of a supercomputer cluster. 
+
+\subsection{Multiple Instructions, Single Data: MISD}
+This last model can correspond to a pipeline representation but even in this case the data are modified after every operations. 
+
+We can also find another characterization to describe the new GPUs architecture: Single Instruction, Multiple Threads. 
+This appears in NVIDIA's paper~\cite{lindholm2008nvidia}. 
+This model describes a stack of SIMD architectures, every block of threads is working with the same control processor on different data. 
+This is the model we describe in next chapter used for the \textit{warps} in NVIDIA CUDA.
+
+\section{Memory}
+In addition of the computational model and parallelism, multi-threading, the memory accesses parterns have a main role on performances. 
+
+Different memory technologies exists and the aim is always greater capacity, better speed and bandwidth.
+
+\subsection{Memory technologies}
+
+\todo{Hard drives ??}
+
+\subsubsection{SRAM}
+The Static Random Access Memory is built using and is mainly used for cache memory. 
+Based on commonly called "flip-flop" circuits that can store the data as long as the machine is powered. 
+This kind of memory is very expensive to produice and is usually limited for small amount of storage. 
+
+\subsubsection{DRAM}
+The Dynamic Random Access Memory, at the opposite to the SRAM, is based on transistors to store the binary information.
+This memory is less expansive to produice but needs to be refresh at a determined time however the data are lost. 
+There is several sub categories of DRAM used in different devices. 
+
+Depending on the way the bus are used we can find Single Data Rate, SDR, Double Data Rate, DDR and QDR, Quad Data Rates DRAM memories. 
+The number of data carried can go from 1x to 4x but the limitation of those products is the price of memory constantly rising. 
+
+We can also find Error-Correcting Code, ECC, memory which implements a bunch of data correction algorithm be garanty the validity of them when error is not allowed. 
+
+
+\subsection{Shared memory}
+In case of the SISD the memory access is just serial and no really rules needs to be set for its usage. 
+When it comes to multi-threaded and multi-cores approaches several kind of memory can be used. 
+We give a description of the most common shared memories architecures. 
+
+\hspace*{-2cm}
+\begin{figure}
+\centering 
+\begin{tikzpicture}
+	\draw [rounded corners=15pt,fill=red!40] (0,0) rectangle (2,2) node[pos=.5] {CPU};
+	\draw [rounded corners=15pt,fill=red!40] (3,0) rectangle (5,2) node[pos=.5] {CPU};
+
+	\draw (0,2.5) rectangle (5,3.5) node[pos=.5] {Memory Controller};
+
+	\draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
+	\draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
+	
+	\draw (3,4) [fill=blue!20] rectangle (5,4.6) node[pos=.5] {RAM};
+	\draw (3,5.2) [fill=blue!20] rectangle (5,5.8) node[pos=.5] {RAM};
+
+	\draw [-] (2,1) -- (3,1);
+	\draw [-] (2.5,1) -- (2.5,2.5);
+	\node at (2.5,2.2) {SDR, DDR, QDR};
+	\node at (2.5,1.8) {links};
+
+	\draw [-] (2.5,3.5) -- (2.5,5.5);
+	\draw [-] (2,4.3) -- (3,4.3);
+	\draw [-] (2,5.5) -- (3,5.5);
+\end{tikzpicture}
+\hspace{1cm}
+\begin{tikzpicture}
+	\draw [rounded corners=15pt,fill=red!40] (0,0) rectangle (2,2) node[pos=.5] {CPU};
+	\draw (3,0.1) [fill=blue!20] rectangle (5,0.7) node[pos=.5] {RAM};
+	\draw (3,1.3) [fill=blue!20] rectangle (5,1.9) node[pos=.5] {RAM};
+	\draw [-] (2,0.4) -- (3,0.4);
+	\draw [-] (2,1.6) -- (3,1.6);
+ 	
+	\draw [rounded corners=15pt,fill=red!40] (3,3.8) rectangle (5,5.8) node[pos=.5] {CPU};
+	\draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
+	\draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
+	\draw [-] (2,4.2) -- (3,4.2);
+	\draw [-] (2,5.4) -- (3,5.4);
+
+	\draw [<->] (1,2) -- (4,3.8);
+	\node at (1.5,3) {QPI-LDT};
+\end{tikzpicture}
+%\hspace{1cm}
+%\begin{tikzpicture}
+%	\draw [rounded corners=15pt] (1,0) rectangle (3,2) node[pos=.5] {CPU};
+%	\draw [rounded corners=15pt] (1,3.8) rectangle (3,5.8) node[pos=.5] {CPU};
+%
+%	\draw (0,2.1) rectangle (2,2.8) node[pos=.5] {RAM};
+%	\draw (0,3.2) rectangle (2,3.8) node[pos=.5] {RAM};
+%	
+%	\draw (3,2.2) rectangle (5,2.8) node[pos=.5] {RAM};
+%	\draw (3,2.2) rectangle (5,3.8) node[pos=.5] {RAM};
+%
+%\end{tikzpicture}
+\caption{UMA vs NUMA}
+\label{fig:1_HPC:von_neumann_model}
+\end{figure}
+
+\subsubsection{UMA}
+The Uniform Memory Access is a global memory shared by every threads or cores. 
+In UMA every processors us its own cache as local memory. 
+The addresses can be accessed directly by each processors. 
+
+With the arising of accelerators like GPUs and their own memory, some constructors found ways to create UMA with heterogeneous memory. 
+AMD creates the heterogeneous UMA, hUMA~\cite{rogers2013amd}, in 2013 allowing CPU and GPU to target the same memory area.
+
+\subsubsection{NUMA}
+
+In Non Unified Memory Access every processor have access to its own memory but allows other processors to access those area though Lightning Data Transport, LDT or Quick Path Interconnect, QPI, for Intel architectures. 
+
+\todo{Present CC-NUMA and NC-NUMA.}
+
+\subsubsection{COMA}
+In Cache-Only Memory Accesses, the whole memory is see as a cache from every processes.
+Attraction memory is setting up and will attract the data near the process that will use those data. 
+This model is less commonly use and lead to, at best, same results as NUMA.
+
 \section{Speedup, efficiency and scalability}
+
+In the previous parts we described the differents models, characterizations and memory patterns for HPC. 
+Based on those tools we need to be able to emphasis the performances of a computer and supercomputer. 
 
 \subsection{Speedup and efficiency}
 Calling latency the time to computer a time, unit of time. 
@@ -128,99 +332,15 @@ The speedup:
 Speedup = Seq + Par \times n
 \end{equation}
 
-\section{Von Neumann Model}
-
-First computers in early 19th were built using vacuum tubes instead of transistors making them very huge. 
-One of the previous, ENIAC, was based on decimal and one of the first binary was construct around 1944, the Electric Discrete Variable Automatic Computer (EDVAC). 
-In the EDVAC team, a physists described the logical model of this computer and provide a model on which every computing device is based nowadays. 
-John Von Neumann published its \textit{First Draft of a Report on the EDVAC}~\cite{von1993first} in 1945. 
-Every devices are now built around this model with optimizations on size, clock speed, memory, etc. 
-
-\begin{figure}
-\centering 
-\begin{tikzpicture}
-	\draw (3,0) rectangle (8,4);
-	\draw (3.1,2) [fill=red!40] rectangle (7.9,3.9);
-	\node at (5.3,3.5) {Central Processing Unit};
-
-	\draw (3.2,2.1) [fill=white] rectangle (7.8,2.6) node[pos=.5] {Arithmetic/Logic Unit};
-	\draw (3.2,2.7) [fill=white] rectangle (7.8,3.2) node[pos=.5] {Control Unit};
-
-	\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
-	\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
-	\draw [->] (2.5,2) -- (3,2);
-	\draw [->] (8,2) -- (8.5,2);
-
-	\draw (3.2,.2) rectangle (7.8,.8) node[pos=.5] {Memory};
-	\draw [->] (4,2) -- (4,.8);
-	\draw [->] (7,.8) -- (7,2);
-  %\draw[-] (-.5,0) -- (4,0) node[right] {$n$};
-  %\draw[-] (0,-.5) -- (0,2.5) node[above] {$speepup$};
-  %\draw (0,0) -- (4,2) node[right] {\text{Linear Speedup}};
-  %\draw (0,0) .. controls (3.5,1.3) .. (4.,1.2) node[right] {\text{Typical Speedup}} ;
-  %\draw (0,0) .. controls (3.5,2.2) .. (4.,2.2) node[above] {\text{Hyperlinear speedup}} ;
-\end{tikzpicture}
-\caption{Von Neumann model}
-\label{fig:1_HPC:von_neumann_model}
-\end{figure}
-
-This model is presented on Fig.~\ref{fig:1_HPC:von_neumann_model}.
-The input device and output device are devices use to store in a read/write way data.
-Inside the main box in the figure we find the memory, for the most common nowaday architecture we can consider it as a Random Access Memory (RAM). Several kind of memory exists and will be discussed later. 
-The Central Processing Unit, CPU, is composed of several elements in this model. 
-On one hand, the Arithmetic and Logic Unit, ALU, which take as input one or two values and apply an operation on those data. 
-They can be either logics like AND, OR, XOR, etc. or arithmetique like ADD, MUL, SUB, etc.
-On the other hand, the Control Unit, CU, which control the data carriage to the ALU from the memory on one way and the other. 
-
-This is the basic model, some ones add another layer in the CPU called registers, to store the local data of the ALU. 
-
-\begin{figure}
-
-\end{figure}
-
-\section{Flynn taxonomy and executions models}
-
-A right characterization of what a sequential and a parallel machine provide is essential in order to be able to target the architecture in the way they are built.
-The flynn taxonomy presents a hierarchical organization of computation machine and executions models.
-In this classification \cite{flynn1972some}, Michael J. Flynn present the SIMD,SISI, MISD and MIMD.
-
-\begin{center}
-\begin{tabular}{| l | l | l |}
-						& Single Data (SD) 	& Multiple Data (MD) \\
-\hline
-Single Instruction (SI)		&  SISD			& SIMD \\
-\hline
-Multiple Instructions (MI) 	& 	MISD		& MIMD \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsection{Single Instruction, Single Data: SISD}
-This is the model corresponding to a single core CPU with no data parallelism. 
-This sequential model is one instruction operate on one data which is then store and the process continue over. 
-
-\subsection{Single Instruction, Multiple Data: SIMD}
-This is the execution model corresponding to a many-core architecture like a GPU. 
-In the same clock, the same operation is executed on every process on different data. 
-The best example stay the work on matrices like a stencil. 
-
-\subsection{Multiple Instructions, Multiple Data: MIMD}
-
-\subsection{Multiple Instructions, Single Data: MISD}
-This last model can correspond to a pipeline but even in this case the data are modified after every operations. 
-
-\section{Memory models}
-The most common memory models for shared memory are: 
-\subsection{UMA}
-\subsection{NUMA}
-
-Non Unified Memory Access, 
-
-\subsection{COMA}
-
-\subsection{DRAM and PRAM}
-
 \section{Conclusions}
+
+In this chapter we presented the different basic tools to be able to understand HPC. 
+The Von Neumann model that represent every nowadays architecture. 
+The Flynn taxonomy that is in constant evolution with new paradigms like recent SIMT from NVIDIA. 
+We also presented the memory types that will be use at different layers in our clusters, from node memory, CPU-GPGPU shared memory space to global fast shared memory. 
+We finished by presenting the most important laws with Amdahl's and Gustafson's laws.
+We introduice the concept of Strong and Weak scaling that will lead our tests through all the examples in Part II and Part III. 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %																	%
