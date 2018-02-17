@@ -10,6 +10,11 @@
 \usepackage{algpseudocode,algorithm}
 \usepackage{tikz}
 \usepackage{todonotes}
+\usepackage{makeidx}
+\usepackage{enumitem}
+
+
+\newcommand{\locpath}{.}
 
 
 \usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2.5cm]{geometry}
@@ -147,11 +152,11 @@ Centre de Recherche en Sciences et Technologies de l'Information et de la Commun
 \addcontentsline{toc}{chapter}{Introduction}
 \input{chapters/introduction}
 % Chapter One
-\input{chapters/1_HPC}
+\input{chapters/part1/part1}
 % Chapter Two 
-\input{chapters/2_cplx}
+\input{chapters/part2/part2}
 % Chapter Three 
-\input{chapters/3_application}
+\input{chapters/part3/part3}
 % Conclusion
 \addcontentsline{toc}{chapter}{Conclusion}
 \input{chapters/conclusion}
@@ -160,6 +165,7 @@ Centre de Recherche en Sciences et Technologies de l'Information et de la Commun
 `\addcontentsline{toc}{chapter}{Annexes}
 \input{chapters/annexes}
 
+\printindex
 
 % Bibliography
 \addcontentsline{toc}{chapter}{Bibliography}

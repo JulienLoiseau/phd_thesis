@@ -10,7 +10,13 @@
 \usepackage{algpseudocode,algorithm}
 \usepackage{tikz}
 \usepackage{todonotes}
+\usepackage{makeidx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{makecell}
 
+
+\newcommand{\locpath}{..}
 
 \usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2.5cm]{geometry}
 
@@ -27,6 +33,9 @@ The Way to Exascale: From Theorics to Applied Problems}
 
 \begin{document}
 
-\input{chapters/1_HPC}
+\input{\locpath/chapters/part1/chap1}
+
+\bibliographystyle{alpha}
+\bibliography{\locpath/biblio/biblio_langford,\locpath/biblio/biblio_graph,\locpath/biblio/biblio_sph,\locpath/biblio/biblio_hpc}
 
 \end{document}
