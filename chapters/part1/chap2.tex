@@ -6,8 +6,6 @@
 
 \chapter{Hardware in HPC}
 
-
-
 \section{Introduction}
 
 Optimization can't be done without a good knowledge of the architecture of the device, machine, or computer. 
@@ -20,13 +18,10 @@ The way they are arranged and the nodes interconnection is something that really
 \subsection{Classical CPU}
 
 The CPU, as we know it today, begin its history with \textit{Texas Instruments Inc} and the first patent describing a CPU is "Computing systems cpu" proposed by \textit{Gary Boone} and published in 1973.
-This first fonctional processing unit on chip and is based on the Von Neumann Model.
-Before that vacuum tubes were used instead of transistors making the space used very high.
+This first fonctional processing unit on chip and is based on the Von Neumann Model presented in chapter 1.
+Before that vacuum tubes were used instead of transistors.
 
-The Von Neumann model can be extracted for the first time by the physists John Von Neumann and its team in \cite{} 
-The Electric Discrete Variable Automatic Computer (EDVAC) presented in this paper was one of the first binary computer built with vacuum tubes. Von Neumann came in the project and summarized the logical aspects of this machine. 
-This model is presented on Fig.~\ref{}.
-since, every devices can be represented based on that model with optimizations in term of number of cores, memory accesses and bus. 
+
 
 VECTORIZATIOONNNNN
 
@@ -36,7 +31,7 @@ We cannot decently present nowadays CPU without presenting the world leader that
 Since 2007 Intel adopted a production model called the "Tick Tock", presented on Fig.~\ref{fig:1_HPC:intel_tick_tock}.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{figures/chap1/intel_tick_tock.png}
+\includegraphics[width=\textwidth]{\locpath/figures/chap1/intel_tick_tock.png}
 \caption{Intel Tick-Tock model}
 \label{fig:1_HPC:intel_tick_tock}
 \end{figure}
@@ -72,7 +67,7 @@ We will describe here the Kepler architecture, this is the one we worked
 \centering
 \setlength\fboxsep{0pt}
 \setlength\fboxrule{0.25pt}
-\includegraphics[scale=0.6]{figures/chap1/smx}
+\includegraphics[scale=0.6]{\locpath/figures/chap1/smx}
 \caption{NVIDIA GPU and CUDA architecture overview}
  \label{fig:chap1_gpu}
 %\vspace{-0.8cm} 
@@ -123,7 +118,7 @@ The Sunway CPUs were invented and built in China, the Vendor is the Shanghai Hig
 
 \begin{figure}
 \centering
-\includegraphics[scale=1]{figures/Chap1/report_sunway_CPE}
+\includegraphics[scale=1]{\locpath/figures/Chap1/report_sunway_CPE}
 \caption{Sunway Taihulight node architecture from \textit{Report on the Sunway TaihuLight System}, Jack Dongarra, June 24, 2016.}
 \label{fig:chap1_report_sunway_CPE}
 \end{figure}

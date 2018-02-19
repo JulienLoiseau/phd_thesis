@@ -22,7 +22,7 @@ The Amhdal's and Gustafson's laws are presented and detailed and thus the Strong
 
 \section{Von Neumann Model}
 \index{Von Neumann Model}
-First computers, in early 20th, were built using vacuum tubes instead of transistors making them very huge, hard to maintain and expansive to create.
+First computers, in early 20th, were built using vacuum tubes making them high power consuming, hard to maintain and expansive to create.
 The most famous of first vacuum tubes supercomputers, The ENIAC, was based on decimal system.
 It might be the most known of first supercomputers but the real revolution came from its successor.
 In 1944 the first binary system based computer, called the Electric Discrete Variable Automatic Computer (EDVAC), was created. 
@@ -38,7 +38,6 @@ In the EDVAC team, a physists described the logical model of this computer and p
 	\draw (3.3,1.5) [fill=white] rectangle (7.7,2.) node[pos=.5] {Registers};
 	\draw (3.3,2.1) [fill=white] rectangle (7.7,2.6) node[pos=.5] {Arithmetic/Logic Unit};
 	\draw (3.3,2.7) [fill=white] rectangle (7.7,3.2) node[pos=.5] {Control Unit};
-
 
 	\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
 	\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
@@ -67,7 +66,8 @@ Several kind of memory exists and will be discussed later.
 \paragraph{Central Processing Unit}
 The Central Processing Unit, CPU, is composed of several elements in this model. 
 On one hand, the Arithmetic and Logic Unit, ALU, which takes as input one or two values and apply an operation on those data. 
-They can be either logics with operations such as AND, OR, XOR, etc. or arithmetique with operations such as ADD, MUL, SUB, etc.
+They can be either logics with operations such as AND, OR, XOR, etc. or arithmetique with operations such as ADD, MUL, SUB, etc. 
+Of course those operations are way more complex on modern CPUs. 
 On the other hand, the Control Unit, CU, which control the data carriage to the ALU from the memory and the operation to be perform on data.
 It is also the part that takes care of the Program Counter (PC), the address of the next instruction in the program. 
 We can also identify the Register section which represent data location used for both ALU and CU to store temporary results, the current instruction address, etc. 
@@ -75,10 +75,10 @@ Some representation may vary, the Registers can be represented directly inside t
 \paragraph{Buses}
 The links between those elements are important and called Buses and can be separated between data buses, control buses and adresses buses.\\
 
-The processing flow on such an architecture can be summarized as a loop: 
+The usual processing flow on such an architecture can be summarized as a loop: 
 \begin{itemize}[noitemsep,nolistsep]
 \item[-] Fetch next instruction from memory;
-\item[-] Decode instruction using the Instruction Set Architecture (ISA), know ISA are Reduce Instruction Set Architecture (RISC) and Complex Instruction Set Architecure (CISC);
+\item[-] Decode instruction using the Instruction Set Architecture (ISA). Known ISA are Reduce Instruction Set Architecture (RISC) and Complex Instruction Set Architecure (CISC);
 \item[-] Evaluate operand(s) address(es);
 \item[-] Fetch operand(s) from memory;
 \item[-] Execute operation(s), with some instructions sets and new architectures several instructions can be processed in the same clock time;
@@ -88,15 +88,15 @@ The processing flow on such an architecture can be summarized as a loop:
 Every devices or machines we will describe in the next chapter will have the same architecture as a basis. 
 
 \subsection{Terminology}
-Before characterizing the exection models, some terminology must be set to describe properly the machines. 
+Before characterizing the execution models, some terminology must be set to describe properly the machines. 
 
 \begin{description}[noitemsep,nolistsep]
-	\item[Core:] A core is a Von Neumann machine. It is basically a CPU. 
+	\item[Core:] A core is a Von Neumann machine. 
 	\item[Socket/Host:] A socket is mistakenly called a CPU in nowadays language. It is, for multi-cores sockets, composed of several cores. The name Host comes from the Host-Device architecture using accelerators. 
 	\item[Accelerators/Devices:] Accelerators are devices that, in addition to the CPU, provide additional computation power. We can identify them as GPUs, FPGAs, ASICs, etc. A socket can have access to one or more accelerators and sockets can also share their usage. 
 	\item[Node:] A node regroup one or more sockets that usually share memory and, linked to the sockets, one or more accelerators. 
-	\item[Cluster/Supercomputer] The cluster group several nodes though an interconnect network. 
-	If they share the same architecture, the cluster is homogeneous and hetegeneous otherwise. 
+	\item[Cluster/Supercomputer] The cluster group several nodes though an interconnect network.
+	% Homogeneous/Heterogeneous  
 \end{description}
 
 \section{Flynn taxonomy and executions models}
@@ -156,7 +156,7 @@ This model describes a stack of SIMD architectures, every block of threads is wo
 This is the model we describe in next chapter used for the \textit{warps} model in NVIDIA CUDA.
 
 \section{Memory}
-In addition of the computational model and parallelism, multi-threading, the memory accesses parterns have a main role on performances especially in SIMD and MIMD. 
+In addition of the execution model and parallelism the memory accesses parterns have a main role on performances especially in SIMD and MIMD. 
 
 Different memory technologies exists and the aim is always greater capacity, better speed and bandwidth while keeping the data integrity.
 
@@ -166,14 +166,19 @@ We present here the volatile memory, represented in the memory part of the Von N
 
 \subsubsection{SRAM}
 The Static Random Access Memory is built using so called "flip-flop" circuits that can store the data as long as the machine is powered. 
-The SRAM and is mainly used for cache memory. 
-This kind of memory is very expensive to produice and is usually limited for small amount of storage. 
+This kind of memory is very expensive to produice due to the number of component needed and the size of the memory.
+Therefore it is usually limited for small amount of storage. 
+The SRAM is mainly used for cache memory. 
+
 Cache is a memory mecanism that is useful to consider when targeting performance. 
-It will be detailled on next part. 
+This little memory is built over several levels. 
+The closer to the CPU is L1, then L2 and generally no more than L3 except on specific architecture. 
+When look for a data the CP will first check the L1 cache, otherwise L2 and L3 to get the data to higher level. 
+This is based on the idea that if a data is used, it shall be use again in the near future. 
 
 \subsubsection{DRAM}
 \index{ECC}
-The Dynamic Random Access Memory, at the opposite to the SRAM, is based on transistors to store the binary information.
+The Dynamic Random Access Memory, at the opposite to the SRAM, is based on transistors and capacitors to store the binary information.
 This memory is less expansive to produice but needs to be refresh at a determined time however the data are lost. 
 There is several sub categories of DRAM used in different devices. 
 
@@ -360,7 +365,7 @@ As the number of processors grows, the program face several of the HPC walls lik
 The increasing number of computational power is reduiced to the sequential part or lose time in communications/exchanges. 
 \paragraph{Hyperlinear speedup}
 In some cases we can observe an hyperlinear speedup, meaning that the results in parallel are even better than the ideal case. 
-This can occur if ihe program can fit exactly in memory for less data on each processors or even fit perfectly for the cache utilization. 
+This can occur if the program can fit exactly in memory for less data on each processors or even fit perfectly for the cache utilization. 
 The parallel algorithm can also be way more efficient than the sequential one. 
 
 The efficiency is defined by the speedup devided by the number of workers: 
@@ -378,7 +383,7 @@ The Amdhal's and Gustafson's laws are ways to evaluate the maximal possible spee
 \index{Amdahl's law}
 The Amdahl's law\cite{amdahl1967validity} is use to find the theoretical speedup in latency of a program.
 We can separate a program into two parts, the one that can be execute in parallel and the one that is sequential. 
-The law atate that even if we reduce the parallel part using an infinity of processes the sequential part will reach 100\% of the total computation time. 
+The law states that even if we reduce the parallel part using an infinity of processes the sequential part will reach 100\% of the total computation time. 
 
 Extracted from the Amdahl paper the law can be writen as: 
 
@@ -391,7 +396,7 @@ Here if we use up to $n=\inf$ processes, $S_n \leq \frac{1}{Seq}$ the sequential
 
 And the efficiency become:
 \begin{equation}
-E_n = \frac{n}{Seq + \frac{Par}{n}}
+E_n = \frac{1}{n\times Seq + Par}
 \end{equation}
 
 \begin{figure}
