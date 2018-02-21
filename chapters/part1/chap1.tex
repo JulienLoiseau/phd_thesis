@@ -187,6 +187,9 @@ The number of data carried can go from 1x to 4x but the limitation of those prod
 
 We can also find Error-Correcting Code, ECC, memory which implements a bunch of data correction algorithm be garanty the validity of them when error is not allowed. 
 
+\todo{MCDRAM}
+\todo{3D memory}
+
 \begin{figure}
 \centering 
 \begin{tikzpicture}[
@@ -312,9 +315,45 @@ Each process or node will then possess its own local memory, that can be share w
 Then, in order to access to other nodes memory, communications through the network have to be done and copyed in local memory. 
 This distributed memory is called No Remote Memory Access (NoRMA).
 
-\section{Speedup, efficiency and scalability}
+\section{FLOPS, Speedup, efficiency and scalability}
 In the previous parts we described the differents executions models, characterizations and memory models for HPC. 
 Based on those tools we need to be able to emphasis the performances of a computer and a cluster. 
+
+\subsection{FLOPS}
+The Floating point Operation Per Second consider the number of floating-point operation that the system will executes in a second. 
+They are an unit of performance for computers, higher FLOPS is better. 
+This is the scale also use to consider supercomputers computational power. 
+For a cluster we can compute the theoretical FLOPS (peak) with:
+\begin{equation}
+FLOPS_{cluster} = \#nodes \times \frac{\#sockets}{\#nodes} \times \frac{\#cores}{\#sockets} \times \frac{\#GHz}{\#core} \times \frac{FLOPS}{cycle}
+\end{equation}
+
+On Fig.\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first world machine is presented. 
+
+\begin{figure}
+\[\arraycolsep=1.4pt\def\arraystretch{2.2}
+\begin{tabular}{| l | l | l || l | l | l |}
+	\hline
+	%\rowstyle{\bfseries}
+	\textbf{Name} & \textbf{FLOPS} & \textbf{Year} & \textbf{Name} & \textbf{FLOPS} & \textbf{Year} \\
+	\hline
+	\hline
+	kiloFLOPS & $10^{3}$ & & petaFLOPS  & $10^{15}$ & 2005 \\ 
+	\hline
+	megaFLOPS & $10^{6}$ & & exaFLOPS   & $10^{18}$ & 2020 ? \\
+	\hline
+	gigaFLOPS & $10^{9}$ & $\approx$ 1980  & zettaFLOPS & $10^{21}$ & \\
+	\hline
+	teraFLOPS & $10^{12}$ & 1996 & yottaFLOPS & $10^{23}$ & \\
+	\hline
+\end{tabular}
+\]
+\caption{Floating-point Operation per Second and years in HPC.}
+\label{tab:1_HPC:flops_year}
+\end{figure}
+
+FLOPS is the main way to reprensent a computer's performance but other ways exists like Instructions Per Seconds (IPS) or Operations Per Second (OPS).
+Some benchmarks also provide their own metrics. 
 
 \subsection{Scalability}
 The scalability express the way a program react to parallelism. 
