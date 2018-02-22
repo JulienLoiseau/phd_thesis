@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%																	%
-%	CHAPTER THREE, SOFTWARE AND API									%
-%																	%
+%								    %
+%	CHAPTER THREE, SOFTWARE AND API				    %
+%								    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -35,6 +35,9 @@ It is based on the fork-join model.
 \cite{chapman2008using,supinski2017scaling}
 
 \subsubsection{Ohters}
+Many other tools handle parallel programming for processors.
+Cilk for C/C++ base, like OpenMP, on Fork-Join paradm. 
+Threads Building Blocks, TBB, from Intel.
 
 \subsection{Distributed}
 In the cluster once the code have been developped locally and using the multiple cores available, the new step is to distribute it all over the nodes of the cluster. 
@@ -46,10 +49,14 @@ The Message Passing Interface, MPI, is the most and widely spread runtime for di
 \cite{gropp2014using,gropp2015using}
 
 \subsubsection{Charm++}
+Charm++ is another API for distributed programming developped by the University of Illinois Urbana-Champaign.
+It is based on asynchronous communications and futures/event mecanism. 
+
 \subsubsection{Legion}
 
 \subsection{Accelerators}
 \subsubsection{CUDA}
+The Compute Device Unified Architecture is the API developpe in C/C++ by NVIDIA to target its GPGPUs. 
 \subsubsection{OpenCL}
 
 \todo{Section for profiling?}
@@ -73,8 +80,7 @@ In conjunction of the TOP500, the GREEN500 focus on the energy consumption of su
 The scale is based on FLOPS per watts~\cite{feng2007green500}.
 
 \subsection{GRAPH500}
-The GRAPH500 is a benchmark focusing on memor
-
+the GRAPH500 benchmark focus on irregular memory accesses, 
 
 
 
