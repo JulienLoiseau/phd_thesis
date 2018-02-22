@@ -52,6 +52,8 @@ The Message Passing Interface, MPI, is the most and widely spread runtime for di
 \subsubsection{CUDA}
 \subsubsection{OpenCL}
 
+\todo{Section for profiling?}
+
 \section{Benchmark}
 
 \subsection{TOP500}
@@ -63,13 +65,18 @@ This benchmark is based on the LINPACK\cite{dongarra1994top500} a benchmark intr
 This benchmark rely on solving  dense system of linear equations. 
 As specified in this document this benchmark is just one of the tools to define the performance of a supercomputer. 
 It reflects "the performance of a dedicated system for solving a dense system of linear equations".
-This kind of benchmark is very regular in computation giving high results. 
+This kind of benchmark is very regular in computation giving high results for FLOPS. 
+
+
+\subsection{GREEN500}
+In conjunction of the TOP500, the GREEN500 focus on the energy consumption of supercomputers. 
+The scale is based on FLOPS per watts~\cite{feng2007green500}.
 
 \subsection{GRAPH500}
+The GRAPH500 is a benchmark focusing on memor
 
 
 
-\subsection{GRENN500}
 
 \section{Conclusion}
 
