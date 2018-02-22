@@ -131,7 +131,7 @@ Grouped into \emph{blocks}, \textit{threads} execute \emph{kernel} functions syn
 Threads within a block can cooperate by sharing data on an SMX and synchronizing their execution to coordinate memory accesses; inside a block, the scheduler organizes \emph{warps} of 32 threads which execute the instructions simultaneously.
 The blocks are distributed over the GPU SMXs to be executed independently.
 
-\subsubsection{Memory, bandwidth and streams:}
+\paragraph{Memory, bandwidth and streams:}
 
 In order to use data in a CUDA kernel, it has to be first created on the CPU, allocated on the GPU and then transferred from the CPU to the GPU; after the kernel execution, the results have to be transferred back from the GPU to the CPU. 
 GPUs consist of several memory categories, organized hierarchically and differing by size, bandwidth and latency.   
@@ -142,13 +142,13 @@ SMXs also have a constant memory cache and a texture memory cache.
 Reaching optimal computing efficiency requires considerable effort while programming.
 Most of the global memory latency can then be hidden by the threads scheduler if there is enough computational effort to be executed while waiting for the global memory access to complete. Another way to hide this latency is to use streams to overlap kernel computation and memory load. 
 
-\subsubsection{Threads synchronization:}
+\paragraph{Threads synchronization:}
 It is also important to note that branching instructions may break the threads synchronous execution inside a warp and thus affect the program efficiency. 
 This is the reason why test-based applications, like combinatorial problems that are inherently irregular, are considered as bad candidates for GPU implementation. 
 %This is particularly true with regard to combinatorial problems resolution. 
 Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
 
-\subsubsection{HPC tools}
+\paragraph{HPC tools}
 Specific tools have been made for HPC in the NVIDIA GPGPUs. 
 \begin{description}[noitemsep,nolistsep]
 	\item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themself. This feature 
@@ -158,26 +158,32 @@ Specific tools have been made for HPC in the NVIDIA GPGPUs.
 
 We give details on the GPU we mainly used in this study in the ROMEO supercomputer center. 
 
-\subsubsection{Details on K20X}
+\paragraph{Details on K20X}
 This NVIDIA Tesla Kepler GPU is based on the GK110 graphics processor describes in the whitepaper\cite{nvidia2012nvidias} on 28nm process.
 This GPU comes in active and passive cooling with respectively K20Xc and K20Xm.
 This GPU embedded 2688 CUDA cores distributed in 14 SMX (we note that GK110 normally provides 15 SMX but only 14 are present4 on the K20X).
-This GPU features 
+In this model each SMX contains 192 single precisions cores, 64 double precision cores, 32 special function units and 32 load/store units.
+In a SMX the memory provides 65536 32-bits registers, 64KB of shared memory L1 cache, 48KB of read-only cache
+The L2 cache is 1546KB shared by the SMX for a total of 6GB of memory adding the DRAM.
+The whole memory is protected using Single‐Error Correct Double‐Error Detect (SECDED) ECC code.
+The power consumption is estimated to 225W.
+This GPGPU is expected to produce 1.31 TFLOPS for double-precision and 3.95 TFLOPS of single-precision.
 
-\todo{Describe K20Xm, 2688 cores}
-
-
-\subsection{AMD}
+\subsubsection{AMD}
 Another company is providing GPUs for HPC, Advanced Micro Devices (AMD). 
 In front of the huge success of NVIDIA GPU that leads from far the HPC market, it is hard for AMD to place its GPGPUs. 
 Their HPC GPUs are called FirePro.
 They are targeting using a language near CUDA called OpenCL. 
+An interessant creation of AMD are the Accelerated Processing Units (APUs) which embedded the processor and the GPU on the same die since 2011. 
+This solution allows them to target the same memory. 
 
 \subsection{FPGA and ASIC}
 Field Programmable Gates Array are device that can de reprogram to fit the needs of the user after their construction.
 The leader was historically Altera with the Stratix, Arria and Cyclone FPGAs and is now part of Intel. 
 With the FPGAs the user have access to the hardware itself and can design its own circuit. 
-Nowadays FPGA can be targeted 
+Nowadays FPGA can be targeted with OpenCL programming language. 
+The arrival of Intel in this market promess the best hopes for HPC version of FPGAs. 
+The main gap for users is the circuit building itself, perfect to respond to specific needs but hard to setup. 
 
 ASICs are dedicated device construct for on purpose. 
 An example of ASIC can be the Gravity Pipe (GRAPE) which is dedicated to compute gravitation given mass/positions.
@@ -188,31 +194,73 @@ Google leads the way for ASIC and just created its dedicated devices to boost AI
 \subsection{Interconnects}
 Interconnect is the way the nodes of a cluster are connected together. 
 Several topologies exists from point to point to multi dimensional torus.
-The most commons are references in Fig
 
-InfiniBand (IB) is the most spread technology used for interconnect with different kind of bandwith.
-\begin{figure}
+\begin{table}
 \begin{center}
 \[\arraycolsep=0.pt\def\arraystretch{1.2}
-\begin{tabular}{| l | l | l | l | l | l | l | l |}
+\begin{tabular}{| l | l | l || l | l | l | }
 \hline
-Name & Single DR & Double DR & Quad DR & Fourth DR & Enhanced DR & Highg DR & Next DR \\
+\textbf{Type} & \textbf{SubType} & \textbf{Diameter} & \textbf{Name} & \textbf{Gbs} & \textbf{Year} \\
 \hline
-Rate (Gbs) & 2.5 & 5 & 10 & 14.0625 & 25.78125 & 50 & 100 \\
 \hline
-Year & 2003 & 2005 & 2007 & 2011 & 2014 & 2017 & 2020 \\
+Trees & & & & & \\
+& Fat Tree & & & & \\
+& k-ary tree & & & & \\
+& Extended Fat Tree & & & &\\
+\hline
+Mesh/Torus & & & & & \\
+& k-ary n-mesh & & & & \\
+& k-ary n-cube & & & & \\
+\hline
+Dragonfly & & & & & \\
+\hline
+HyperX & & & & &  \\
 \hline
 \end{tabular}
 \]
+\caption{InfiniBand technologies}
+\label{fig:1_HPC:topology}
 \end{center}
-\end{figure}
+\end{table}
 
+\todo{Finir table}
+\todo{Ajouter schema des topologies ?}
+The Fig.\ref{fig:1_HPC:topology} list the most famous interconnection network and their diameters.
 
-\subsection{TOP500 remarquable clusters}
+InfiniBand (IB) is the most spread technology used for interconnect with different kind of bandwith presented in Fig.\ref{fig:1_HPC:infiniband}.
+
+\begin{table}
+\begin{center}
+\[\arraycolsep=0.pt\def\arraystretch{1.2}
+\begin{tabular}{| l | l | l || l | l | l | }
+\hline
+\textbf{Name} & \textbf{Gbs} & \textbf{Year} & \textbf{Name} & \textbf{Gbs} & \textbf{Year} \\
+\hline
+\hline
+Single DR & 2.5 & 2003 & Enhanced DR & 25 & 2014 \\
+\hline
+Double DR & 5 & 2005 & Highg DR & 50 & 2017 \\
+\hline
+Quad DR & 10 & 2007 & Next DR & 100 & 2020 \\
+\hline
+Fourth DR & 14 & 2011 & & &  \\
+\hline
+\end{tabular}
+\]
+\caption{InfiniBand technologies}
+\label{fig:1_HPC:infiniband}
+\end{center}
+\end{table}
+
+\subsection{TOP500 remarkable supercomputer}
+The TOP500 is the reference benchmarks for the world size supercomputers. 
+Most of the TOP10 machines have specific architecture and, of course, the most efficient ones. 
+In this section we give details on several supercomputers about their interconnect, processors and specific accelerators. 
+
 \subsubsection{Sunway Taihulight}
 
-Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. \todo{(VERIFIER)}
-A recent report from Jack Dongarra, a figure in HPC, decrypt the architecture of this supercomputer\cite{dongarra2016report}. 
+Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. 
+A recent report from Jack J. Dongarra, a figure in HPC, decrypt the architecture of this supercomputer\cite{dongarra2016report}. 
 The most interessant point is the conception of this machine, completely done in China. 
 The Sunway CPUs were invented and built in China, the Vendor is the Shanghai High Performance IC Design Center. 
 
@@ -223,17 +271,24 @@ The Sunway CPUs were invented and built in China, the Vendor is the Shanghai Hig
 \label{fig:chap1_report_sunway_CPE}
 \end{figure}
 
-The SW26010, a many core architecture, features 260 cores based on RISC architecture and a specific conception depicted on Fig.\ref{fig:chap1_report_sunway_CPE}.
+The SW26010, a many core architecture processor, features 260 cores based on RISC architecture and a specific conception depicted on Fig.\ref{fig:chap1_report_sunway_CPE}. 
+The processor is composed of the master core, a Memory Controller (MC), a Management Processing Element (MPE) that manages the Computing Processing Elements (CPE) which are the slaves cores. 
+
+The interconnect network is called Sunway Network and connected using Melloanix Host Channel Adapter (HCA) and switches. 
+This is a five level interconnect going through computing nodes, computing board, supernodes and cabinets to the complete system.
+The total memory is 1.31 PB and the number of cores available is 10,649,600.
+The peak performance is 125.4 PFLOPS and the Linpack is 93 PFLOPS which induce 74.16\% of efficiency. 
 
 \subsubsection{Piz Daint}
 The supercomputer of the CSCS, Swiss National Supercomputing Center, is currently ranked 2nd of the November 2017 TOP500 list. 
-This GPU accelerated GPU is a most powerful representative of the  
+This GPU accelerated GPU is a most powerful representative of the hybrid architecture featuring processor and accelerators. 
 
 \subsubsection{K-Computer}
 K-Computer was the top 1 supercomputer of TOP500 2011 list. 
 
 The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} and stands for TOrus FUsion.
-This interconnect mixes a 6D Mesh/Torus interconnect to provide up to  ...
+This interconnect mixes a 6D Mesh/Torus interconnect.
+
 
 \subsubsection{Sequoia/Mira}
 Sequoia supercomputer was top 1 of the TOP500 2012 list. 
@@ -268,3 +323,13 @@ In addition to the 130 computations nodes, the cluster provides a visualization 
 The old machine, renamed Clovis, is always available but does not features GPUs. 
 
 The supercomputer supports MPI with GPU Aware and GPUDirect. 
+
+\section{Conclusion}
+
+In this chapter we reviewed the most important nowadays hardware architectures and technologies. 
+In order to use the driver or API in the most efficient way we need to keep in mind the way the data and instructions are proceed by the machine. 
+
+As efficiency is based on computation power but also communications we showed different interconnection topologies and their specificities. 
+
+The TOP500 supercomputers presented here are a perfect use case of the tehcnologies presented and reflect the best human can do with nowadays systems.
+They also show that every architecture is unique in its construction and justify the optimization work dedicated to reach performance.   

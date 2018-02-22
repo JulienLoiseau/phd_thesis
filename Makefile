@@ -13,15 +13,8 @@ display:
 clean:
 	rm -rf *~ *.idx *.lot *.toc *.lof *.aux *.blg *.out *.bbl *.log *.pdf
 
-$(FILE).pdf: $(FILE).tex
+$(FILE).pdf: $(FILE).tex chapters/part1/*.tex chapters/part2/*.tex chapters/part3/*.tex 
 	pdflatex $(FILE)
 	bibtex $(FILE)
 	pdflatex $(FILE)
 	pdflatex $(FILE)
-
-chap1: chapters_alone/chap1.tex
-	cd chapters_alone
-	pdflatex $<
-	bibtex $<
-	pdflatex $<
-	pdflatex $<

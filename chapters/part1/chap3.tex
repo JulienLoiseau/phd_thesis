@@ -4,20 +4,73 @@
 %																	%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Pitfalls, Software and Benchmarks}
 
-\section{Pit falls}
+\chapter{Software and Benchmarks}
 
-load balancing ... 
-concurrence ... 
+\section{Introduction}
+After presenting the rules of HPC and the hardware that compose the cluster we need to introduice ways to target this supercomputer. 
+Several options are present in the language, the multi-processing API, the distribution and the accelerators code. 
+This chapter details the most important software options for HPC programming and include the choices we made for our applications.
+
+Then it presents the software used to benchmark the supercomputers called Benchmarks. 
+We present here the most famous, the TOP500, GRAPH500 and GREEN500 to give their advantages and weaknesses. 
+
+\todo{Parler des pitfalls, load balancing, concurrence, ... ou le faire plus bas.}
 
 \section{Sofware/API}
-\subsection{OpenMP}
-\subsection{MPI}
-\subsection{CUDA}
-\subsection{Charm++}
-\subsection{Legion}
+In this section we present the main runtimes, API and programming language use in HPC and in this study in particular. 
+The considered language will be C/C++, the most present in HPC world.
+
+\subsection{Parallel programming}
+\subsubsection{PThreads}
+The POSIX threads API is an execution model available in most of the languages. 
+It allows the user to define threads that will execute concurrently on the processor ressources using shared/private memory.
+PThreads is the low level handling of threads and the user need to handle concurrency with mutex, conditions variables and synchronization "by hand".
+This makes the PThreads hard to use in complex applications and used only for very fine-grained control over the threads management. 
+\todo{Fine-grain Coarse-grain applications}
+
+\subsubsection{OpenMP}
+Open Multi-Processing, OpenMP, is an API for multi-processing shared memory. 
+It is based on the fork-join model.
+\cite{chapman2008using,supinski2017scaling}
+
+\subsubsection{Ohters}
+
+\subsection{Distributed}
+In the cluster once the code have been developped locally and using the multiple cores available, the new step is to distribute it all over the nodes of the cluster. 
+This step requires the processes to access NoRMA memory from a node to another. 
+Several runtime are possible for this purpose.
+
+\subsubsection{MPI}
+The Message Passing Interface, MPI, is the most and widely spread runtime for distributed computing.
+\cite{gropp2014using,gropp2015using}
+
+\subsubsection{Charm++}
+\subsubsection{Legion}
+
+\subsection{Accelerators}
+\subsubsection{CUDA}
+\subsubsection{OpenCL}
+
 \section{Benchmark}
+
 \subsection{TOP500}
+The most famous benchmark is certainly the TOP500\footnote{http://www.top500.org}. 
+It gives the ranking of the 500 most powerful, known, supercomputers of the world as its name indicates.
+Since 1993 the organization assembles and maintains this list updated twice a year in June and November.
+
+This benchmark is based on the LINPACK\cite{dongarra1994top500} a benchmark introduced by Jack J. Dongarra.
+This benchmark rely on solving  dense system of linear equations. 
+As specified in this document this benchmark is just one of the tools to define the performance of a supercomputer. 
+It reflects "the performance of a dedicated system for solving a dense system of linear equations".
+This kind of benchmark is very regular in computation giving high results. 
+
 \subsection{GRAPH500}
+
+
+
 \subsection{GRENN500}
+
+\section{Conclusion}
+
+

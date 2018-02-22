@@ -108,7 +108,7 @@ This evolution required new paradigms.
 A right characterization is then essential to be able to target the right architecture for the right purpose. 
 The flynn taxonomy presents a hierarchical organization of computation machines and executions models.
 
-\begin{figure}
+\begin{table}
 \begin{center}
 \[\arraycolsep=1.4pt\def\arraystretch{2.2}
 \begin{tabular}{| l | l | l |}
@@ -124,7 +124,7 @@ Multiple Instructions (MI) 	& MISD		& MIMD \\
 \end{center}
 \caption{Flynn's taxonomy}
 \label{fig:1_HPC:flynn_taxonomy}
-\end{figure}
+\end{table}
 
 In this classification~\cite{flynn1972some} from 1972, Michael J. Flynn presents the SIMD, SISD, MISD and MIMD models represented on Fig.~\ref{fig:1_HPC:flynn_taxonomy}.
 Every of those for execution model correspond to a specific machine and function.
@@ -330,7 +330,7 @@ FLOPS_{cluster} = \#nodes \times \frac{\#sockets}{\#nodes} \times \frac{\#cores}
 
 On Fig.\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first world machine is presented. 
 
-\begin{figure}
+\begin{table}
 \[\arraycolsep=1.4pt\def\arraystretch{2.2}
 \begin{tabular}{| l | l | l || l | l | l |}
 	\hline
@@ -350,7 +350,7 @@ On Fig.\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first 
 \]
 \caption{Floating-point Operation per Second and years in HPC.}
 \label{tab:1_HPC:flops_year}
-\end{figure}
+\end{table}
 
 FLOPS is the main way to reprensent a computer's performance but other ways exists like Instructions Per Seconds (IPS) or Operations Per Second (OPS).
 Some benchmarks also provide their own metrics. 
