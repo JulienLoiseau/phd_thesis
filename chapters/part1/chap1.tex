@@ -31,22 +31,22 @@ In the EDVAC team, a physists described the logical model of this computer and p
 \begin{figure}
 \centering 
 \begin{tikzpicture}
-	\draw (3,0) rectangle (8,4);
-	\draw (3.2,1.3) [fill=red!30] rectangle (7.8,3.8);
-	\node at (5.5,3.5) {Central Processing Unit};
+\draw (3,0) rectangle (8,4);
+\draw (3.2,1.3) [fill=red!30] rectangle (7.8,3.8);
+\node at (5.5,3.5) {Central Processing Unit};
 
-	\draw (3.3,1.5) [fill=white] rectangle (7.7,2.) node[pos=.5] {Registers};
-	\draw (3.3,2.1) [fill=white] rectangle (7.7,2.6) node[pos=.5] {Arithmetic/Logic Unit};
-	\draw (3.3,2.7) [fill=white] rectangle (7.7,3.2) node[pos=.5] {Control Unit};
+\draw (3.3,1.5) [fill=white] rectangle (7.7,2.) node[pos=.5] {Registers};
+\draw (3.3,2.1) [fill=white] rectangle (7.7,2.6) node[pos=.5] {Arithmetic/Logic Unit};
+\draw (3.3,2.7) [fill=white] rectangle (7.7,3.2) node[pos=.5] {Control Unit};
 
-	\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
-	\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
-	\draw [->] (2.5,2) -- (3,2);
-	\draw [->] (8,2) -- (8.5,2);
+\draw (0,1.5) rectangle (2.5,2.5) node[pos=.5] {Input device};
+\draw (8.5,1.5) rectangle (11,2.5) node[pos=.5] {Output device};
+\draw [->] (2.5,2) -- (3,2);
+\draw [->] (8,2) -- (8.5,2);
 
-	\draw (3.2,.2) [fill=blue!20] rectangle (7.8,.8) node[pos=.5] {Memory};
-	\draw [->] (4,1.3) -- (4,.8);
-	\draw [->] (7,.8) -- (7,1.3);
+\draw (3.2,.2) [fill=blue!20] rectangle (7.8,.8) node[pos=.5] {Memory};
+\draw [->] (4,1.3) -- (4,.8);
+\draw [->] (7,.8) -- (7,1.3);
 \end{tikzpicture}
 \caption{Von Neumann model}
 \label{fig:1_HPC:von_neumann_model}
@@ -91,11 +91,11 @@ Every devices or machines we will describe in the next chapter will have the sam
 Before characterizing the execution models, some terminology must be set to describe properly the machines. 
 
 \begin{description}[noitemsep,nolistsep]
-	\item[Core:] A core is a Von Neumann machine. 
-	\item[Socket/Host:] A socket is mistakenly called a CPU in nowadays language. It is, for multi-cores sockets, composed of several cores. The name Host comes from the Host-Device architecture using accelerators. 
-	\item[Accelerators/Devices:] Accelerators are devices that, in addition to the CPU, provide additional computation power. We can identify them as GPUs, FPGAs, ASICs, etc. A socket can have access to one or more accelerators and sockets can also share their usage. 
-	\item[Node:] A node regroup one or more sockets that usually share memory and, linked to the sockets, one or more accelerators. 
-	\item[Cluster/Supercomputer] The cluster group several nodes though an interconnect network.
+\item[Core:] A core is a Von Neumann machine. 
+\item[Socket/Host:] A socket is mistakenly called a CPU in nowadays language. It is, for multi-cores sockets, composed of several cores. The name Host comes from the Host-Device architecture using accelerators. 
+\item[Accelerators/Devices:] Accelerators are devices that, in addition to the CPU, provide additional computation power. We can identify them as GPUs, FPGAs, ASICs, etc. A socket can have access to one or more accelerators and sockets can also share their usage. 
+\item[Node:] A node regroup one or more sockets that usually share memory and, linked to the sockets, one or more accelerators. 
+\item[Cluster/Supercomputer] The cluster group several nodes though an interconnect network.
 	% Homogeneous/Heterogeneous  
 \end{description}
 
@@ -193,72 +193,72 @@ We can also find Error-Correcting Code, ECC, memory which implements a bunch of 
 \begin{figure}
 \centering 
 \begin{tikzpicture}[
-  every node/.style = {
-  	level distance=1em,
-  	shape=rectangle, 
-  	rounded corners,
-    draw, 
-    align=center,
+every node/.style = {
+level distance=1em,
+shape=rectangle, 
+rounded corners,
+draw, 
+align=center,
     top color=white%, 
    % bottom color=blue!20
-  }]]
-  \node {MIMD} [sibling distance=12em]
-    child { node {Shared} [sibling distance=7em]
-    	child{node {UMA}} 
-    	child{node {NUMA}
-    		child{node {CC-NUMA}}
-    		child{node {NC-NUMA}}
-    	}
-    	child{node {COMA}}
-    }
-    child { node {Distributed}
-      child { node {NoRMA}}
-    };
-\end{tikzpicture}
-\caption{MIMD memory models}
-\label{fig:1_HPC:mimd_memory_model}
-\end{figure}
+   }]]
+   \node {MIMD} [sibling distance=12em]
+   child { node {Shared} [sibling distance=7em]
+   child{node {UMA}} 
+   child{node {NUMA}
+   child{node {CC-NUMA}}
+   child{node {NC-NUMA}}
+   }
+   child{node {COMA}}
+   }
+   child { node {Distributed}
+   child { node {NoRMA}}
+   };
+   \end{tikzpicture}
+   \caption{MIMD memory models}
+   \label{fig:1_HPC:mimd_memory_model}
+   \end{figure}
 
-The different types of memory for MIMD model are summed up in Fig.\ref{fig:1_HPC:mimd_memory_model}.
-Two main categories can be extract, share or distributed memories. 
+   The different types of memory for MIMD model are summed up in Fig.\ref{fig:1_HPC:mimd_memory_model}.
+   Two main categories can be extract, share or distributed memories. 
 
-\subsection{Shared memory}
-In case of the SISD the memory access is just serial and no really rules needs to be set for its usage. 
-When it comes to multi-threaded and multi-cores like MIMD or SIMD execution models several kind of memory models are possible. 
-We give a description of the most common shared memories architecures. 
+   \subsection{Shared memory}
+   In case of the SISD the memory access is just serial and no really rules needs to be set for its usage. 
+   When it comes to multi-threaded and multi-cores like MIMD or SIMD execution models several kind of memory models are possible. 
+   We give a description of the most common shared memories architecures. 
 
-\hspace*{-2cm}
-\begin{figure}
-\centering 
-\begin{tikzpicture}
-	\draw [rounded corners=15pt,fill=red!40] (0,0) rectangle (2,2) node[pos=.5] {CPU};
-	\draw [rounded corners=15pt,fill=red!40] (3,0) rectangle (5,2) node[pos=.5] {CPU};
+   \hspace*{-2cm}
+   \begin{figure}
+   \centering 
+   \begin{tikzpicture}
+   \draw [rounded corners=15pt,fill=red!40] (0,0) rectangle (2,2) node[pos=.5] {CPU};
+   \draw [rounded corners=15pt,fill=red!40] (3,0) rectangle (5,2) node[pos=.5] {CPU};
 
-	\draw (0,2.5) rectangle (5,3.5) node[pos=.5] {Memory Controller};
+   \draw (0,2.5) rectangle (5,3.5) node[pos=.5] {Memory Controller};
 
-	\draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
-	\draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
-	
-	\draw (3,4) [fill=blue!20] rectangle (5,4.6) node[pos=.5] {RAM};
-	\draw (3,5.2) [fill=blue!20] rectangle (5,5.8) node[pos=.5] {RAM};
+   \draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
+   \draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
+   
+   \draw (3,4) [fill=blue!20] rectangle (5,4.6) node[pos=.5] {RAM};
+   \draw (3,5.2) [fill=blue!20] rectangle (5,5.8) node[pos=.5] {RAM};
 
-	\draw [-] (2,1) -- (3,1);
-	\draw [-] (2.5,1) -- (2.5,2.5);
+   \draw [-] (2,1) -- (3,1);
+   \draw [-] (2.5,1) -- (2.5,2.5);
 	%\node at (2.5,2.2) {SDR, DDR, QDR};
 	\node at (2.5,1.8) {links};
 
 	\draw [-] (2.5,3.5) -- (2.5,5.5);
 	\draw [-] (2,4.3) -- (3,4.3);
 	\draw [-] (2,5.5) -- (3,5.5);
-\end{tikzpicture}
-\hspace{1cm}
-\begin{tikzpicture}
+	\end{tikzpicture}
+	\hspace{1cm}
+	\begin{tikzpicture}
 	\draw [rounded corners=15pt,fill=red!40] (0,0) rectangle (2,2) node[pos=.5] {CPU};
 	\draw (3,0.1) [fill=blue!20] rectangle (5,0.7) node[pos=.5] {RAM};
 	\draw (3,1.3) [fill=blue!20] rectangle (5,1.9) node[pos=.5] {RAM};
 	\draw [-] (2,0.4) -- (3,0.4);
 	\draw [-] (2,1.6) -- (3,1.6);
- 	
+	
 	\draw [rounded corners=15pt,fill=red!40] (3,3.8) rectangle (5,5.8) node[pos=.5] {CPU};
 	\draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
 	\draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
@@ -267,7 +267,7 @@ We give a description of the most common shared memories architecures.
 
 	\draw [<->] (1,2) -- (4,3.8);
 	\node at (1.5,3) {QPI-LDT};
-\end{tikzpicture}
+	\end{tikzpicture}
 %\hspace{1cm}
 %\begin{tikzpicture}
 %	\draw [rounded corners=15pt] (1,0) rectangle (3,2) node[pos=.5] {CPU};
@@ -333,7 +333,7 @@ On Fig.\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first 
 \begin{table}
 \[\arraycolsep=1.4pt\def\arraystretch{2.2}
 \begin{tabular}{| l | l | l || l | l | l |}
-	\hline
+\hline
 	%\rowstyle{\bfseries}
 	\textbf{Name} & \textbf{FLOPS} & \textbf{Year} & \textbf{Name} & \textbf{FLOPS} & \textbf{Year} \\
 	\hline
@@ -346,134 +346,134 @@ On Fig.\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first 
 	\hline
 	teraFLOPS & $10^{12}$ & 1996 & yottaFLOPS & $10^{23}$ & \\
 	\hline
-\end{tabular}
-\]
-\caption{Floating-point Operation per Second and years in HPC.}
-\label{tab:1_HPC:flops_year}
-\end{table}
+	\end{tabular}
+	\]
+	\caption{Floating-point Operation per Second and years in HPC.}
+	\label{tab:1_HPC:flops_year}
+	\end{table}
 
-FLOPS is the main way to reprensent a computer's performance but other ways exists like Instructions Per Seconds (IPS) or Operations Per Second (OPS).
-Some benchmarks also provide their own metrics. 
+	FLOPS is the main way to reprensent a computer's performance but other ways exists like Instructions Per Seconds (IPS) or Operations Per Second (OPS).
+	Some benchmarks also provide their own metrics. 
 
-\subsection{Scalability}
-The scalability express the way a program react to parallelism. 
-When an algorithm is implemented on a serial machine and is ideal to solve a problem, one may consider to use it on more than one core, socket, node or even cluster. 
-Indeed, one may expect less computation time, bigger problem or a combination of both while using more ressources. 
-This completely depend on the algorithm parallelisation and is expressed through scalability. 
-A scalable program will scale on as many processors as we give, whereas a poorly scalable one will give same of even worst results as the serial code.  
-Scalability can be approch using speedup and efficiency.
+	\subsection{Scalability}
+	The scalability express the way a program react to parallelism. 
+	When an algorithm is implemented on a serial machine and is ideal to solve a problem, one may consider to use it on more than one core, socket, node or even cluster. 
+	Indeed, one may expect less computation time, bigger problem or a combination of both while using more ressources. 
+	This completely depend on the algorithm parallelisation and is expressed through scalability. 
+	A scalable program will scale on as many processors as we give, whereas a poorly scalable one will give same of even worst results as the serial code.  
+	Scalability can be approch using speedup and efficiency.
 
-\subsection{Speedup and efficiency}
-The latency is the time necessary to complete a task in a program.
-\index{latency} 
-Lower latency is better. 
+	\subsection{Speedup and efficiency}
+	The latency is the time necessary to complete a task in a program.
+	\index{latency} 
+	Lower latency is better. 
 
-The speedup compare the latency of both sequential and parallel algorithm. 
-In order to get relevent results, one may consider the best serial program against the best parallel implementation.
+	The speedup compare the latency of both sequential and parallel algorithm. 
+	In order to get relevent results, one may consider the best serial program against the best parallel implementation.
 
-Considering $n$ the number of processes and $n=1$ the sequential case.
-And $T_n$ the execution time with $n$ processes and $T_1$ with one process, the sequential execution time. 
-The speedup can be defined using the latency by the formula: 
-\index{Speedup}
-\begin{equation}
-\text{speedup} = S_n =  \frac{T_1}{T_n}
-\end{equation}
-
-
-\begin{figure}
-\centering 
-\begin{tikzpicture}
-  \draw[->] (-.5,0) -- (4,0) node[right] {$n$};
-  \draw[->] (0,-.5) -- (0,2.5) node[above] {$speepup$};
-  \draw (0,0) -- (4,2) node[right] {\text{Linear Speedup}};
-  \draw (0,0) .. controls (3.5,1.3) .. (4.,1.2) node[right] {\text{Typical Speedup}} ;
-  \draw (0,0) .. controls (3.5,2.2) .. (4.,2.2) node[above] {\text{Hyperlinear speedup}} ;
-\end{tikzpicture}
-\caption{Observed speedup}
-\label{fig:1_HPC:speedup_obs}
-\end{figure}
-
-As shown on figure \ref{fig:1_HPC:speedup_obs} several kind of speedup can be observed. 
-\paragraph{Linear}
-The linear speedup usually represents the target for every program in HPC. 
-Indeed, having the speedup growing exactly as the number of processors grows is the ideal case. 
-Codes fall typical into two cases, typical and hyperlinear speedup. 
-\paragraph{Typical speedup}
-This represents the most common observed speedup. 
-As the number of processors grows, the program face several of the HPC walls like communications wall or memory wall. 
-The increasing number of computational power is reduiced to the sequential part or lose time in communications/exchanges. 
-\paragraph{Hyperlinear speedup}
-In some cases we can observe an hyperlinear speedup, meaning that the results in parallel are even better than the ideal case. 
-This can occur if the program can fit exactly in memory for less data on each processors or even fit perfectly for the cache utilization. 
-The parallel algorithm can also be way more efficient than the sequential one. 
-
-The efficiency is defined by the speedup devided by the number of workers: 
-\index{Efficiency}
-\begin{equation}
-\text{efficiency} = E_n = \frac{S_n}{n} = \frac{T_1}{nT_n}
-\end{equation}
-The efficiency, expressed in percent, represent the evolution of the code stability to growing number of processors. 
-As the number of processes grows, a scalable application will keep an efficiency near 100\%.
-
-\section{Amdhal's and Gustafson's law}
-The Amdhal's and Gustafson's laws are ways to evaluate the maximal possible speedup for an application taking in account different characteristics. 
-
-\subsection{Amdahl's law}
-\index{Amdahl's law}
-The Amdahl's law\cite{amdahl1967validity} is use to find the theoretical speedup in latency of a program.
-We can separate a program into two parts, the one that can be execute in parallel and the one that is sequential. 
-The law states that even if we reduce the parallel part using an infinity of processes the sequential part will reach 100\% of the total computation time. 
-
-Extracted from the Amdahl paper the law can be writen as: 
-
-\begin{equation}
-S_n = \frac{1}{Seq + \frac{Par}{n}}
-\end{equation}
-
-Where $Seq + Par = 1$ and $Seq$ and $Par$ respectively the sequential and parallel ratio of a program.
-Here if we use up to $n=\inf$ processes, $S_n \leq \frac{1}{Seq}$ the sequential part of the code become the most time consumming. 
-
-And the efficiency become:
-\begin{equation}
-E_n = \frac{1}{n\times Seq + Par}
-\end{equation}
-
-\begin{figure}
-\includegraphics[width=\textwidth]{\locpath/figures/chap1/speedup_laws.png}
-\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) law}
-\label{fig:1_HPC:speedup_laws}
-\end{figure}
-
-A representation of Amdahl's speedup is presented on Fig.~\ref{fig:1_HPC:speedup_laws} with varying percentage of serial part. 
-The parallel part is like $Par = (100-Ser)\%$.
-
-\subsection{Gustafson's law}
-\index{Gustfson's law}
-The Amdhal's law is focused on time with problem of the same size. 
-John L. Gustafson's idea is that using more computational units, the problem size can grow accordingly. 
-He considered a constant computation time with evolving problem, growing the size accordingly to the number of processes. 
-Indeed the parallel part grows as the problem size do, reducing the percentage of the serial part for the overall resolution.
-
-The speedup can now be estimated by:
-\begin{equation}
-S_n = Seq + Par \times n
-\end{equation}
-
-And the effiencity: 
-\begin{equation}
-E_n = \frac{Seq}{n} + Par
-\end{equation}
+	Considering $n$ the number of processes and $n=1$ the sequential case.
+	And $T_n$ the execution time with $n$ processes and $T_1$ with one process, the sequential execution time. 
+	The speedup can be defined using the latency by the formula: 
+	\index{Speedup}
+	\begin{equation}
+	\text{speedup} = S_n =  \frac{T_1}{T_n}
+	\end{equation}
 
 
-Both Amdahl's and Gustafson's law are correct and they represent two solution to check the speedup of our applications. 
-The strong scaling\index{Strong scaling}, looking at how the computation time vary evolving only the number of processes, not the problem size. 
-The weak scaling\index{Weak scaling}, at opposite to strong scaling we look how the computation time evolute varying the problem size keeping the same amount of work per processes. 
+	\begin{figure}
+	\centering 
+	\begin{tikzpicture}
+	\draw[->] (-.5,0) -- (4,0) node[right] {$n$};
+	\draw[->] (0,-.5) -- (0,2.5) node[above] {$speepup$};
+	\draw (0,0) -- (4,2) node[right] {\text{Linear Speedup}};
+	\draw (0,0) .. controls (3.5,1.3) .. (4.,1.2) node[right] {\text{Typical Speedup}} ;
+	\draw (0,0) .. controls (3.5,2.2) .. (4.,2.2) node[above] {\text{Hyperlinear speedup}} ;
+	\end{tikzpicture}
+	\caption{Observed speedup}
+	\label{fig:1_HPC:speedup_obs}
+	\end{figure}
 
-\section{Conclusions}
+	As shown on figure \ref{fig:1_HPC:speedup_obs} several kind of speedup can be observed. 
+	\paragraph{Linear}
+	The linear speedup usually represents the target for every program in HPC. 
+	Indeed, having the speedup growing exactly as the number of processors grows is the ideal case. 
+	Codes fall typical into two cases, typical and hyperlinear speedup. 
+	\paragraph{Typical speedup}
+	This represents the most common observed speedup. 
+	As the number of processors grows, the program face several of the HPC walls like communications wall or memory wall. 
+	The increasing number of computational power is reduiced to the sequential part or lose time in communications/exchanges. 
+	\paragraph{Hyperlinear speedup}
+	In some cases we can observe an hyperlinear speedup, meaning that the results in parallel are even better than the ideal case. 
+	This can occur if the program can fit exactly in memory for less data on each processors or even fit perfectly for the cache utilization. 
+	The parallel algorithm can also be way more efficient than the sequential one. 
 
-In this chapter we presented the different basic tools to be able to understand HPC. 
-The Von Neumann model that represent every nowadays architecture. 
-The Flynn taxonomy that is in constant evolution with new paradigms like recent SIMT from NVIDIA. 
-We also presented the memory types that will be use at different layers in our clusters, from node memory, CPU-GPGPU shared memory space to global fast shared memory. 
-We finished by presenting the most important laws with Amdahl's and Gustafson's laws.
-We introduice the concept of Strong and Weak scaling that will lead our tests through all the examples in Part II and Part III. 
+	The efficiency is defined by the speedup devided by the number of workers: 
+	\index{Efficiency}
+	\begin{equation}
+	\text{efficiency} = E_n = \frac{S_n}{n} = \frac{T_1}{nT_n}
+	\end{equation}
+	The efficiency, expressed in percent, represent the evolution of the code stability to growing number of processors. 
+	As the number of processes grows, a scalable application will keep an efficiency near 100\%.
+
+	\section{Amdhal's and Gustafson's law}
+	The Amdhal's and Gustafson's laws are ways to evaluate the maximal possible speedup for an application taking in account different characteristics. 
+
+	\subsection{Amdahl's law}
+	\index{Amdahl's law}
+	The Amdahl's law\cite{amdahl1967validity} is use to find the theoretical speedup in latency of a program.
+	We can separate a program into two parts, the one that can be execute in parallel and the one that is sequential. 
+	The law states that even if we reduce the parallel part using an infinity of processes the sequential part will reach 100\% of the total computation time. 
+
+	Extracted from the Amdahl paper the law can be writen as: 
+
+	\begin{equation}
+	S_n = \frac{1}{Seq + \frac{Par}{n}}
+	\end{equation}
+
+	Where $Seq + Par = 1$ and $Seq$ and $Par$ respectively the sequential and parallel ratio of a program.
+	Here if we use up to $n=\inf$ processes, $S_n \leq \frac{1}{Seq}$ the sequential part of the code become the most time consumming. 
+
+	And the efficiency become:
+	\begin{equation}
+	E_n = \frac{1}{n\times Seq + Par}
+	\end{equation}
+
+	\begin{figure}
+	\includegraphics[width=\textwidth]{\locpath/figures/chap1/speedup_laws.png}
+	\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) law}
+	\label{fig:1_HPC:speedup_laws}
+	\end{figure}
+
+	A representation of Amdahl's speedup is presented on Fig.~\ref{fig:1_HPC:speedup_laws} with varying percentage of serial part. 
+	The parallel part is like $Par = (100-Ser)\%$.
+
+	\subsection{Gustafson's law}
+	\index{Gustfson's law}
+	The Amdhal's law is focused on time with problem of the same size. 
+	John L. Gustafson's idea is that using more computational units, the problem size can grow accordingly. 
+	He considered a constant computation time with evolving problem, growing the size accordingly to the number of processes. 
+	Indeed the parallel part grows as the problem size do, reducing the percentage of the serial part for the overall resolution.
+
+	The speedup can now be estimated by:
+	\begin{equation}
+	S_n = Seq + Par \times n
+	\end{equation}
+
+	And the effiencity: 
+	\begin{equation}
+	E_n = \frac{Seq}{n} + Par
+	\end{equation}
+
+
+	Both Amdahl's and Gustafson's law are correct and they represent two solution to check the speedup of our applications. 
+	The strong scaling\index{Strong scaling}, looking at how the computation time vary evolving only the number of processes, not the problem size. 
+	The weak scaling\index{Weak scaling}, at opposite to strong scaling we look how the computation time evolute varying the problem size keeping the same amount of work per processes. 
+
+	\section{Conclusions}
+
+	In this chapter we presented the different basic tools to be able to understand HPC. 
+	The Von Neumann model that represent every nowadays architecture. 
+	The Flynn taxonomy that is in constant evolution with new paradigms like recent SIMT from NVIDIA. 
+	We also presented the memory types that will be use at different layers in our clusters, from node memory, CPU-GPGPU shared memory space to global fast shared memory. 
+	We finished by presenting the most important laws with Amdahl's and Gustafson's laws.
+	We introduice the concept of Strong and Weak scaling that will lead our tests through all the examples in Part II and Part III. 

@@ -8,7 +8,7 @@
 
 \section{Introduction}
 
-Optimization can't be done without a good knowledge of the architecture of device, machine, or computer. 
+Optimization can't be done without a good knowledge of the architecture of devices, machines, or computers. 
 Indeed, nowadays software and API try to take care of most of the optimizations but the last percents of gain always need to be architecture dependent. 
 In this chapter we describe the most important devices architecures from classical processors, General Purpose Graphics Processing Units (GPGPUs), Field Programmable Gate Arrays (FPGAs) and Application-specific integrated circuits (ASICs).
 Then those independants elements are use together in order to build supercomputers. 
@@ -17,21 +17,22 @@ The way they are arranged and the nodes interconnection is something that matter
 \section{Architectures}
 In this section we will describe the main nowadays architecture from HPC world and their specificities.
 
-The CPU, as we know it today, begins its history with \textit{Texas Instruments Inc} and the first patent describing a CPU is "Computing systems cpu" proposed by \textit{Gary Boone} and published in 1973.
+The CPU, as we know it today, begins its history around 1970s.
 It is the reflection of the Von Neumann Machine we presented in Chapter I. 
-
-From this first version plenty of optimizations arised. 
+Historically more features were added to this simple core machine, going from 4 bits 1971 (Intel 4004), 8 bits in 1972 (Intel 8008), 12 bits, 16 bits, 32 bits and 64 bits bus size for recent CPUs. 
+The CPUs also get a huge performance gain based on the frequency acceleration, from the 100kHz to GHz nowadays. 
+Plenty of other optimizations arised:
 \begin{description}[noitemsep,nolistsep]
-	\item[Multiple CPU cores] Multiple CPU cores on the same die. They can have independant or share part of the cache and access to the same main memory. The first machine were the IBM power4 with dual core.
-	\item[In/Out-Of-Order] In-order-process is the one describes in previous chapter, the CU fetches instruction in memory, then the operands and the ALU computes, and finally the results is stored in memory. 
-	In this model the time to perform an instruction, cumulation of instruction fetching + operand fetching + computation + store the resul, can be high and the ALU itself is busy only one step for computation itself. The idea of Out-of-order is to compute the instructions without following the PC order. Indeed, for independant tasks (this is know based on dependancy graphs) while the process fetch the next instructions data, the ALU can perform another operation with already available data. 
-	\item[Prefetching] When a data is not available in L1 cache, it has to be moved from either L2 to L1 or L3 to L2 to L1 or in the worst case RAM to L3 to L2 to L1. Prefecthing technology is a way to, knowing the next instructions operands, prefetch the data in closer cache. The prefetch can either be hardware or software implemented and can concern data and even instructions.
-	\item[Vectorization] Processors allows the instructions to be executed at the same time in a SIMD manner. If the same instruction is executed on coalescent data they can be executed in the same clock cycle. 
+	\item[Multiple CPU cores:] Multiple CPU cores on the same die. They can have independant or share part of the cache and access to the same main memory. The first machine were the IBM power4 with dual core.
+	\item[In/Out-Of-Order:] In-order-process is the one describes in previous chapter, the CU fetches instruction in memory, then the operands and the ALU computes, and finally the results is stored in memory. 
+	In this model the time to perform an instruction, cumulation of instruction fetching + operand fetching + computation + store the result, can be high and the ALU itself is busy only one step for computation itself. The idea of Out-of-order is to compute the instructions without following the Porgram Counter order. Indeed, for independant tasks (this is know based on dependancy graphs) while the process fetch the next instructions data, the ALU can perform another operation with already available data. 
+	\item[Prefetching:] When a data is not available in L1 cache, it has to be moved from either L2 to L1 or L3 to L2 to L1 or in the worst case RAM to L3 to L2 to L1. Prefecthing technology is a way to, knowing the next instructions operands, prefetch the data in closer cache. The prefetch can either be hardware or software implemented and can concern data and even instructions.
+	\item[Vectorization:] Processors allows the instructions to be executed at the same time in a SIMD manner. If the same instruction is executed on coalescent data they can be executed in the same clock cycle. 
 	Of course this tool require specific care during coding. 
 \end{description}
 Those optimizations can be found either in the classical processor model or accelerators.  
 
-\subsection{Classical processors}
+\subsection{Multi-core}
 
 Nowadays processors share mostly the same architecture. 
 They are called multi-cores and provide up to 2 to 16 cores and each constructor have its own specificities. 
@@ -67,17 +68,6 @@ Adding more computation per node can technically allows the cores to switch cont
 A lot of studies have been released on HT from Intel itself~\cite{marr2002hyperthreading} to other studies~\cite{bononi2006exploring,leng2002empirical}.
 This does not fit to all the cases and can be disable for normal use of the processors. 
 
-\subsubsection{Xeon Phi}
-Another specific HPC product from Intel is the Xeon Phi. 
-This device can be considered as a Host or Device/Accelerator machine. 
-Intel describes it as "a bootable host processor that delivers massive parallism and vectorization".
-This architecture embedded multiple multi-cores processors interconnected. 
-This is call Intel's Many Integrated Core (MIC).
-The architectures names are Knights Ferry, Knights Ferry, Knights Corner and Knight Landing~\cite{sodani2016knights}. 
-The last architecture, Knight Hill, was recently canceled by Intel. 
-The main advantage of this architecture compared to GPGPUs is the x86 compatibility of the embedded cores and the fact this device can boot and use to drive other accelerators. 
-They also feature more complex operations and handle double precision natively. 
-
 \subsubsection{ARM}
 Back in 1980s, ARM stood for Acorn RISC Machine in reference of the first company implementing this kind of architecture, Acorn Computers. 
 This company later changed to Advanced RISC Machine (ARM). 
@@ -98,14 +88,17 @@ For the Exascale project in Horizon 2020 this project focus on using ARM-based s
 The project is decomposed in several steps to finaly reach Exascale near 2020. 
 The third step, Mont-Blanc 3, is about to work on a pre-exascale prototype powered by Cavium’s ThunderX2 ARM chip based on 64-bits ARMv8.
 
-\subsection{GPGPU}
+\subsection{Many-cores}
+
+\subsubsection{GPU}
 
 GPUs are based on the SIMD model of the Flynn taxonomy presented previously, \emph{Single Instruction, Multiple Data}.
 The specific execution model is called SIMT (\emph{Single Instruction, Multiple Thread}). It enables the execution of millions of coordinated threads in a data-parallel mode. 
-Two main companies provide GPGPUs for HPC: NVIDIA and AMD.
-We will present them in that order and conclude on the differences. 
+They are called many-core architectures.
 
-\subsubsection{NVIDIA GPU architecture}
+Two main companies provide GPGPUs for  HPC: NVIDIA and AMD.
+
+\paragraph{NVIDIA GPU architecture}
 
 The NVIDIA company was fonded in April 1993 in Santa Clara, Carolina, by three persons in which Jensen Huang, the actual CEO.
 Its name seems to come from \textit{invidia} the latin word for Envy and vision, for the graphics generation. 
@@ -127,12 +120,11 @@ The public GPUs can also be use for dedicated computation but does not feature E
 As presented in Fig.\ref{fig:chap1_gpu}, NVIDIA GPUs include many \emph{Streaming Multiprocessors} (SM), each of which is composed of many \emph{Streaming Processors} (SP). In the Kepler architecture, the SM new generation is called SMX.
 %
 %In the CUDA programing model~\cite{cuda}, the GPU works as a SIMT co-processor of a conventional CPU. 
-Grouped into \emph{blocks}, \textit{threads} execute \emph{kernel} functions synchronously.
+Grouped into \emph{blocks}, \textit{threads} execute \emph{kernels} functions synchronously.
 Threads within a block can cooperate by sharing data on an SMX and synchronizing their execution to coordinate memory accesses; inside a block, the scheduler organizes \emph{warps} of 32 threads which execute the instructions simultaneously.
 The blocks are distributed over the GPU SMXs to be executed independently.
 
-\paragraph{Memory, bandwidth and streams:}
-
+%Memory, bandwidth and streams:
 In order to use data in a CUDA kernel, it has to be first created on the CPU, allocated on the GPU and then transferred from the CPU to the GPU; after the kernel execution, the results have to be transferred back from the GPU to the CPU. 
 GPUs consist of several memory categories, organized hierarchically and differing by size, bandwidth and latency.   
 On the one hand, the device's main memory is relatively large but has a slow access time due to a huge latency. 
@@ -142,13 +134,13 @@ SMXs also have a constant memory cache and a texture memory cache.
 Reaching optimal computing efficiency requires considerable effort while programming.
 Most of the global memory latency can then be hidden by the threads scheduler if there is enough computational effort to be executed while waiting for the global memory access to complete. Another way to hide this latency is to use streams to overlap kernel computation and memory load. 
 
-\paragraph{Threads synchronization:}
+%Threads synchronization:
 It is also important to note that branching instructions may break the threads synchronous execution inside a warp and thus affect the program efficiency. 
 This is the reason why test-based applications, like combinatorial problems that are inherently irregular, are considered as bad candidates for GPU implementation. 
 %This is particularly true with regard to combinatorial problems resolution. 
-Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
+%Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
 
-\paragraph{HPC tools}
+%HPC tools
 Specific tools have been made for HPC in the NVIDIA GPGPUs. 
 \begin{description}[noitemsep,nolistsep]
 	\item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themself. This feature 
@@ -157,8 +149,6 @@ Specific tools have been made for HPC in the NVIDIA GPGPUs.
 \end{description}
 
 We give details on the GPU we mainly used in this study in the ROMEO supercomputer center. 
-
-\paragraph{Details on K20X}
 This NVIDIA Tesla Kepler GPU is based on the GK110 graphics processor describes in the whitepaper\cite{nvidia2012nvidias} on 28nm process.
 This GPU comes in active and passive cooling with respectively K20Xc and K20Xm.
 This GPU embedded 2688 CUDA cores distributed in 14 SMX (we note that GK110 normally provides 15 SMX but only 14 are present4 on the K20X).
@@ -169,13 +159,34 @@ The whole memory is protected using Single‐Error Correct Double‐Error Detect
 The power consumption is estimated to 225W.
 This GPGPU is expected to produce 1.31 TFLOPS for double-precision and 3.95 TFLOPS of single-precision.
 
-\subsubsection{AMD}
+\paragraph{AMD}
 Another company is providing GPUs for HPC, Advanced Micro Devices (AMD). 
 In front of the huge success of NVIDIA GPU that leads from far the HPC market, it is hard for AMD to place its GPGPUs. 
 Their HPC GPUs are called FirePro.
 They are targeting using a language near CUDA called OpenCL. 
 An interessant creation of AMD are the Accelerated Processing Units (APUs) which embedded the processor and the GPU on the same die since 2011. 
 This solution allows them to target the same memory. 
+
+In the race to market and performances, AMD found a accord with Intel to provide dies featuring Intel processor, AMD GPU and common HBM memory. 
+The project is call  Kaby Lake-G and announce for first semester of 2018 but for public, not HPC itself. 
+
+\subsubsection{Intel Xeon Phi}
+Another specific HPC product from Intel is the Xeon Phi. 
+This device can be considered as a Host or Device/Accelerator machine. 
+Intel describes it as "a bootable host processor that delivers massive parallism and vectorization".
+This architecture embedded multiple multi-cores processors interconnected. 
+This is call Intel's Many Integrated Core (MIC).
+The architectures names are Knights Ferry, Knights Corner and Knight Landing~\cite{sodani2016knights}. 
+The last architecture, Knight Hill, was recently canceled by Intel due to performances and to recentrate the Xeon Phi for Exascale.
+The main advantage of this architecture compared to GPGPUs is the x86 compatibility of the embedded cores and the fact this device can boot and use to drive other accelerators. 
+They also feature more complex operations and handle double precision natively. 
+
+
+\subsubsection{PEZY}
+Another many-core architecture just appears in the last benchmarks. 
+The PEZY Super Computer 2, PEZY-SC2, is the third many-core microprocessor developed by the company PEZY. 
+The three first machine ranked in the GREEN500 list are accelerator using this many-core die. 
+We also note that in the November 2017 list the 4th supercomputer, Gyoukou, is also powered by PEZY-SC2 cards.
 
 \subsection{FPGA and ASIC}
 Field Programmable Gates Array are device that can de reprogram to fit the needs of the user after their construction.
@@ -223,6 +234,444 @@ HyperX & & & & &  \\
 \end{center}
 \end{table}
 
+\begin{figure}
+\centering
+\begin{tikzpicture}[thick,inner sep=0.1cm]
+	
+	\node [fill,circle,red] (node 1000) at (0,0) {};
+	\node [fill,circle] (node 1001) at (1,0) {};
+	\node [fill,circle] (node 1002) at (2,0) {};
+	\node [fill,circle] (node 1003) at (0,1) {};
+	\node [fill,circle] (node 1004) at (1,1) {};
+	\node [fill,circle] (node 1005) at (2,1) {};
+	\node [fill,circle] (node 1006) at (0,2) {};
+	\node [fill,circle] (node 1007) at (1,2) {};
+	\node [fill,circle,red] (node 1008) at (2,2) {};
+	
+	\draw (node 1000)
+							         .. controls +(0.500000,-1.000000)
+							                 and +(0.500000,1.000000)
+							         .. (node 1006);
+	\draw[red] (node 1000)
+							         .. controls +(-1.000000,0.500000)
+							                 and +(1.000000,0.500000)
+							         .. (node 1002);
+	\draw (node 1000) -- (node 1001);
+	\draw (node 1000) -- (node 1003);
+	\draw (node 1001) -- (node 1004);
+	\draw (node 1001)
+							         .. controls +(0.500000,-1.000000)
+							                 and +(0.500000,1.000000)
+							         .. (node 1007);
+	\draw (node 1002) -- (node 1005);
+	\draw (node 1002) -- (node 1001);
+	\draw[red] (node 1002)
+							         .. controls +(0.500000,-1.000000)
+							                 and +(0.500000,1.000000)
+							         .. (node 1008);
+	
+	\draw (node 1003)
+							         .. controls +(-1.000000,0.500000)
+							                 and +(1.000000,0.500000)
+							         .. (node 1005);
+	\draw (node 1003) -- (node 1006);
+	\draw (node 1003) -- (node 1004);
+	\draw (node 1004) -- (node 1005);
+	\draw (node 1004) -- (node 1007);
+	\draw (node 1005) -- (node 1008);
+	\draw (node 1006)
+							         .. controls +(-1.000000,0.500000)
+							                 and +(1.000000,0.500000)
+							         .. (node 1008);
+	\draw (node 1006) -- (node 1007);
+	\draw (node 1007) -- (node 1008);
+
+\end{tikzpicture}
+\vspace{1cm}
+\begin{tikzpicture}[thick,inner sep=0.1cm]
+	
+	\node [fill,circle,red] (node a) at (0,0) {};
+	\node [fill,circle] (node b) at (1,0) {};
+	\node [fill,circle] (node c) at (2,0) {};
+	\node [fill,circle] (node d) at (3,0) {};
+	\node [fill,circle] (node e) at (4,0) {};
+	\node [fill,circle] (node f) at (5,0) {};
+	\node [fill,circle] (node g) at (6,0) {};
+	\node [fill,circle,red] (node h) at (7,0) {};
+
+	\node [fill,circle,black!50] (node a0) at (0.5,1) {};
+	\node [fill,circle,black!50] (node a1) at (2.5,1) {};
+	\node [fill,circle,black!50] (node a2) at (4.5,1) {};
+	\node [fill,circle,black!50] (node a3) at (6.5,1) {};
+	\node [fill,circle,black!50] (node a4) at (0.5,2) {};
+	\node [fill,circle,black!50] (node a5) at (2.5,2) {};
+	\node [fill,circle,black!50] (node a6) at (4.5,2) {};
+	\node [fill,circle,black!50] (node a7) at (6.5,2) {};
+
+	\node [fill,circle,black!50] (node n0) at (2.33,3) {};
+	\node [fill,circle,black!50] (node n1) at (4.66,3) {};
+
+	\draw[red] (node a) -- (node a0);
+	\draw (node b) -- (node a0);
+	\draw (node c) -- (node a1);
+	\draw (node d) -- (node a1);
+	\draw (node e) -- (node a2);
+	\draw (node f) -- (node a2);
+	\draw (node g) -- (node a3);
+	\draw[red] (node h) -- (node a3);
+
+	\draw[red] (node a0) -- (node a4);
+	\draw (node a0) -- (node a5);
+	\draw (node a1) -- (node a4);
+	\draw (node a1) -- (node a5);
+	\draw (node a2) -- (node a6);
+	\draw (node a2) -- (node a7);
+	\draw (node a3) -- (node a6);
+	\draw[red] (node a3) -- (node a7);
+
+	\draw[red] (node n0) -- (node a4);
+	\draw (node n1) -- (node a5);
+	\draw (node n0) -- (node a5);
+	\draw (node n1) -- (node a4);
+	\draw (node n0) -- (node a6);
+	\draw (node n1) -- (node a7);
+	\draw[red] (node n0) -- (node a7);
+	\draw (node n1) -- (node a6);
+
+
+\end{tikzpicture}
+\caption{Torus and 4-ary tree}
+\end{figure}
+\begin{figure}
+\begin{tikzpicture}[thick,inner sep=0.1cm]
+	
+	\node [fill,circle,black!50] (node a0) at (0,0) {};
+	\node [fill,circle,black!50] (node b0) at (1,0) {};
+	\node [fill,circle,black!50] (node c0) at (0,1) {};
+	\node [fill,circle,black!50] (node d0) at (1,1) {};
+	\node [fill,circle,black!50] (node e0) at (0.5,0.5) {};
+	\node [fill,circle,black!50] (node f0) at (1.5,0.5) {};
+	\node [fill,circle,black!50] (node g0) at (0.5,1.5) {};
+	\node [fill,circle,black!50] (node h0) at (1.5,1.5) {};
+
+	\node [fill,circle,black!50] (node a1) at (2,0) {};
+	\node [fill,circle,black!50] (node b1) at (3,0) {};
+	\node [fill,circle,black!50] (node c1) at (2,1) {};
+	\node [fill,circle,black!50] (node d1) at (3,1) {};
+	\node [fill,circle,black!50] (node e1) at (2.5,0.5) {};
+	\node [fill,circle,black!50] (node f1) at (3.5,0.5) {};
+	\node [fill,circle,black!50] (node g1) at (2.5,1.5) {};
+	\node [fill,circle,black!50] (node h1) at (3.5,1.5) {};
+
+	\node [fill,circle,red] (node cn0) at (4,2.) {};
+	\node [fill,circle] (node cn1) at (4,1.7) {};
+	\node [fill,circle] (node cn2) at (4,1.4) {};
+	\node [fill,circle] (node cn3) at (4,1.1) {};
+
+	\node [fill,circle] (node cn4) at (-0.5,-0.3) {};
+	\node [fill,circle] (node cn5) at (-0.5,0.0) {};
+	\node [fill,circle] (node cn6) at (-0.5,0.3) {};
+	\node [fill,circle,red] (node cn7) at (-0.5,0.6) {};
+
+
+	\draw (node a0) -- (node b0);
+	\draw (node b0) -- (node d0);
+	\draw (node c0) -- (node d0);
+	\draw (node a0) -- (node c0);
+	\draw (node e0) -- (node f0);
+	\draw (node f0) -- (node h0);
+	\draw (node g0) -- (node h0);
+	\draw (node e0) -- (node g0);
+
+	\draw (node a0) -- (node e0);
+	\draw (node b0) -- (node f0);
+	\draw (node c0) -- (node g0);
+	\draw (node d0) -- (node h0);
+
+	\draw[red] (node a1) -- (node b1);
+	\draw[red] (node b1) -- (node d1);
+	\draw (node c1) -- (node d1);
+	\draw (node a1) -- (node c1);
+	\draw (node e1) -- (node f1);
+	\draw (node f1) -- (node h1);
+	\draw (node g1) -- (node h1);
+	\draw (node e1) -- (node g1);
+
+	\draw (node a1) -- (node e1);
+	\draw (node b1) -- (node f1);
+	\draw (node c1) -- (node g1);
+	\draw[red] (node d1) -- (node h1);
+
+	\draw[red] (node cn0) -- (node h1);
+	\draw (node cn1) -- (node h1);
+	\draw (node cn2) -- (node h1);
+	\draw (node cn3) -- (node h1);
+	\draw (node cn4) -- (node a0);
+	\draw (node cn5) -- (node a0);
+	\draw (node cn6) -- (node a0);
+	\draw[red] (node cn7) -- (node a0);
+
+	%\draw (node a0) -- (node a1);
+	\draw[red] (node a0)
+		        .. controls +(0.,-0.500000)
+		                 and +(0.,-0.500000)
+		        .. (node a1);
+	\draw[black!40] (node b0) 
+				.. controls +(0.,-0.500000)
+		                 and +(0.,-0.500000)
+		        .. (node b1);
+	\draw[black!40] (node c0) 
+				.. controls +(0.,0.300000)
+		                 and +(0.,0.300000)
+		        ..  (node c1);
+	\draw[black!40] (node d0) 
+				.. controls +(0.,0.300000)
+		                 and +(0.,0.300000)
+		        ..  (node d1);
+	\draw[black!40] (node e0) 
+				.. controls +(0.,-0.300000)
+		                 and +(0.,-0.300000)
+		        ..  (node e1);
+	\draw[black!40] (node f0) 
+				.. controls +(0.,-0.300000)
+		                 and +(0.,-0.300000)
+		        ..  (node f1);
+	\draw[black!40] (node g0) 
+				.. controls +(0.,0.500000)
+		                 and +(0.,0.500000)
+		        ..  (node g1);
+	\draw[black!40] (node h0) 
+				.. controls +(0.,0.500000)
+		                 and +(0.,0.500000)
+		        ..  (node h1);
+
+
+\end{tikzpicture}
+\hspace{1cm}
+\begin{tikzpicture}[thick,inner sep=0.1cm]
+	\node [fill,circle,black!50] (node a00) at (0.45,1) {};
+	\node [fill,circle,black!50] (node a01) at (1.05,1) {};
+	\node [fill,circle,black!50] (node a02) at (1.65,1) {};
+	\node [fill,circle,black!50] (node a03) at (2.25,1) {};
+	\node [fill,circle,red] (node n01) at (0.3,0) {};
+	\node [fill,circle] (node n02) at (0.6,0) {};
+	\node [fill,circle] (node n03) at (0.9,0) {};
+	\node [fill,circle] (node n04) at (1.2,0) {};
+	\node [fill,circle] (node n05) at (1.5,0) {};
+	\node [fill,circle] (node n06) at (1.8,0) {};
+	\node [fill,circle] (node n07) at (2.1,0) {};
+	\node [fill,circle] (node n08) at (2.4,0) {};
+
+	\node [fill,circle,black!50] (node a10) at (2.85,1) {};
+	\node [fill,circle,black!50] (node a11) at (3.45,1) {};
+	\node [fill,circle,black!50] (node a12) at (4.05,1) {};
+	\node [fill,circle,black!50] (node a13) at (4.65,1) {};
+	\node [fill,circle] (node n11) at (2.7,0) {};
+	\node [fill,circle] (node n12) at (3,0) {};
+	\node [fill,circle] (node n13) at (3.3,0) {};
+	\node [fill,circle] (node n14) at (3.6,0) {};
+	\node [fill,circle] (node n15) at (3.9,0) {};
+	\node [fill,circle] (node n16) at (4.2,0) {};
+	\node [fill,circle] (node n17) at (4.5,0) {};
+	\node [fill,circle] (node n18) at (4.8,0) {};
+
+	\node [fill,circle,black!50] (node a20) at (0.45,3) {};
+	\node [fill,circle,black!50] (node a21) at (1.05,3) {};
+	\node [fill,circle,black!50] (node a22) at (1.65,3) {};
+	\node [fill,circle,black!50] (node a23) at (2.25,3) {};
+	\node [fill,circle] (node n21) at (0.3,4) {};
+	\node [fill,circle] (node n22) at (0.6,4) {};
+	\node [fill,circle] (node n23) at (0.9,4) {};
+	\node [fill,circle] (node n24) at (1.2,4) {};
+	\node [fill,circle] (node n25) at (1.5,4) {};
+	\node [fill,circle] (node n26) at (1.8,4) {};
+	\node [fill,circle] (node n27) at (2.1,4) {};
+	\node [fill,circle] (node n28) at (2.4,4) {};
+
+	\node [fill,circle,black!50] (node a30) at (2.85,3) {};
+	\node [fill,circle,black!50] (node a31) at (3.45,3) {};
+	\node [fill,circle,black!50] (node a32) at (4.05,3) {};
+	\node [fill,circle,black!50] (node a33) at (4.65,3) {};
+	\node [fill,circle] (node n31) at (2.7,4) {};
+	\node [fill,circle] (node n32) at (3,4) {};
+	\node [fill,circle] (node n33) at (3.3,4) {};
+	\node [fill,circle] (node n34) at (3.6,4) {};
+	\node [fill,circle] (node n35) at (3.9,4) {};
+	\node [fill,circle] (node n36) at (4.2,4) {};
+	\node [fill,circle] (node n37) at (4.5,4) {};
+	\node [fill,circle,red] (node n38) at (4.8,4) {};
+
+	\draw[black!50] (2.65,2.4) rectangle (4.85,3.3);
+	\draw[black!50] (0.25,2.4) rectangle (2.45,3.3);
+
+	\draw[black!50] (2.65,0.7) rectangle (4.85,1.6);
+	\draw[black!50] (0.25,0.7) rectangle (2.45,1.6);
+
+	\draw (1.35,1.6)
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (3.75,1.6); 
+
+	\draw[red] (1.35,1.6)
+	.. controls +(0.,0.4)
+	    and +(0.,-0.4)
+	..  (3.75,2.4); 
+	%\draw (1.35,1.6) -- (3.75,2.4);
+	\draw (3.75,1.6)
+	.. controls +(0.,0.4)
+	    and +(0.,-0.4)
+	..  (1.35,2.4); 
+	%\draw (3.75,1.6) -- (1.35,2.4);
+
+	\draw (1.,1.6) -- (1.,2.4);
+	\draw (4.,1.6) -- (4.,2.4);
+
+	\draw (1.35,2.4)
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (3.75,2.4); 
+
+
+	\draw[red] (node n01) -- (node a00);
+	\draw (node n02) -- (node a00);
+	\draw (node n03) -- (node a01);
+	\draw (node n04) -- (node a01);
+	\draw (node n05) -- (node a02);
+	\draw (node n06) -- (node a02);
+	\draw (node n07) -- (node a03);
+	\draw (node n08) -- (node a03);
+
+	\draw (node n11) -- (node a10);
+	\draw (node n12) -- (node a10);
+	\draw (node n13) -- (node a11);
+	\draw (node n14) -- (node a11);
+	\draw (node n15) -- (node a12);
+	\draw (node n16) -- (node a12);
+	\draw (node n17) -- (node a13);
+	\draw (node n18) -- (node a13);
+
+	\draw (node n21) -- (node a20);
+	\draw (node n22) -- (node a20);
+	\draw (node n23) -- (node a21);
+	\draw (node n24) -- (node a21);
+	\draw (node n25) -- (node a22);
+	\draw (node n26) -- (node a22);
+	\draw (node n27) -- (node a23);
+	\draw (node n28) -- (node a23);
+
+	\draw (node n31) -- (node a30);
+	\draw (node n32) -- (node a30);
+	\draw (node n33) -- (node a31);
+	\draw (node n34) -- (node a31);
+	\draw (node n35) -- (node a32);
+	\draw (node n36) -- (node a32);
+	\draw (node n37) -- (node a33);
+	\draw[red] (node n38) -- (node a33);
+
+	\draw (node a00) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a01);
+	\draw (node a00) 
+	.. controls +(0.,0.35)
+	    and +(0.,0.35)
+	..  (node a02);
+	\draw (node a00) 
+	.. controls +(0.,0.5)
+	    and +(0.,0.5)
+	..  (node a03);
+	\draw (node a01) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a02);
+	\draw (node a01) 
+	.. controls +(0.,0.35)
+	    and +(0.,0.35)
+	..  (node a03);
+	\draw (node a02) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a03);
+
+	\draw (node a10) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a11);
+	\draw (node a10) 
+	.. controls +(0.,0.35)
+	    and +(0.,0.35)
+	..  (node a12);
+	\draw (node a10) 
+	.. controls +(0.,0.5)
+	    and +(0.,0.5)
+	..  (node a13);
+	\draw (node a11) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a12);
+	\draw (node a11) 
+	.. controls +(0.,0.35)
+	    and +(0.,0.35)
+	..  (node a13);
+	\draw (node a12) 
+	.. controls +(0.,0.2)
+	    and +(0.,0.2)
+	..  (node a13);
+
+	\draw (node a20) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a21);
+	\draw (node a20) 
+	.. controls +(0.,-0.35)
+	    and +(0.,-0.35)
+	..  (node a22);
+	\draw (node a20) 
+	.. controls +(0.,-0.5)
+	    and +(0.,-0.5)
+	..  (node a23);
+	\draw (node a21) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a22);
+	\draw (node a21) 
+	.. controls +(0.,-0.35)
+	    and +(0.,-0.35)
+	..  (node a23);
+	\draw (node a22) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a23);
+
+	\draw (node a30) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a31);
+	\draw (node a30) 
+	.. controls +(0.,-0.35)
+	    and +(0.,-0.35)
+	..  (node a32);
+	\draw (node a30) 
+	.. controls +(0.,-0.5)
+	    and +(0.,-0.5)
+	..  (node a33);
+	\draw (node a31) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a32);
+	\draw (node a31) 
+	.. controls +(0.,-0.35)
+	    and +(0.,-0.35)
+	..  (node a33);
+	\draw (node a32) 
+	.. controls +(0.,-0.2)
+	    and +(0.,-0.2)
+	..  (node a33);
+
+\end{tikzpicture}
+\caption{HyperX, DragonFly}
+\end{figure}
+
 \todo{Finir table}
 \todo{Ajouter schema des topologies ?}
 The Fig.\ref{fig:1_HPC:topology} list the most famous interconnection network and their diameters.
@@ -252,7 +701,7 @@ Fourth DR & 14 & 2011 & & &  \\
 \end{center}
 \end{table}
 
-\subsection{TOP500 remarkable supercomputer}
+\subsection{Remarkable supercomputer}
 The TOP500 is the reference benchmarks for the world size supercomputers. 
 Most of the TOP10 machines have specific architecture and, of course, the most efficient ones. 
 In this section we give details on several supercomputers about their interconnect, processors and specific accelerators. 
@@ -281,14 +730,19 @@ The peak performance is 125.4 PFLOPS and the Linpack is 93 PFLOPS which induce 7
 
 \subsubsection{Piz Daint}
 The supercomputer of the CSCS, Swiss National Supercomputing Center, is currently ranked 2nd of the November 2017 TOP500 list. 
-This GPU accelerated GPU is a most powerful representative of the hybrid architecture featuring processor and accelerators. 
+This GPU accelerated supercomputer is a most powerful representative of GPU acceleration
+This is also the most powerful european supercomputer. 
+He is composed of 4761 hybrids and 1210 multicore nodes. 
+The hybrids nodes embedded an Intel Xeon E5-2690v3 and an NVIDIA Tesla P100 GPGPU. 
+The interconnect is based on a Dragonfly network topology and Cray Aries routing and communications ASICs. 
+The peak performance is 25.326 TFLOPS using only the hybrid nodes and the Linpack gives 19.590 TFLOPS.
+The low power consumption rank Piz Daint as 10th in the GREEN500 list. 
 
 \subsubsection{K-Computer}
 K-Computer was the top 1 supercomputer of TOP500 2011 list. 
 
 The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} and stands for TOrus FUsion.
 This interconnect mixes a 6D Mesh/Torus interconnect.
-
 
 \subsubsection{Sequoia/Mira}
 Sequoia supercomputer was top 1 of the TOP500 2012 list. 
