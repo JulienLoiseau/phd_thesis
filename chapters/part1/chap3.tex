@@ -14,7 +14,7 @@ This chapter details the most important software options for HPC programming and
 Then it presents the software used to benchmark the supercomputers. 
 We present here the most famous, the TOP500, GRAPH500 and GREEN500 to give their advantages and weaknesses. 
 
-\todo{Parler des pitfalls, load balancing, concurrence, ... or when the case.}
+\todo{Parler des pitfalls, load balancing, concurrence, ... NON dans la partie 2 avant la metrique mise en place ? }
 
 \section{Sofware/API}
 In this section we present the main runtimes, API and programming language use in HPC and in this study in particular. 
@@ -38,11 +38,6 @@ In this model the main thread, the first one before forks, command the fork-join
 The last versions of OpenMP also allow the user to target accelerators. 
 During compilation the user specify on which processor or accelerator the code will be executed in parallel. 
 
-\subsubsection{Ohters}
-Many other tools handle parallel programming for processors.
-Cilk for C/C++ base, like OpenMP, on Fork-Join paradm. 
-Threads Building Blocks, TBB, from Intel.
-
 \subsection{Distributed programming}
 In the cluster once the code have been developped locally and using the multiple cores available, the new step is to distribute it all over the nodes of the cluster. 
 This step requires the processes to access NoRMA memory from a node to another. 
@@ -52,7 +47,7 @@ Several runtime are possible for this purpose.
 The Message Passing Interface, MPI, is the most and widely spread runtime for distributed computing~\cite{gropp2014using,gropp2015using}.
 Several implementations exists from Intel MPI\footnote{https://software.intel.com/en-us/intel-mpi-library} (IMPI), MVAPICH\footnote{http://mvapich.cse.ohio-state.edu/} by the Ohio State University and OpenMP\footnote{http://www.open-mpi.org} combining several MPI work like Los Alamos MPI (LA-MPI).
 Those implementation follow the MPI standards 1.0, 2.0 or the latest, 3.0. 
-\todo{Who define standards ??}
+\todo{Who define standards ?}
 
 Some MPI implementation offer a support for accelerators targeting directly their memory through the network without multiple copies on host memory. 
 
@@ -88,9 +83,32 @@ It converts the device code into Parallel Thread eXecution, PTX, and rely to the
 PTX is a pseudo assembly language translated by the GPU in binary code that is then execute. 
 As the ISA is pretty simple it able the user to work directly in assembly for very fine grain optimizations. 
 
-\subsubsection{OpenCL}
+Specific tools have been made for HPC in the NVIDIA GPGPUs. 
+\begin{description}[noitemsep,nolistsep]
+  \item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themself. This feature 
+  \item[Hyper-Q] This technology enable several CPU threads to execute kernels on the same GPU simultaneously. This can help to reduce the synchronization time and idle time of CPU cores for specific applications.
+  \item[NVIDIA GPU-Direct] GPUs' memory and CPU ones are different and the Host much push the data on GPU before allowing it to compute. GPU-Direct allows direct transferts from GPU devices through the network. Usually implemented using MPI.  
+\end{description}
 
-\todo{Section for profiling?}
+\subsubsection{OpenCL}
+OpenCL is a multi-platform framework targeting a large part of nowadays architectures from processors to GPUs, FPGAs, etc.
+A large group of company already provided conform version of the OpenCL standard: IBM, Intel, NVIDIA, AMD, ARM, etc.
+This framework allows to produce a single code that can run in all the host or device architectures. 
+It is quite similar to NVIDIA CUDA Driver API and based on kernels that are writen and can be used in Online/Offline compilation meaning Just In Time (JIT) or not. 
+The idea of OpenCL is great by rely on the 
+Indeed, one may wonder, what is the level of work done by NVIDIA on its own CUDA framework compare to the one done to implement OpenCL standards? 
+What is the advantage for NVIDIA GPU to be able to be replace by another component and compare on the same level? 
+Those questions are still empty but many tests prove that OpenCL can be as comparable as CUDA but rarely better\cite{karimi2010performance,fang2011comprehensive}. 
+
+In this study most of the code had been developped using CUDA to have the best benefit of the NVIDIA GPUs present in the ROMEO Supercomputer. 
+Also the long time partnership of the University of Reims Champagne-Ardenne and NVIDIA since 2003 allows us to exchange directly with the support and NVIDIA developpers. 
+
+\subsection{OpenACC}
+Open ACCelerators is a "user-driven directive-based performance-portable parallel programming model"\footnote{https://www.openacc.org/} developped with Cray, AMD, NVIDIA, etc.
+This programming model propose, in a similar way to OpenMP, pragmas to define the loop parallelism and the device behavior. 
+As the device memory is separated specific pragmas are use to define the memory movements.
+Research works\cite{wienke2012openacc} tend to show that OpenACC performances are good regarding the time spend in the implementation itself compare to fine grain CUDA or OpenCL approaches. 
+The little lack of performances can also be explaim by the current contribution to companies in the wrapper for their architectures and devices. 
 
 \begin{figure}
 \centering 
@@ -104,27 +122,35 @@ As the ISA is pretty simple it able the user to work directly in assembly for ve
     top color=white%, 
    % bottom color=blue!20
   }]]
-  \node {??} [sibling distance=16em]
-    child { node {Distributed memory} [sibling distance=7em]
+  \node {??} [sibling distance=14em]
+    child { node {Shared memory} [sibling distance=5em]
+      child { node {PThreads}}
+      child { node {OpenMP}}
+    }
+    child { node {Distributed memory} [sibling distance=5em]
         child{node {MPI}} 
         child{node {Charm++}}
         child{node {Legion}}
     }
-    child { node {Shared memory} [sibling distance=7em]
-      child { node {PThreads}}
-      child { node {OpenMP}}
-    }
-    child { node {Accelerators} [sibling distance=7em]
+    child { node {Accelerators} [sibling distance=5em]
       child {node  {CUDA}} 
       child { node {OpenCL}}
+      child {node {OpenACC}}
     };
 \end{tikzpicture}
-\caption{MIMD memory models}
-\label{fig:1_HPC:mimd_memory_model}
+\caption{Runtimes, libraries, frameworks or APIs}
+\label{fig:1_HPC:software}
 \end{figure}
 
-The runtimes, libraries and API we describe can be use in combination. 
-The usual one is MPI for distribution, OpenMP and CUDA to target GPUs. 
+The runtimes, libraries, frameworks and APIs are summarized in Fig.\ref{fig:1_HPC:software} 
+They are used in combination. 
+The usual one is MPI for distribution, OpenMP and CUDA to target processors and GPUs. 
+
+\section{Profiling tools}
+\todo{Est-ce interessant? Plus tard? Ne pas en parler?}
+\subsection{Intel suite}
+\subsection{MAQAO}
+\subsection{Allinea/MAP}
 
 \section{Benchmark}
 
@@ -144,12 +170,16 @@ This kind of benchmark is very regular in computation giving high results for FL
 \subsection{GREEN500}
 In conjunction of the TOP500, the GREEN500 focus on the energy consumption of supercomputers. 
 The scale is based on FLOPS per watts~\cite{feng2007green500}.
+Indeed the energy wall is the main limitation for next generation and exascale supercomputers. 
+In the last list, November 2017, the TOP3 machines are accelerated with PEZY-SC many-core devices. 
+The TOP20 supercomputers are all equiped with many-cores architectures: 5 with PEZY-SC, 14 with NVIDIA P100 and 1 with the Sunway many-core devices. 
+This show clearly that the nowadays energy efficient solutions resides in many-core architecture and more than that, hybrid supercomputers. 
 
 \subsection{GRAPH500}
 The GRAPH500 benchmark focus on irregular memory accesses, and communications.
 It will be detailed in Part. II Chapter II in our benchmark suite. 
-
+\todo{Etoffer}
 
 \section{Conclusion}
-
+In this chapter we presented the most used software tools for HPC. 
 

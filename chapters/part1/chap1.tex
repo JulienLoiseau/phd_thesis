@@ -174,7 +174,8 @@ Cache is a memory mecanism that is useful to consider when targeting performance
 This little memory is built over several levels. 
 The closer to the CPU is L1, then L2 and generally no more than L3 except on specific architecture. 
 When look for a data the CP will first check the L1 cache, otherwise L2 and L3 to get the data to higher level. 
-This is based on the idea that if a data is used, it shall be use again in the near future. 
+This is based on the idea that if a data is used, it shall be use again in the near future.
+Many cache architectures exist like direct, associative, fully associative, etc but this is behond the scope of this document. 
 
 \subsubsection{DRAM}
 \index{ECC}
@@ -238,7 +239,7 @@ align=center,
 
    \draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
    \draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};
-   
+
    \draw (3,4) [fill=blue!20] rectangle (5,4.6) node[pos=.5] {RAM};
    \draw (3,5.2) [fill=blue!20] rectangle (5,5.8) node[pos=.5] {RAM};
 
@@ -258,7 +259,7 @@ align=center,
 	\draw (3,1.3) [fill=blue!20] rectangle (5,1.9) node[pos=.5] {RAM};
 	\draw [-] (2,0.4) -- (3,0.4);
 	\draw [-] (2,1.6) -- (3,1.6);
-	
+
 	\draw [rounded corners=15pt,fill=red!40] (3,3.8) rectangle (5,5.8) node[pos=.5] {CPU};
 	\draw (0,4) [fill=blue!20] rectangle (2,4.6) node[pos=.5] {RAM};
 	\draw (0,5.2) [fill=blue!20] rectangle (2,5.8) node[pos=.5] {RAM};

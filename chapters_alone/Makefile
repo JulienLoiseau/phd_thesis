@@ -1,9 +1,9 @@
-all: chap1.pdf chap2.pdf chap3.pdf
+all: part1.pdf chap1.pdf chap2.pdf chap3.pdf
 
-view: chap3.pdf display
+view: part1.pdf display
 
 display:
-	open chap3.pdf
+	open part1.pdf
 
 .PHONY: clean
 
@@ -28,3 +28,10 @@ chap3.pdf: chap3.tex ../chapters/part1/chap3.tex
 	bibtex chap3
 	pdflatex $<
 	pdflatex $<
+
+part1.pdf: part1.tex ../chapters/part1/*.tex
+	pdflatex -halt-on-error $<
+	bibtex part1
+	pdflatex $<
+	pdflatex $<
+

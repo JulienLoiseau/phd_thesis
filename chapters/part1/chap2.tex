@@ -89,13 +89,15 @@ The project is decomposed in several steps to finaly reach Exascale near 2020.
 The third step, Mont-Blanc 3, is about to work on a pre-exascale prototype powered by Cavium’s ThunderX2 ARM chip based on 64-bits ARMv8.
 
 \subsection{Many-cores}
+Several architecture are defined as many-cores. 
+Those device integrate thousands of cores that are usually control by a control unit. 
+They are base on SIMD Flynn taxonomy. 
+Some devices are specific like the Xeon Phi of Intel, integrating a hundred of cores. 
 
 \subsubsection{GPU}
 
 GPUs are based on the SIMD model of the Flynn taxonomy presented previously, \emph{Single Instruction, Multiple Data}.
 The specific execution model is called SIMT (\emph{Single Instruction, Multiple Thread}). It enables the execution of millions of coordinated threads in a data-parallel mode. 
-They are called many-core architectures.
-
 Two main companies provide GPGPUs for  HPC: NVIDIA and AMD.
 
 \paragraph{NVIDIA GPU architecture}
@@ -125,7 +127,7 @@ Threads within a block can cooperate by sharing data on an SMX and synchronizing
 The blocks are distributed over the GPU SMXs to be executed independently.
 
 %Memory, bandwidth and streams:
-In order to use data in a CUDA kernel, it has to be first created on the CPU, allocated on the GPU and then transferred from the CPU to the GPU; after the kernel execution, the results have to be transferred back from the GPU to the CPU. 
+In order to use data in a device kernel, it has to be first created on the CPU, allocated on the GPU and then transferred from the CPU to the GPU; after the kernel execution, the results have to be transferred back from the GPU to the CPU. 
 GPUs consist of several memory categories, organized hierarchically and differing by size, bandwidth and latency.   
 On the one hand, the device's main memory is relatively large but has a slow access time due to a huge latency. 
 On the other hand, each SMX has a small amount of shared memory and L1 cache, accessible by its SPs, with faster access, and registers organized as an SP-local memory. 
@@ -139,14 +141,6 @@ It is also important to note that branching instructions may break the threads s
 This is the reason why test-based applications, like combinatorial problems that are inherently irregular, are considered as bad candidates for GPU implementation. 
 %This is particularly true with regard to combinatorial problems resolution. 
 %Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
-
-%HPC tools
-Specific tools have been made for HPC in the NVIDIA GPGPUs. 
-\begin{description}[noitemsep,nolistsep]
-	\item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themself. This feature 
-	\item[Hyper-Q] This technology enable several CPU threads to execute kernels on the same GPU simultaneously. This can help to reduce the synchronization time and idle time of CPU cores for specific applications.
-	\item[NVIDIA GPU-Direct] GPUs' memory and CPU ones are different and the Host much push the data on GPU before allowing it to compute. GPU-Direct allows direct transferts from GPU devices through the network. Usually implemented using MPI.  
-\end{description}
 
 We give details on the GPU we mainly used in this study in the ROMEO supercomputer center. 
 This NVIDIA Tesla Kepler GPU is based on the GK110 graphics processor describes in the whitepaper\cite{nvidia2012nvidias} on 28nm process.
@@ -188,7 +182,7 @@ The PEZY Super Computer 2, PEZY-SC2, is the third many-core microprocessor devel
 The three first machine ranked in the GREEN500 list are accelerator using this many-core die. 
 We also note that in the November 2017 list the 4th supercomputer, Gyoukou, is also powered by PEZY-SC2 cards.
 
-\subsection{FPGA and ASIC}
+\subsection{FPGA}
 Field Programmable Gates Array are device that can de reprogram to fit the needs of the user after their construction.
 The leader was historically Altera with the Stratix, Arria and Cyclone FPGAs and is now part of Intel. 
 With the FPGAs the user have access to the hardware itself and can design its own circuit. 
@@ -196,9 +190,11 @@ Nowadays FPGA can be targeted with OpenCL programming language.
 The arrival of Intel in this market promess the best hopes for HPC version of FPGAs. 
 The main gap for users is the circuit building itself, perfect to respond to specific needs but hard to setup. 
 
+\subsection{ASIC}
 ASICs are dedicated device construct for on purpose. 
 An example of ASIC can be the Gravity Pipe (GRAPE) which is dedicated to compute gravitation given mass/positions.
-Google leads the way for ASIC and just created its dedicated devices to boost AI bots. 
+Google leads the way for ASIC and just created its dedicated devices to boost AI bots.
+We also find ASIC in some optimized communication devices like in fast interconnection network in HPC.  
 
 \section{Interconnection and clusters}
 
@@ -206,38 +202,38 @@ Google leads the way for ASIC and just created its dedicated devices to boost AI
 Interconnect is the way the nodes of a cluster are connected together. 
 Several topologies exists from point to point to multi dimensional torus.
 
-\begin{table}
-\begin{center}
-\[\arraycolsep=0.pt\def\arraystretch{1.2}
-\begin{tabular}{| l | l | l || l | l | l | }
-\hline
-\textbf{Type} & \textbf{SubType} & \textbf{Diameter} & \textbf{Name} & \textbf{Gbs} & \textbf{Year} \\
-\hline
-\hline
-Trees & & & & & \\
-& Fat Tree & & & & \\
-& k-ary tree & & & & \\
-& Extended Fat Tree & & & &\\
-\hline
-Mesh/Torus & & & & & \\
-& k-ary n-mesh & & & & \\
-& k-ary n-cube & & & & \\
-\hline
-Dragonfly & & & & & \\
-\hline
-HyperX & & & & &  \\
-\hline
-\end{tabular}
-\]
-\caption{InfiniBand technologies}
-\label{fig:1_HPC:topology}
-\end{center}
-\end{table}
+% \begin{table}
+% \begin{center}
+% \[\arraycolsep=0.pt\def\arraystretch{1.2}
+% \begin{tabular}{| l | l | l || l | l | l | }
+% \hline
+% \textbf{Type} & \textbf{SubType} & \textbf{Diameter} & \textbf{Name} & \textbf{Gbs} & \textbf{Year} \\
+% \hline
+% \hline
+% Trees & & & & & \\
+% & Fat Tree & & & & \\
+% & k-ary tree & & & & \\
+% & Extended Fat Tree & & & &\\
+% \hline
+% Mesh/Torus & & & & & \\
+% & k-ary n-mesh & & & & \\
+% & k-ary n-cube & & & & \\
+% \hline
+% Dragonfly & & & & & \\
+% \hline
+% HyperX & & & & &  \\
+% \hline
+% \end{tabular}
+% \]
+% \caption{InfiniBand technologies}
+% \label{fig:1_HPC:topology}
+% \end{center}
+% \end{table}
 
 \begin{figure}
 \centering
+\resizebox {.15\columnwidth} {!} {
 \begin{tikzpicture}[thick,inner sep=0.1cm]
-	
 	\node [fill,circle,red] (node 1000) at (0,0) {};
 	\node [fill,circle] (node 1001) at (1,0) {};
 	\node [fill,circle] (node 1002) at (2,0) {};
@@ -285,9 +281,10 @@ HyperX & & & & &  \\
 							         .. (node 1008);
 	\draw (node 1006) -- (node 1007);
 	\draw (node 1007) -- (node 1008);
-
 \end{tikzpicture}
-\vspace{1cm}
+}
+%\vspace{1cm}
+\resizebox {.25\columnwidth} {!} {
 \begin{tikzpicture}[thick,inner sep=0.1cm]
 	
 	\node [fill,circle,red] (node a) at (0,0) {};
@@ -337,12 +334,12 @@ HyperX & & & & &  \\
 	\draw (node n1) -- (node a7);
 	\draw[red] (node n0) -- (node a7);
 	\draw (node n1) -- (node a6);
-
-
 \end{tikzpicture}
-\caption{Torus and 4-ary tree}
-\end{figure}
-\begin{figure}
+}
+%\caption{Torus and 4-ary tree}
+%\end{figure}
+%\begin{figure}
+\resizebox {.30\columnwidth} {!} {
 \begin{tikzpicture}[thick,inner sep=0.1cm]
 	
 	\node [fill,circle,black!50] (node a0) at (0,0) {};
@@ -444,10 +441,10 @@ HyperX & & & & &  \\
 				.. controls +(0.,0.500000)
 		                 and +(0.,0.500000)
 		        ..  (node h1);
-
-
 \end{tikzpicture}
-\hspace{1cm}
+}
+%\hspace{1cm}
+\resizebox {.24\columnwidth} {!} {
 \begin{tikzpicture}[thick,inner sep=0.1cm]
 	\node [fill,circle,black!50] (node a00) at (0.45,1) {};
 	\node [fill,circle,black!50] (node a01) at (1.05,1) {};
@@ -667,14 +664,21 @@ HyperX & & & & &  \\
 	.. controls +(0.,-0.2)
 	    and +(0.,-0.2)
 	..  (node a33);
-
 \end{tikzpicture}
-\caption{HyperX, DragonFly}
+}
+\caption{Torus, Fat-Tree, HyperX, DragonFly}
+\label{fig:1_HPC:topology}
 \end{figure}
 
-\todo{Finir table}
-\todo{Ajouter schema des topologies ?}
-The Fig.\ref{fig:1_HPC:topology} list the most famous interconnection network and their diameters.
+The Fig.\ref{fig:1_HPC:topology} is a representation of famous topology. 
+Each interconnect technology has its own specificity. 
+These networks takes in account the number of nodes to interconnect and the targeted bandwidth/budget.
+Several declination of each network are not detailed here. 
+the Mesh and the Torus are use as a basis in lower layers of others more complex interconnection networks. 
+A perfect example will be make with the K-Computer in the next section.
+The Fat Tree presented here is a k-ary n-tree, higher the position in the tree more connection are found and the bandwidth is important. 
+Another topology, HyperX\cite{ahn2009hyperx}, is base on HyperCube topology.
+The DragonFly\cite{kim2008technology} interconnect is pretty recent, 2008, and use in nowadays supercomputers.
 
 InfiniBand (IB) is the most spread technology used for interconnect with different kind of bandwith presented in Fig.\ref{fig:1_HPC:infiniband}.
 
@@ -701,7 +705,7 @@ Fourth DR & 14 & 2011 & & &  \\
 \end{center}
 \end{table}
 
-\subsection{Remarkable supercomputer}
+\subsection{Remarkable supercomputers}
 The TOP500 is the reference benchmarks for the world size supercomputers. 
 Most of the TOP10 machines have specific architecture and, of course, the most efficient ones. 
 In this section we give details on several supercomputers about their interconnect, processors and specific accelerators. 
@@ -742,12 +746,25 @@ The low power consumption rank Piz Daint as 10th in the GREEN500 list.
 K-Computer was the top 1 supercomputer of TOP500 2011 list. 
 
 The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} and stands for TOrus FUsion.
-This interconnect mixes a 6D Mesh/Torus interconnect.
 
-\subsubsection{Sequoia/Mira}
-Sequoia supercomputer was top 1 of the TOP500 2012 list. 
-It is based on BlueGene from IBM.
-The BlueGene project made up to three main architectures with BlueGene/L, BlueGene/P and BlueGene/Q.
+\begin{figure}
+\begin{center}
+\includegraphics[width=\textwidth]{\locpath/figures/chap1/6d_torus}
+\end{center}
+\caption{TOFU Interconnect schematic from \textit{The K-Computer: System Overview}, Atsuya Uno, SC11}
+\label{fig:1_HPC:tofu}
+\end{figure}
+This interconnect presented in Fig.\ref{fig:1_HPC:tofu} mixes a 6D Mesh/Torus interconnect.
+The basic units are based on a mesh and are interconnected together in a 3 dimensional torus. 
+In this configuration each node can access to its 12 neighbors directly. 
+It also provide a fault tolerant network with many routes to reach distant node. 
+
+\todo{AJouter MIRA/SEQUOIA pour paler de IBM}
+\todo{Parler de CRAY ?}
+%\subsubsection{Sequoia/Mira}
+%Sequoia supercomputer was top 1 of the TOP500 2012 list. 
+%It is based on BlueGene from IBM.
+%The BlueGene project made up to three main architectures with BlueGene/L, BlueGene/P and BlueGene/Q.
 
 \section{ROMEO Supercomputer}
 
@@ -784,6 +801,9 @@ In this chapter we reviewed the most important nowadays hardware architectures a
 In order to use the driver or API in the most efficient way we need to keep in mind the way the data and instructions are proceed by the machine. 
 
 As efficiency is based on computation power but also communications we showed different interconnection topologies and their specificities. 
+We presented perfect use cases of the tehcnologies in nowadays top ranked systems.
+They also show that every architecture is unique in its construction and justify the optimization work dedicated to reach performance. 
 
-The TOP500 supercomputers presented here are a perfect use case of the tehcnologies presented and reflect the best human can do with nowadays systems.
-They also show that every architecture is unique in its construction and justify the optimization work dedicated to reach performance.   
+We can see through the new technologies presented here that every one is moving toward hybrids architectures featuring multi-core processors accelerated by one or more devices, many-core architectures. 
+The shape of the Exascale supercomputer of 2020 will be shape with hybrid architectures and they represent the best of nowadays technology for purpose of HPC. 
+Combining CPU and GPUs or FPGA on the same die, sharing the same memory space can also be the solution.
