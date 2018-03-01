@@ -1,18 +1,29 @@
 \part{HPC and Exascale}
 \chapter*{Introduction}
 
-High Performance Computing, HPC, does not find a strict definition. 
-Since computer creation, first dedicated for balistic purposes, domain scientists developped their tool to perform computations. 
-Then, in front of the complexity of building such machines, HPC became a dedicated field of research. 
+This part is a state of the art of High Performance Computing and describes the tools we need for our study. 
+High Performance Computing, HPC, does not have a strict definition. 
+The history starts with domain scientists in need of more complex and longer computation for models checking or simulations. 
+They developed their own tools beginning  with vacuum tubes computers which can be consider as a milestone in HPC history. 
+Since this first machine the technology became more and more complex at every layer. 
+The hardware conception, the software to handle it and even the models and topologies. 
+HPC is now a field on its own but always dedicated to the end purpose, domain scientist computations. 
+HPC experts are interested in supercomputer construction, architecture and code optimization, interconnection behaviors and creating more software, framework or tools to facilitate access to these very complex machines. 
 
-Computer scientists interested in HPC will have to focus on several domains. 
-\begin{itemize}
-\item The energy consumption, mainly directed by the hardware producers. 
-\item The computational power, how to take advantages of the ressources ? 
-\item The communication, because such machines are constructed over several machines or nodes. 
-\end{itemize}
+In this part we give a non-exhaustive definition of HPC focusing our needs for this study through three chapters. 
 
-Domain scientists are also involved directly in HPC with their software and redefining the structure based on their needs and usages. 
+We first focus on what are the theoretic models for the machines and the memory we base our work on. 
+This first chapter also present what we define performance for HPC and the main laws that concern it. 
+
+The second chapter details the architecture base on these models. 
+We present nowadays dominant constructors and architectures from multi-cores to specific many-cores machines. 
+Representative member of today supercomputers are described.  
+We show that hybrid architectures seems to be the only plausible way to reach the exascale. 
+
+In the third chapter we detail the main software to target those complex architectures. 
+We present tools, frameworks and API for shared and distributed memory. 
+We also introduce the mains benchmarks use in HPC world to rank the most powerful supercomputers. 
+This chapter also shows that those benchmarks are not the bests to give an accurate score or scale for "realistic" domain scientists applications.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %																	%
@@ -40,8 +51,22 @@ Domain scientists are also involved directly in HPC with their software and rede
 \input{\locpath/chapters/part1/chap3}
 
 \chapter*{Conclusion}
-This part detailed the state of the art theory, hardware and software in High Performance Computing. 
-We showed through nowadays example of supercomputers and benchmarks the important change of mind regarding hybrid architectures. 
+This part detailed the state of the art theory, hardware and software in High Performance Computing and the tools we need to detail our experiences.
 
-The question that arise is: can we trust those benchmarks when it comes to rank supercomputers and the architectures that come to be more and more complexes?
+In the first chapter we introduced the models for computation and memory. 
+We also detailed the main laws of HPC. 
+
+The second chapter was an overview of hardware architectures in HPC. 
+The one that seems to be the most promising regarding computational power and energy consumption seems to be hybrid architectures. 
+Supercomputers equipped with classical processors accelerated by devices like GPGPUs, Xeon Phi or, for tomorrow supercomputers, FPGAs. 
+
+In the third section we showed that the tools to target such complex architecture are ready. 
+They provide the developer a two or three layer development model with MPI for distribution over processes, OpenMP/PThreads for tasks between the processor's cores and CUDA/OpenCL/OpenMP/OpenACC to target the accelerator. 
+
+We also showed in the last part that the benchmarks proposed to rank those architectures are based on regular computation. 
+They are node facing realistic domain scientists code behavior. 
+The question that arise is: How the hybrid architecture will handle irregularity in term of computation and communication? 
+This question will be developed in the next part through one example for irregular computation and another for irregular communication using accelerators. 
+
+
 
