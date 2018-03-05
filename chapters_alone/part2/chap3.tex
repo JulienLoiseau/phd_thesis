@@ -1,0 +1,44 @@
+\documentclass[11pt,a4paper]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{python}
+\usepackage{algpseudocode,algorithm}
+\usepackage{tikz}
+%\usepackage{todonotes}
+\usepackage{makeidx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+
+\newcommand\todo[1]{\textcolor{red}{#1}}
+\newcommand{\locpath}{../..}
+
+\usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2.5cm]{geometry}
+
+% Thesis title
+%\title{Energy Efficiency, Exascale and Complex Systems}
+\title{Vers l'Exascale: Des Probl\`emes Th\'eoriques aux Probl\`emes Appliqu\'es\\
+The Way to Exascale: From Theorics to Applied Problems}
+% Author
+\author{Julien Loiseau}
+% Date 
+\date{\today}
+
+\makeindex
+
+\begin{document}
+\setcounter{chapter}{2}
+
+\input{\locpath/chapters/part2/chap3}
+
+\bibliographystyle{alpha}
+\bibliography{\locpath/biblio/biblio_part2_chap1,\locpath/biblio/biblio_langford,\locpath/biblio/biblio_graph,\locpath/biblio/biblio_sph,\locpath/biblio/biblio_hpc}
+
+\end{document}

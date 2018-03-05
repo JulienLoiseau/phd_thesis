@@ -2,12 +2,13 @@
 \chapter{Computational Wall: Langford Problem}
 
 \section{Introduction}
-In this part we are going to face the computational wall on accelerators. 
-In this case we used an academic problem known to be very irregular and heavy on computations. 
+Our aim is to determine the behavior of accelerators compared to classical processor in case of irregular-computationally heavy problems.
+For this purpose we choose the Langford problem which is an academic problem of combinatorial counting.
 We show the optimizations made to the regular processor algorithm to efficiently implement this application on GPU. 
+We compare the two approaches from classical processor to GPU implementation. 
+The results are then presented to show the acceleration using the whole ROMEO supercomputer. 
 
-\section{The Langford problem}
-
+%\section{The Langford problem}
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
 While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.
   
@@ -49,38 +50,39 @@ The central resolution method consists in placing the pairs of cubes, one after 
   \hline
 \end{tabular}
 \]
-\caption{Solutions and time with differents methods}
+\caption{Solutions and time for Langford problem using different methods}
 \label{tab:result_base}
 \end{table}
 
 The Langford problem has been approached in different ways: discrete mathematics results, specific algorithms, specific encoding, constraint satisfaction problem (CSP), inclusion-exclusion~\ldots~\cite{Mil00,apes-26,Smi00,larsen2009counting}.
-In 2004, the last solved instance, $L(2,24)$, was computed by our team using a specific algorithm. (see Table \ref{tab:result_base}); $L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
+In 2004, the last solved instance, $L(2,24)$, was computed by our team\cite{CReSTIC-711} using a specific algorithm. (see Table \ref{tab:result_base}); $L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
 
 The main efficient known algorithms are the following: the Miller backtrack method, the Godfrey algebraic method and the Larsen inclusion-exclusion method.
 The Miller one is based on backtracking and can be modeled as a CSP; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go further. 
 Then, we use the Godfrey method to achieve $L(2,24)$ more quickly and then recompute $L(2,27)$ and $L(2,28)$, presently known as the last instances.
 The Larsen method is based on inclusion-exclusion \cite{larsen2009counting}; although this method is effective, practically the Godfrey one is better. 
-The lastest known work on the Langford Problem is a GPU implementation proposed in \cite{ASS_LGF} in 2015. Unfortunately this study does not provide any performance considerations but just gives the number of solution of $L(2,27)$ and $L(2,28)$.
+The latest known work on the Langford Problem is a GPU implementation proposed in \cite{ASS_LGF} in 2015. Unfortunately this study does not provide any performance considerations but just gives the number of solution of $L(2,27)$ and $L(2,28)$.
 
-\subsection{Miller algorithm}
+\section{Miller algorithm}
 
 In this part we present our multiGPU cluster implementation of the Miller's algorithm. First, we introduce the backtrack method. Then we present our implementation in order to fit the GPUs architecture. The last section presents our results. 
 
-%\subsection{CSP and backtracking}
+\subsection{CSP}
 
-%Combinatorial problems are NP-complete\cite{GJ79} and can be described as a SATISFIABILITY problems (SAT) using a polynomial transformation. They can be transformed into CSP formalism.
-%A Constraint Satisfaction Problem (CSP), first introduced by Montanari\cite{Mon74}, is defined as a triple $<X,D,C>$ where:
-%$X=\{X_1,...,X_n\}$, a finite set of variables, $D=\{D_1,...,D_n\}$, their finite domains of values et $C=\{C_1,...,C_p\}$, a finite set of constraints.
+Combinatorial problems are NP-complete\cite{GJ79} and can be described as a SATISFIABILITY problems (SAT) using a polynomial transformation. 
+They can be transformed into CSP formalism.
+A Constraint Satisfaction Problem (CSP), first introduced by Montanari\cite{Mon74}, is defined as a triple $<X,D,C>$ where:
+$X=\{X_1,...,X_n\}$, a finite set of variables, $D=\{D_1,...,D_n\}$, their finite domains of values et $C=\{C_1,...,C_p\}$, a finite set of constraints.
 
-%The goal in this formalism is to assign values in $D$ to $n$-uple $X$ respecting all the $C$ $p$-uple constraints.
-%This approach is a large field of research. \cite{arbelaez2014gpu} developed \textit{local search} and compares GPU to CPU. 
-%This first work brings to light that GPU is a real contributor to the global computation speed. \cite{campeotto2014exploring} proposes a solver using \textit{propagator} on a GPU architecture to solve CSP problems. 
-%\cite{jenkins2011lessons} cares about GPU weak points, loading bandwidth and global memory latency.
+The goal in this formalism is to assign values in $D$ to $n$-uple $X$ respecting all the $C$ $p$-uple constraints.
+This approach is a large field of research. \cite{arbelaez2014gpu} developed \textit{local search} and compares GPU to CPU. 
+This first work brings to light that GPU is a real contributor to the global computation speed. \cite{campeotto2014exploring} proposes a solver using \textit{propagator} on a GPU architecture to solve CSP problems. 
+\cite{jenkins2011lessons} cares about GPU weak points, loading bandwidth and global memory latency.
 
 %\subsection{CSP parallel resolution}
 %\label{sec:CSP_resolution}
 
-%Considering a basic approach, combinatorial problems formed into CSP can be represented as a tree search. Each level corresponds to a given variable, with values in its domain. Leaves of the tree correspond to a complete assignment (all variables are set). If it meets all the constraints this assignment is called an acceptor state. Depending on the constraints set, the satisfiability evaluation can be made either on complete or partial assignment.
+Considering a basic approach, combinatorial problems formed into CSP can be represented as a tree search. Each level corresponds to a given variable, with values in its domain. Leaves of the tree correspond to a complete assignment (all variables are set). If it meets all the constraints this assignment is called an acceptor state. Depending on the constraints set, the satisfiability evaluation can be made either on complete or partial assignment.
 %
 %There are many ways to browse the tree and find the solutions: \emph{backtracking}, \emph{forward-checking}, \emph{backjumping}, etc. 
 %We limit our method to the naive \emph{backtrack} resolution. We chose to evaluate the variables and their values in a static order; in a depth-first manner, the solution is built incrementally and if a partial assignment can be aborted, the branch is cut. A solution is found each time a leaf is reached.
@@ -134,18 +136,17 @@ In this part we present our multiGPU cluster implementation of the Miller's algo
 %
 %With this method numerous branches have been cut from the main tree during generation stage and GPU/CPU tasks are faster due to their lower depth. Despite the combinatorial explosion of this kind of problem, we can consider solving CSP in a massively parallel manner on multiGPU clusters.
 
-\subsubsection{Backtrack resolution}
+\subsection{Backtrack resolution}
 
 As presented above the Langford problem is known to be a highly irregular combinatorial problem. 
 We first present here the general tree representation and the ways we regularize the computation for GPUs.
 Then we show how to parallelize the resolution over a multiGPU cluster.
 
-\paragraph{Langford's problem tree representation}
+\subsubsection{Langford's problem tree representation}
 \label{sec:LGF_resolution}
-In~\cite{HKS02}, we propose to formalize the Langford problem as a CSP  ({\it Constraint Satisfaction Problem}), first introduced by Montanari in \cite{Mon74}, and show that an efficient parallel resolution is possible. 
-CSP formalized problems can be transformed into tree evaluations. %represented as trees. 
+%In~\cite{HKS02}, we propose to formalize the Langford problem as a CSP  ({\it Constraint Satisfaction Problem}), first introduced by Montanari in \cite{Mon74}, and show that an efficient parallel resolution is possible. 
+As explained, CSP formalized problems can be transformed into tree evaluations. %represented as trees. 
 %The tree Here we intend to develop a specific algorithm taking into account the conclusion of our previous studies (memory management of memory and load balance) and transfer the tasks resolution into GPUs.\\
-In order to solve $L(2,n)$, we consider the following tree of height $n$: see example of $L(2,3)$ in Fig.~\ref{fig:arbre}.
 
 \begin{figure}[htb]
 \centering
@@ -154,6 +155,7 @@ In order to solve $L(2,n)$, we consider the following tree of height $n$: see ex
 \label{fig:arbre}
 \end{figure}
 
+In order to solve $L(2,n)$, we consider a tree of height $n$: see example of $L(2,3)$ in figure~\ref{fig:arbre}.
 
 \begin{itemize}   
 \item Every level of the tree corresponds to a color.
@@ -166,8 +168,8 @@ We limit our study to the naive \emph{backtrack} resolution and choose to evalua
 % presents a backtrack search with the previous CSP representation.
 
 The recommendation for performance on GPU accelerators is to use non test-based programs.
-Due to its irregularity, the basic \emph{backtracking} algorithm, presented on Fig.~\ref{backtrack}, is not supposed to suit the GPU architecture.
-Thus a vectorized version is given when evaluating the assignments at the leaves' level, with one of the two following ways: assignments can be prepared on each tree node or totally set on final leaves before testing the satisfiability of the built solution (Fig.~\ref{regularized}).
+Due to its irregularity, the basic \emph{backtracking} algorithm, presented on figure~\ref{backtrack}, is not supposed to suit the GPU architecture.
+Thus a vectorized version is given when evaluating the assignments at the leaves' level, with one of the two following ways: assignments can be prepared on each tree node or totally set on final leaves before testing the satisfiability of the built solution (figure~\ref{regularized}).
 
 \begin{figure}[htb]
 \begin{minipage}[b]{0.45\linewidth}
@@ -203,18 +205,7 @@ for pair 1 positions
 \end{minipage}
 \end{figure}
 
-\paragraph{Data representation}
-
-In order to count every Langford problem solution, we first identify all possible combinations for one color without worrying about the other ones. 
-Each possible combination is coded within an interger, one bit to 1 corresponding to a cube presence, a 0 to its absence. This is what we called a \emph{mask}.
-This way Fig.~\ref{fig:comb1} presents the possible combinations to place the one, two and three weight cubes for the $L(2,3)$ Langford instance.
-
-Furthermore the masks can be used to evaluate the partial placements of a chosen set of colors: all the 1s correspond to occupied positions; the assignment is consistent \emph{iff} there are as many 1s as the number of cubes set for the assignment. 
-
-With the aim to find solutions, we just have to go all over the tree and \emph{sum} one combination of each of the colors: a solution is found \emph{iff} all the bits of the sum are set to 1. 
-
-Each route on the tree can be evaluated individually and independently; then it can be evaluated as a thread on the GPU.
-This way the problem is massively parallel and can be, indeed, computed on GPU. Fig.~\ref{fig:pos_lgf} represents the tree masks' representation.
+\subsubsection{Data representation}
 
 \begin{figure}[htb]
 \begin{minipage}[b]{0.40\linewidth}
@@ -230,7 +221,18 @@ This way the problem is massively parallel and can be, indeed, computed on GPU. 
 \end{minipage}
 \end{figure}
 
-\paragraph{Specific operations and algorithms}
+In order to count every Langford problem solution, we first identify all possible combinations for one color without worrying about the other ones. 
+Each possible combination is coded within an integer, one bit to 1 corresponding to a cube presence, a 0 to its absence. This is what we called a \emph{mask}.
+This way figure~\ref{fig:comb1} presents the possible combinations to place the one, two and three weight cubes for the $L(2,3)$ Langford instance.
+
+Furthermore the masks can be used to evaluate the partial placements of a chosen set of colors: all the 1 correspond to occupied positions; the assignment is consistent \emph{iff} there are as many 1 as the number of cubes set for the assignment. 
+
+With the aim to find solutions, we just have to go all over the tree and \emph{sum} one combination of each of the colors: a solution is found \emph{iff} all the bits of the sum are set to 1. 
+
+Each route on the tree can be evaluated individually and independently; then it can be evaluated as a thread on the GPU.
+This way the problem is massively parallel and can be, indeed, computed on GPU. figure~\ref{fig:pos_lgf} represents the tree masks' representation.
+
+\subsubsection{Specific operations and algorithms}
 
 Three main operations are required in order to perform the tree search. 
 %The first one, allowing to check if a pair can be added to a given partial assignment, is only necessary for the original backtrack scheme.
@@ -238,61 +240,6 @@ Three main operations are required in order to perform the tree search.
 The first one, used for both backtrack and regularized methods, aims to add a pair to a given assignment. 
 The second one, allowing to check if a pair can be added to a given partial assignment, is only necessary for the original backtrack scheme.
 The last one is used for testing if a global assignment is an available solution: it is involved in the regularized version of the Miller algorithm.
-
-\textbf{Add a pair -}
-Top of Fig.~\ref{fig:test_et} presents the way to add a pair to a given assignment.
-With a \emph{binary or}, the new mask contains the combination of the original mask and of the added pair.
-This operation can be performed even if the position is not available for the pair (however the resulting mask is inconsistent). 
-
-\textbf{Test a pair position -}
-On the bottom part of the same figure, we test the positioning of a pair on a given mask. 
-For this, it is necessary to perform a \emph{binary and} between the mask and the pair.
-\begin{itemize}
-	\item[] $=0$: \emph{success}, the pair can be placed here
-	\item[] $\neq0$: \emph{error}, try another position
-\end{itemize}
-
-\textbf{Final validity test -}
-The last operation is for \emph{a posteriori} checking. For example the mask $101111$, corresponding to a leaf of the tree, is inconsistent and should not be counted among the solutions.
-The final placement mask corresponds to a solution \emph{iff} all the places are occupied, which can be tested as $\neg mask = 0$. % \rightarrow solution$ else $inconsistent$.
-%We performed a \emph{binary not} on the mask. If there is a zero, so the mask is inconsistent, result will be different of zero. If the mask is full of $1$, result is zero, so we can add one to the number of solutions.
-\\
-
-Using this data representation, 
-we implemented both \emph{backtrack} and \emph{regularized} versions of the Miller algorithm, as presented in Fig.~\ref{backtrack} and \ref{regularized}.
-% C'est là que je veux changer la structure ....
-%: the original backtrack for CPU computation and the regularized one for GPUs.
-%As we have seen above, the regularized algorithm is unsuitable due to combinatorial explosion, that is why we use the hybrid method on a distributed architecture.
-\\
-The next section presents the way we hybridize these two schemes in order to get an efficient parallel implementation of the Miller algorithm.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Hybrid parallel implementation}
-\label{section:parallel_backtrack}
-This part presents our methodology to implement Miller's method on a multiGPU cluster.
-
-\textbf{Tasks generation -}
-In order to parallelize the resolution we have to generate tasks. 
-Considering the tree representation, we construct tasks by fixing the different values of a first set of variables [pairs] up to a given level. Choosing the development level allows to generate as many tasks as necessary. This leads to a \textit{Finite number of Irregular and Independent Tasks} (\emph{FIIT} applications \cite{krajecki1999object}). 
-
-\textbf{Cluster parallelization -} 
-The generated tasks are independent and we spread them in a client-server manner: a server generates them and makes them available for clients. As we consider the cluster as a set of CPU-GPU(s) machines, the clients are these machines. 
-At the machines level, the role of the CPU is, first, to generate work for the GPU(s): it has to generate sub-tasks, by continuing the tree development as if it were a second-level server, and the GPU(s) can be considered as second-level client(s). \\
-The sub-tasks generation, at the CPU level, can be made in parallel by the CPU cores. Depending on the GPUs number and their computation power the sub-tasks generation rhythm may be adapted, to maintain a regular workload both for the CPU cores and GPU threads: some CPU cores, not involved in the sub-tasks generation, could be made available for sub-tasks computing.\\
-This leads to the 3-level parallelism scheme presented in Fig.~\ref{fig:parallel}, where $p$, $q$ and $r$ respectively correspond to: ($p$) the server-level tasks generation depth, ($q$) the client-level sub-tasks generation one, ($r$) the remaining depth in the tree evaluation, \textit{i.e.} the number of remaining variables to be set before reaching the leaves.  
-
-\textbf{\emph{Backtrack} and \emph{regularized} methods hybridization -} 
-The Backtrack version of the Miller algorithm suits CPU execution and allows to cut branches during the tree evaluation, reducing the search space and limiting the combinatorial explosion effects. A regularized version had to be developed, since GPUs execution requires synchronous execution of the threads, with as few branching divergence as possible; however this method imposes to browse the entire search space and is too time-consuming. \\
-We propose to hybridize the two methods in order to take advantage of both of them for the multiGPU parallel execution: 
-for tasks and sub-tasks generated at sever and client levels, the tree development by the CPU cores is made using the backtrack method, cutting branches as soon as possible [and generating only possible tasks]; when computing the sub-tasks generated at client-level, the CPU cores involved in the sub-tasks resolution use the backtrack method and the GPU threads the regularized one. 
-
-%With this method it is necessary to browse the entire tree but this requires using all the search space and it is too time-consuming.
-
-%In order to overcome this we divide the work between CPU and GPU. The CPU generates some levels of the tree and creates tasks. Then GPU and CPU cores divide up the workload in order to achieve the generation on the latest levels of the tree. 
-%With this method, inconsistent branches can be cut on highest level and GPU/CPU cores only compute possibly consistent tasks.
-
-%This representation enables a server-client model to distribute the tasks: the server generates independent sub-problems at a chosen depth in the tree, treated by clients. 
-%Each client decomposes the sub-problem into tasks, distributed over the GPU/CPU cores, Fig.~\ref{fig:parallel}.
 
 \begin{figure}[t!]
 \begin{minipage}[b]{0.5\linewidth}
@@ -308,6 +255,61 @@ for tasks and sub-tasks generated at sever and client levels, the tree developme
 \end{minipage}
 \end{figure}
 
+\paragraph{Add a pair: }
+Top of figure~\ref{fig:test_et} presents the way to add a pair to a given assignment.
+With a \emph{binary or}, the new mask contains the combination of the original mask and of the added pair.
+This operation can be performed even if the position is not available for the pair (however the resulting mask is inconsistent). 
+
+\paragraph{Test a pair position: }
+On the bottom part of the same figure, we test the positioning of a pair on a given mask. 
+For this, it is necessary to perform a \emph{binary and} between the mask and the pair.
+\begin{itemize}
+	\item[] $=0$: \emph{success}, the pair can be placed here
+	\item[] $\neq0$: \emph{error}, try another position
+\end{itemize}
+
+\paragraph{Final validity test: }
+The last operation is for \emph{a posteriori} checking. For example the mask $101111$, corresponding to a leaf of the tree, is inconsistent and should not be counted among the solutions.
+The final placement mask corresponds to a solution \emph{iff} all the places are occupied, which can be tested as $\neg mask = 0$. % \rightarrow solution$ else $inconsistent$.
+%We performed a \emph{binary not} on the mask. If there is a zero, so the mask is inconsistent, result will be different of zero. If the mask is full of $1$, result is zero, so we can add one to the number of solutions.
+\\
+
+Using this data representation, 
+we implemented both \emph{backtrack} and \emph{regularized} versions of the Miller algorithm, as presented in figure~\ref{backtrack} and \ref{regularized}.
+% C'est là que je veux changer la structure ....
+%: the original backtrack for CPU computation and the regularized one for GPUs.
+%As we have seen above, the regularized algorithm is unsuitable due to combinatorial explosion, that is why we use the hybrid method on a distributed architecture.
+\\
+The next section presents the way we hybridize these two schemes in order to get an efficient parallel implementation of the Miller algorithm.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Hybrid parallel implementation}
+\label{section:parallel_backtrack}
+This part presents our methodology to implement Miller's method on a multiGPU cluster.
+
+\paragraph{Tasks generation: }
+In order to parallelize the resolution we have to generate tasks. 
+Considering the tree representation, we construct tasks by fixing the different values of a first set of variables [pairs] up to a given level. Choosing the development level allows to generate as many tasks as necessary. This leads to a \textit{Finite number of Irregular and Independent Tasks} (\emph{FIIT} applications \cite{krajecki1999object}). 
+
+\paragraph{Cluster parallelization: } 
+The generated tasks are independent and we spread them in a client-server manner: a server generates them and makes them available for clients. As we consider the cluster as a set of CPU-GPU(s) machines, the clients are these machines. 
+At the machines level, the role of the CPU is, first, to generate work for the GPU(s): it has to generate sub-tasks, by continuing the tree development as if it were a second-level server, and the GPU(s) can be considered as second-level client(s). \\
+The sub-tasks generation, at the CPU level, can be made in parallel by the CPU cores. Depending on the GPUs number and their computation power the sub-tasks generation rhythm may be adapted, to maintain a regular workload both for the CPU cores and GPU threads: some CPU cores, not involved in the sub-tasks generation, could be made available for sub-tasks computing.\\
+This leads to the 3-level parallelism scheme presented in figure~\ref{fig:parallel}, where $p$, $q$ and $r$ respectively correspond to: ($p$) the server-level tasks generation depth, ($q$) the client-level sub-tasks generation one, ($r$) the remaining depth in the tree evaluation, \textit{i.e.} the number of remaining variables to be set before reaching the leaves.  
+
+\paragraph{\emph{Backtrack} and \emph{regularized} methods hybridization: } 
+The Backtrack version of the Miller algorithm suits CPU execution and allows to cut branches during the tree evaluation, reducing the search space and limiting the combinatorial explosion effects. A regularized version had to be developed, since GPUs execution requires synchronous execution of the threads, with as few branching divergence as possible; however this method imposes to browse the entire search space and is too time-consuming. \\
+We propose to hybridize the two methods in order to take advantage of both of them for the multiGPU parallel execution: 
+for tasks and sub-tasks generated at sever and client levels, the tree development by the CPU cores is made using the backtrack method, cutting branches as soon as possible [and generating only possible tasks]; when computing the sub-tasks generated at client-level, the CPU cores involved in the sub-tasks resolution use the backtrack method and the GPU threads the regularized one. 
+
+%With this method it is necessary to browse the entire tree but this requires using all the search space and it is too time-consuming.
+
+%In order to overcome this we divide the work between CPU and GPU. The CPU generates some levels of the tree and creates tasks. Then GPU and CPU cores divide up the workload in order to achieve the generation on the latest levels of the tree. 
+%With this method, inconsistent branches can be cut on highest level and GPU/CPU cores only compute possibly consistent tasks.
+
+%This representation enables a server-client model to distribute the tasks: the server generates independent sub-problems at a chosen depth in the tree, treated by clients. 
+%Each client decomposes the sub-problem into tasks, distributed over the GPU/CPU cores, Fig.~\ref{fig:parallel}.
+
 %By doing so numerous branches have been cut from the main tree during generation stage and GPU/CPU tasks are faster due to their lower depth. Despite the combinatorial explosion of this kind of problem, we can consider solve it in a massively parallel manner on multiGPU clusters.
  
 %The tree representation allows to generate tasks at a chosen level, which leads to a \textit{Finite number of Irregular and Independent Tasks} (\emph{FIIT} applications \cite{krajecki1999object}).
@@ -322,7 +324,7 @@ for tasks and sub-tasks generated at sever and client levels, the tree developme
 
 In order to take advantage of all the computing power of the GPU we have to refine the way we use them: this section presents the experimental study required to choose optimal settings. This tuning allowed us to prove our proposal on significant instances of the Langford problem.
 
-\paragraph{Registers, blocks and grid}
+\paragraph{Registers, blocks and grid: }
 
 In order to use all GPUs capabilities, the first way was to fill the blocks and grid. To maximize occupancy (ratio between active warps and the total number of warps) NVIDIA suggests to use 1024 threads per block to improve GPU performances and proposes a CUDA occupancy calculator\footnote{\url{http://developer.download.nvidia.com/compute/cuda/CUDA_Occupancy_calculator.xls}}. But, confirmed by the Volkov's results\cite{Volkov}, we experimented that better performances may be obtained using lower occupancy. Indeed, another critical criterion is the inner GPU registers occupation. 
 The optimal number of registers ($57$ registers) is obtained by setting 9 pairs placed on the client for $L(2,15)$, thus 6 pairs are remaining for GPU computation.
@@ -336,22 +338,13 @@ The optimal number of registers ($57$ registers) is obtained by setting 9 pairs 
 
 In order to tune the blocks and grid sizes, we performed tests on the ROMEO architecture. 
 %0 With this value we obtained an optimized number of registers by thread . 
-Fig.~\ref{f7} represents the time in relation with the number of blocks per grid and the number of threads per block. The most relevant result, observed as a local minimum on the 3D surface, is obtained near 64 or 96 threads per block; for the grid size, the limitation is relative to the GPU global memory size.
-It can be noted that we do not need shared memory because their are no data exchanges between threads. This allows us to use the total available memory for the L1 cache for each thread.
+Figure~\ref{f7} represents the time in relation with the number of blocks per grid and the number of threads per block. 
+The most relevant result, observed as a local minimum on the 3D surface, is obtained near 64 or 96 threads per block; for the grid size, the limitation is relative to the GPU global memory size.
+It can be noted that we do not need shared memory because their are no data exchanges between threads. 
+This allows us to use the total available memory for the L1 cache for each thread.
 
-\paragraph{Streams}
-
-%\subsubsection{Overlap CPU/GPU}
-
+\paragraph{Streams:}
 A client has to prepare work for GPU. There are four main steps: generate the tasks, load them into the device memory, process the task on the GPU and then get the results.
-
-CPU-GPU memory transfers cause huge time penalties (about 400 cycles latency for transfers between CPU memory and GPU \emph{device memory}). 
-At first, we had no overlapping between memory transfer and kernel computation because the tasks generation on CPU was too long compared to the kernel computation.
-To reduce the tasks generation time we used OpenMP in order to use the eight available CPU cores.
-Thus CPU computation was totally hidden by memory transfers and GPU kernel computation. We tried using up to 7 streams; as shown by Fig.~\ref{fig:streams}, using only two simultaneous streams did not improve efficiency because the four steps did not overlap completely; the best performances were obtained with three streams; the slow increase in the next values is caused by synchronization overhead and CUDA streams management.
-
-
-
 
 \begin{figure}[htb]
 \begin{minipage}[b]{0.48\linewidth}
@@ -368,8 +361,13 @@ Thus CPU computation was totally hidden by memory transfers and GPU kernel compu
 \end{minipage}
 \end{figure}
 
-\paragraph{Setting up the server, client and GPU depths}
-We now have to set the depths of each actor, server $(p)$, client $(q)$ and GPU $(r)$ (see Fig.~\ref{fig:parallel}).
+CPU-GPU memory transfers cause huge time penalties (about 400 cycles latency for transfers between CPU memory and GPU \emph{device memory}). 
+At first, we had no overlapping between memory transfer and kernel computation because the tasks generation on CPU was too long compared to the kernel computation.
+To reduce the tasks generation time we used OpenMP in order to use the eight available CPU cores.
+Thus CPU computation was totally hidden by memory transfers and GPU kernel computation. We tried using up to 7 streams; as shown by figure~\ref{fig:streams}, using only two simultaneous streams did not improve efficiency because the four steps did not overlap completely; the best performances were obtained with three streams; the slow increase in the next values is caused by synchronization overhead and CUDA streams management.
+
+\paragraph{Setting up the server, client and GPU depths: }
+We now have to set the depths of each actor, server $(p)$, client $(q)$ and GPU $(r)$ (see figure~\ref{fig:parallel}).
 
 First we set the $r = 5$ for large instances because of the GPU limitation in terms of registers by threads, exacerbated by the use of numerous $64bits$ integers. For $r \geq 6$, we get too many registers (64) and for $r \leq 4$ the GPU computation is too fast compared to the memory load overhead.
 
@@ -379,7 +377,10 @@ So we have conducted tests by varying the server depth, $p$. The best result is 
 % because with more levels on the server, tasks are smaller and then the GPU work is not long enough in view of memory exchanges.
 
 \paragraph{CPU: Feed the GPUs and compute}
-The first work of CPU cores is to prepare tasks for GPU so that we can generate overlapping between memory load and kernel computation. In this configuration using eight cores to generate GPU tasks under-uses CPU computation power. It is the reason why we propose to use some of the CPU cores to take part of the sub-problems treatment. Fig.~\ref{cores_rep} represents computation time in relation with different task distributions between CPU and GPU.
+The first work of CPU cores is to prepare tasks for GPU so that we can generate overlapping between memory load and kernel computation. 
+In this configuration using eight cores to generate GPU tasks under-uses CPU computation power. 
+It is the reason why we propose to use some of the CPU cores to take part of the sub-problems treatment. 
+Figure~\ref{cores_rep} represents computation time in relation with different task distributions between CPU and GPU.
 We experimentally demonstrated that only 4 or 5 CPU cores are enough to feed GPU, the other ones can be used to perform backtrack resolution in competition with GPUs.
 
 \subsubsection{Results}
@@ -453,12 +454,12 @@ This method first allowed us to perform the computation of $L(2,19)$ in less tha
 
 This exhibits the ability of the GPU scheduler to manage highly irregular tasks. It proves that GPUs are adapted even to solve combinatorial problems, which they were not supposed to be.
 
-\subsection{Godfrey's algebraic method}
+\section{Godfrey's algebraic method}
 The previous part presents the Miller algorithm for the Langford problem, this method cannot achieve bigger instances than the $L(2,21)$.\\
 An algebraic representation of the Langford problem has been proposed by M. Godfrey in 2002.
 In order to break the limitation of $L(2,24)$ we already used this very efficient problem specific method.
 In this part we describe this algorithm and optimizations, and then our implementation on multiGPU clusters.
-\subsubsection{Method description}
+\subsection{Method description}
 Consider $L(2,3)$ and $X=(X_1,X_2,X_3,X_4,X_5,X_6)$. 
 It proposes to modelize $L(2,3)$ by 
 $F(X,3) = (X_1X_3+X_2X_4+X_3X_5+X_4X_6)\times (X_1X_4+X_2X_5+X_3X_6)\times (X_1X_5+X_2X_6) $
@@ -477,23 +478,22 @@ $\sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} \big( \prod\limits_{i=1}^{2n} 
 \noindent That allows to get $L(2,n)$ from polynomial evaluations.
 The computational complexity of $L(2,n)$ is of $O(4^n\times n^2)$ and an efficient big integer arithmetic is necessary. This principle can be optimized by taking into account the symmetries of the problem and using the Gray code: these optimizations are described below.
 
-\subsubsection{Optimizations}
+\subsection{Optimizations}
 Some works focused on finding optimizations for this arithmetic method\cite{CReSTIC-1154}. Here we explain the symmetric and computation optimizations used in our algorithm.
 
-\paragraph{Evaluation parity}
+\subsubsection{Evaluation parity: }
 As $[F(-X,n) = F(X,n)]$, $G$ is not affected by a global sign change. 
 In the same way the global sign does not change if we change the sign of each pair or impair variable.
 
 Using these optimizations we can set the value of two variables and accordingly divide the computation time and result size by four.
 
-\paragraph{Symmetry summing}
+\subsubsection{Symmetry summing: }
 In this problem we have to count each solution up to a symmetry; thus for the first pair of cubes we can stop the computation at half of the available positions considering 
 
 \noindent $S'_1(x) = \sum_{k=1}^{n-1}x_kx_{k+2}$ instead of $S_1(x) = \sum_{k=1}^{2n-2} x_kx_{k+2}$.
 The result is divided by 2. 
 
-\paragraph{Sums order}
-
+\subsubsection{Sums order: }
 Each evaluation of $ S_i(x) = \sum_{k=1}^{2n-i-1} x_kx_{k+i+1} $, before multiplying might be very important regarding to the computation time for this sum. 
 Changing only one value of $ x_i $ at a time, we can recompute the sum using the previous one without global recomputation. 
 Indeed, we order the evaluations of the outer sum using Gray code sequence. 
@@ -502,10 +502,10 @@ Then the computation time is considerably reduced.
 Based on all these improvements and optimizations we can use the Godfrey method in order to solve huge instances of the Langford problem. 
 The next section develops the main issues of our multiGPU architecture implementation. 
 
-\subsubsection{Implementation details}
+\subsection{Implementation details}
 In this part we present the specific adaptations required to implement the Godfrey method on a multiGPU architecture.
 
-\paragraph{Optimized big integer arithmetic}
+\subsubsection{Optimized big integer arithmetic: }
 
 In each step of computation, the value of each $S_i$ can reach $2n-i-1$ in absolute value, and their product can reach $\frac{(2n-2)!}{(n-2)!}$. 
 As we have to sum the $S_i$ product on $2^{2n}$ values, in the worst case we have to store a value up to $2^{2n}\frac{(2n-2)!}{(n-2)!}$, which corresponds to $10^{61}$ for $n=28$, with about 200 bits.
@@ -523,14 +523,14 @@ Fig.~\ref{fig:big-integer} represents this big integer handling.
 \end{figure}
 
 
-\paragraph{Gray sequence in memory}
+\subsubsection{Gray sequence in memory: }
 The Gray sequence cannot be stored in an array because it would be too large (it would contain $2^{2n}$ byte values). This is the reason why only one part of the Gray code sequence is stored in memory and the missing terms are directly computed from the known ones using arithmetic considerations.
 The size of the stored part of the Gray code sequence is chosen to be as large as possible to be contained in the processor's cache memory, the L1 cache for the GPUs threads: so the accesses are fastened and the computation of the Gray code is optimized.
 For an efficient use of the E5-2650 v2 ROMEO's CPUs, which disposes of 20 MB of level-3 cache, the CPU Gray code sequence is developed recursively up to depth 25. For the K20Xm ROMEO's GPUs, which dispose of 8 KB of constant memory, the sequence is developed up to depth 15. The rest of the memory is used for the computation itself. 
 %As the Gray sequence is not entirely stored in memory, 
 %As we show, all the gray sequence is not in memory, in order to compute the next value when the array is exceeded a modulus method is used for recompute the next value.
 
-\paragraph{Tasks generation and computation}
+\subsubsection{Tasks generation and computation: }
 \label{sec:tasks}
 
 In order to perform the computation of the polynomial, two variables can be set among the $2n$ available. For the tasks generation we choose a number $p$ of variables to generate $2^p$ tasks by developing the evaluation tree to depth $p$.\\
@@ -538,12 +538,12 @@ In order to perform the computation of the polynomial, two variables can be set 
  
 The tasks are spread over the cluster, either synchronously or asynchronously.
 
-\textbf{Synchronous computation -}
+\paragraph{Synchronous computation: }
 A first experiment was carried out with an MPI distribution of the tasks of the previous model. 
 Each MPI process finds its tasks list based on its process \textit{id}; then converting each task number into binary gives the task's initialization. 
 The processes work independently; finally the root process ($id=0$) gathers all the computed numbers of solutions and sums them.
 
-\textbf{Asynchronous computation -}
+\paragraph{Asynchronous computation: }
 \label{section:asynchronous}
 In this case the tasks can be computed independently. 
 As with the synchronous computation, the tasks' initializations are retrieved from their number. 
@@ -560,21 +560,21 @@ Each machine can get a task,  compute it, and then store its result; then when a
 %\item Finally the CPU cores computed results are summed over a shared variable; the GPU sub-tasks results are copied back and then summed with the global result.
 %\end{itemize}
 
-\subsubsection{Experimental settings}
+\subsection{Experimental settings}
 This part presents the experimental context and methodology, and the way the experiments were carried out.
 This study has similar goals as for the Miller's resolution experiments.
 
-\paragraph{Experimental methodology}
+\subsubsection{Experimental methodology: }
 We present here the way the experimental settings were chosen.
 Firstly we define the tasks distribution, secondly we set the number of threads per GPU block; finally, we set the CPU/GPU distribution.
 
 
-\textbf{Tasks distribution depth -}
+\paragraph{Tasks distribution depth: }
 This value being set it is important to get a high number of blocks to maintain sufficient GPU load.
 Thus we have to determine the best number of tasks for the distribution. As presented in part \ref{sec:tasks} the number $p$ of bits determines $2^p$ tasks. On the one hand, too many tasks are a limitation for the GPU that cannot store all the tasks in its 6GB memory. On the other hand, not enough tasks means longer tasks and too few blocks to fill the GPU grid. Fig.~\ref{fig:graphe_prof} shows that for the $L(2,23)$ instance the best task number is with generation depth 28.
 
 
-\textbf{Number of threads per block -}
+\paragraph{Number of threads per block: }
 In order to take advantage of the GPU computation power, we have to determine the threads/block distribution. Inspired by our experiments with Miller's algorithm we know that the best value may appear at lower occupancy. We perform tests on a given tasks set varying the threads/block number and grid size associated. 
 Fig.~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem: the best distribution is around $128$ threads per block. 
 \begin{figure}[htbp]
@@ -603,27 +603,27 @@ Fig.~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem
 \end{minipage}
 \end{figure}
 
-\paragraph{CPU vs GPU distribution -}
+\subsubsection{CPU vs GPU distribution: }
 The GPU and CPU computation algorithm will approximately be the same. 
 In order to take advantage of all the computational power of both components we have to balance tasks between CPU and GPU. 
 We performed tests by changing the CPU/GPU distribution based on simulations on a chosen set of tasks.  
 Fig.~\ref{fig:graphe_rep} shows that the best distribution is obtained when the GPU handles 65\% of the tasks. 
 This optimal load repartition directly results from the intrinsics computational power of each component; this repartition should be adapted if using a more powerful GPU like Tesla K40 or K80.
 
-\paragraph{Computing context}
+\subsubsection{Computing context: }
 
-As presented in part~\ref{sec:context}, we used the ROMEO supercomputer to perform our tests and computations.
+As presented in part~\ref{sec:part1_ROMEO}, we used the ROMEO supercomputer to perform our tests and computations.
 %We use the same supercomputer to perform that computation that we use for the Miller method (section \ref{sec:context}), the ROMEO cluster which use Slurm as node reservation software.
 On this supercomputer SLURM\cite{slurm} is used as a reservation and job queue manager.
 This software allows two reservation modes: a static one-job limited reservation or the opportunity to dynamically submit several jobs in a Best-Effort manner.
 
-\textbf{Static distribution -}
+\paragraph{Static distribution: }
 In this case we used the synchronous distribution presented in \ref{section:asynchronous}. 
 We submited a reservation with the number of MPI processes and the number of cores per process.
 This method is useful to get the results quickly if we can get at once a large amount of computation resources. It was used to perform the computation of small problems, and even for $L(2,23)$ and $L(2,24)$.\\
 As an issue, it has to be noted that it is difficult to quickly obtain a very large reservation on such a shared cluster, since many projects are currently running. 
 
-\textbf{Best effort -}
+\paragraph{Best effort: }
 SLURM allows to submit tasks in the specific Best-Effort queue, which does not count in the user \textit{fair-share}. In this queue, if a node is free and nobody is using it, the reservation is set for a job in the best effort queue for a minimum time reservation. 
 If another user asks for a reservation and requests this node, the best effort job is killed (with, for example, a SIGTERM signal). This method, based on asynchronous computation, enables a maximal use of the computational resources without blocking for a long time the entire cluster.
 %This global computation process is fault-tolerant since no result is provided for aborted tasks, that are computed again.
@@ -694,7 +694,7 @@ At the end the outputs of the different tasks are merged and the global result c
 
 
 
-\subsubsection{Results}
+\subsection{Results}
 After these optimizations and implementation tuning steps, we conducted tests on the ROMEO supercomputer using best-effort queue to solve $L(2,27)$ and $L(2,28)$. 
 We started the experiment after an update of the supercomputer, that implied a cluster shutdown. 
 Then the machine was restarted and was about 50\% idle for the duration of our challenge. 
@@ -734,35 +734,33 @@ This allowed us to obtain a weak best-effort overhead, and an important cluster 
 Unfortunately for $L(2,28)$ on such a long period we got a lower part of the supercomputer dedicated to our computational project.
 Thus we are confident in good perspectives for the $L(2,31)$ instance if computed on an even larger cluster or several distributed clusters. 
 
-\subsection{Conclusion}
+\section{Conclusion}
 
-This paper presents two methods to solve the Langford pairing problem on multiGPU clusters. 
+This study presents two methods to solve the Langford pairing problem on multiGPU clusters. 
 In its first part the Miller's algorithm is presented. 
 Then to break the problem limitations we show optimizations and implementation of Godfrey's algorithm.
 
-\textbf{CSP resolution method -}
+\subsection{CSP resolution method}
 As any combinatorial problem can be represented as a CSP, the Miller algorithm can be seen as general resolution scheme based on the backtrack tree browsing. 
 A three-level tasks generation allows to fit the multiGPU architecture. 
 MPI or Best-Effort are used to spread tasks over the cluster, OpenMP for the CPU cores distribution and then CUDA to take advantage of the GPU computation power.
 We were able to compute $L(2,20)$ with this regularized method and to get an even better time with the basic backtrack. 
 This proves the proposed approach and also exhibits that the GPU scheduler is very efficient at managing highly divergent threads.
 
-\textbf{MultiGPU clusters and best-effort -}
+\subsection{MultiGPU clusters and best-effort -}
 In addition and with the aim to beat the Langford limit we present a new implementation of the Godfrey method using GPUs as accelerators. In order to use the supercomputer ROMEO, which is shared by a large scientific community, we have implemented a distribution that does not affect the machine load, using a best-effort queue. The computation is fault-tolerant and totally asynchronous.
 
-\textbf{Langford problem results -}
-This study enabled us to compute $L(2,27)$ and $(L2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. The total number of solutions is: 
+\paragraph{Langford problem results: }
+This study enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. The total number of solutions is: 
 
 \hspace{3cm} L(2,27) = 111,683,611,098,764,903,232
 
 \hspace{3cm} L(2,28) = 1,607,383,260,609,382,393,152
 
-\textbf{Perspectives -}
+\paragraph{Perspectives: }
 This study shows the benefit of using GPUs as accelerators for combinatorial problems. 
 In Miller's algorithm they handle 80\% of the computation effort and 65\% in Godfrey's.\\
 As a near-term prospect, we want to scale and show that it is possible to use the order of 1000 or more GPUs for pure combinatorial problems.\\
 The next step of this work is to generalize the method to optimization problems. This adds an order of complexity since shared information has to be maintained over a multiGPU cluster. 
 
-
-\section{Conclusion}
  
