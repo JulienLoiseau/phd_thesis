@@ -1,13 +1,24 @@
-\chapter{Complex systems as a benchmark} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                   %
+%	CHAPTER SIX: COMMUNICATION WALL: GRAPH500                       %
+%                                                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Communication Wall: GRAPH500} 
 
 \section{Introduction}
+In order to face the communication wall in our metric for accelerators, we choose the Graph500 problem. 
+In this part we present the benchmark itself, from the graph generation to the traversal. 
+We focus on the BFS part, we do not work on the latest Graph500 using SSSP. 
+
+\subsection{Breadth First Search}
 The most commonly used search algorithms for graphs are Breadth First Search (BFS) and Depth First Search (DFS).
 Many graph analysis methods, such as the finding of shortest path for unweighted graphs and centrality, are based on BFS. 
 
 As it is a standard approach method in graph theory, its implementation and optimization require extensive work. 
 This algorithm can be seen as frontier expansion and exploration. 
 At each step the frontier is expanded with the unvisited neighbors.  
-The sequential and basic algorithm is well known and is presented on Algorithm~\ref{alg:bfs_squential}.
+
 \begin{algorithm}
 \caption{Sequential BFS}\label{alg:bfs_squential}
 \begin{algorithmic}[1]
@@ -32,10 +43,168 @@ The sequential and basic algorithm is well known and is presented on Algorithm~\
 \end{algorithmic}
 \end{algorithm}
 
+The sequential and basic algorithm is well known and is presented on Algorithm~\ref{alg:bfs_squential}.
+
+\begin{figure}
+\begin{tikzpicture}
+	\node [draw,circle,red] (node A) at (1,3.5) {A};
+	\node [draw,circle] (node B) at (0,2.5) {B};
+	\node [draw,circle] (node C) at (2,2.5) {C};
+	\node [draw,circle] (node D) at (0,1) {D};
+	\node [draw,circle] (node E) at (2,1) {E};
+	\node [draw,circle] (node F) at (1,0) {F};
+	
+	\draw (node A) -- (node B);
+	\draw (node A) -- (node C);
+	\draw (node B) -- (node D);
+	\draw (node B) -- (node E);
+	\draw (node C) -- (node E);
+	\draw (node D) -- (node F);
+	\draw (node E) -- (node F);
+	\draw (node B) -- (node C);
+	\draw (node D) -- (node E);
+
+	% The array under the graph
+	%\foreach \x in{0,...,5}{\draw (\x*1em,-1) rectangle (\x*1em+1em,-1+1em);}
+	\draw (0,4) rectangle (1em,4.35) node[pos=.5] {A};
+	\draw (1em,4) rectangle (2em,4.35);
+	\draw (2em,4) rectangle (3em,4.35);
+	\draw (3em,4) rectangle (4em,4.35);
+	\draw (4em,4) rectangle (5em,4.35);
+	\draw (5em,4) rectangle (6em,4.35);
+
+	\node [anchor=south west] at (0,4.3) {Queue};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+	\node [draw,circle,red] (node A) at (1,3.5) {A};
+	\node [draw,circle,red] (node B) at (0,2.5) {B};
+	\node [draw,circle,red] (node C) at (2,2.5) {C};
+	\node [draw,circle] (node D) at (0,1) {D};
+	\node [draw,circle] (node E) at (2,1) {E};
+	\node [draw,circle] (node F) at (1,0) {F};
+	
+	\draw [red,line width=2pt] (node A) -- (node B);
+	\draw [red,line width=2pt] (node A) -- (node C);
+	\draw (node B) -- (node D);
+	\draw (node B) -- (node E);
+	\draw (node C) -- (node E);
+	\draw (node D) -- (node F);
+	\draw (node E) -- (node F);
+	\draw (node B) -- (node C);
+	\draw (node D) -- (node E);
+
+	% The array under the graph
+	%\foreach \x in{0,...,5}{\draw (\x*1em,-1) rectangle (\x*1em+1em,-1+1em);}
+	\draw (0,4) rectangle (1em,4.35) node[pos=.5] {};
+	\draw (1em,4) rectangle (2em,4.35) node[pos=.5] {B};
+	\draw (2em,4) rectangle (3em,4.35) node[pos=.5] {C};
+	\draw (3em,4) rectangle (4em,4.35) node[pos=.5] {};
+	\draw (4em,4) rectangle (5em,4.35) node[pos=.5] {};
+	\draw (5em,4) rectangle (6em,4.35) node[pos=.5] {};
+
+	\node [anchor=south west] at (0,4.3) {Queue};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+	\node [draw,circle,red] (node A) at (1,3.5) {A};
+	\node [draw,circle,red] (node B) at (0,2.5) {B};
+	\node [draw,circle,red] (node C) at (2,2.5) {C};
+	\node [draw,circle,red] (node D) at (0,1) {D};
+	\node [draw,circle,red] (node E) at (2,1) {E};
+	\node [draw,circle] (node F) at (1,0) {F};
+	
+	\draw [line width=2pt] (node A) -- (node B);
+	\draw [line width=2pt] (node A) -- (node C);
+	\draw [red,line width=2pt] (node B) -- (node D);
+	\draw [red,line width=2pt] (node B) -- (node E);
+	\draw [red] (node C) -- (node E);
+	\draw (node D) -- (node F);
+	\draw (node E) -- (node F);
+	\draw [red] (node B) -- (node C);
+	\draw (node D) -- (node E);
+
+	% The array under the graph
+	%\foreach \x in{0,...,5}{\draw (\x*1em,-1) rectangle (\x*1em+1em,-1+1em);}
+	\draw (0,4) rectangle (1em,4.35) node[pos=.5] {};
+	\draw (1em,4) rectangle (2em,4.35) node[pos=.5] {};
+	\draw (2em,4) rectangle (3em,4.35) node[pos=.5] {};
+	\draw (3em,4) rectangle (4em,4.35) node[pos=.5] {D};
+	\draw (4em,4) rectangle (5em,4.35) node[pos=.5] {E};
+	\draw (5em,4) rectangle (6em,4.35) node[pos=.5] {};
+
+	\node [anchor=south west] at (0,4.3) {Queue};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+	\node [draw,circle,red] (node A) at (1,3.5) {A};
+	\node [draw,circle,red] (node B) at (0,2.5) {B};
+	\node [draw,circle,red] (node C) at (2,2.5) {C};
+	\node [draw,circle,red] (node D) at (0,1) {D};
+	\node [draw,circle,red] (node E) at (2,1) {E};
+	\node [draw,circle,red] (node F) at (1,0) {F};
+	
+	\draw [line width=2pt] (node A) -- (node B);
+	\draw [line width=2pt] (node A) -- (node C);
+	\draw [line width=2pt]  (node B) -- (node D);
+	\draw [line width=2pt] (node B) -- (node E);
+	\draw (node C) -- (node E);
+	\draw [red,line width=2pt] (node D) -- (node F);
+	\draw [red] (node E) -- (node F);
+	\draw (node B) -- (node C);
+	\draw [red] (node D) -- (node E);
+
+	% The array under the graph
+	%\foreach \x in{0,...,5}{\draw (\x*1em,-1) rectangle (\x*1em+1em,-1+1em);}
+	\draw (0,4) rectangle (1em,4.35) node[pos=.5] {};
+	\draw (1em,4) rectangle (2em,4.35) node[pos=.5] {};
+	\draw (2em,4) rectangle (3em,4.35) node[pos=.5] {};
+	\draw (3em,4) rectangle (4em,4.35) node[pos=.5] {};
+	\draw (4em,4) rectangle (5em,4.35) node[pos=.5] {};
+	\draw (5em,4) rectangle (6em,4.35) node[pos=.5] {F};
+
+	\node [anchor=south west] at (0,4.3) {Queue};
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+	\node [draw,circle] (node A) at (1,3.5) {A};
+	\node [draw,circle] (node B) at (0,2.5) {B};
+	\node [draw,circle] (node C) at (2,2.5) {C};
+	\node [draw,circle] (node D) at (0,1) {D};
+	\node [draw,circle] (node E) at (2,1) {E};
+	\node [draw,circle] (node F) at (1,0) {F};
+	
+	\draw [line width=2pt] (node A) -- (node B);
+	\draw [line width=2pt] (node A) -- (node C);
+	\draw [line width=2pt] (node B) -- (node D);
+	\draw [line width=2pt] (node B) -- (node E);
+	\draw [line width=2pt] (node D) -- (node F);
+	
+	% The array under the graph
+	%\foreach \x in{0,...,5}{\draw (\x*1em,-1) rectangle (\x*1em+1em,-1+1em);}
+	\draw (0,4) rectangle (1em,4.35) node[pos=.5] {$\emptyset$};
+	\draw (1em,4) rectangle (2em,4.35) node[pos=.5] {A}; % B
+	\draw (2em,4) rectangle (3em,4.35) node[pos=.5] {A}; % C
+	\draw (3em,4) rectangle (4em,4.35) node[pos=.5] {B}; % D
+	\draw (4em,4) rectangle (5em,4.35) node[pos=.5] {B}; % E
+	\draw (5em,4) rectangle (6em,4.35) node[pos=.5] {D}; % F
+
+	\node [anchor=south west] at (0,4.3) {Predecessor};
+\end{tikzpicture}
+\caption{Example of Breadth First Search in an undirected graph}
+\label{fig:part2_chap3:BFS}
+\end{figure}
+
+
+This algorithm is presented on figure~\ref{fig:part2_chap3:BFS}.
+At each step from the current queue we search through the neighbors of nodes. 
+All the new nodes, not yet traversed, are added in the queue for the next step.
+We keep the information of neighors exploration in order to recreate the precessor array. 
+
 This algorithm is very famous thanks to its use in many applications but also thanks to the world supercomputer ranking called Graph500\footnote{\url{http://www.graph500.org}}.
 This benchmark is designed to measure the performance on very irregular problems like BFS on a large scale randomized generated graph. 
 The first Graph500 list was released in November 2010.
-The last list, issued in November 2015, is composed of 201 machines ranked using a specific metric: Traversed Edges Per Second, denoted as TEPS. 
+The last list, issued in November 2017, is composed of 235 machines ranked using a specific metric: Traversed Edges Per Second, denoted as TEPS. 
 The aim is to perform a succession of 64 BFS on a large scale graph in the fastest possible way.
 Then the ratio of edges traversed per the time of computation is used to rank the machines.
 
@@ -54,7 +223,7 @@ The second section  describes the Graph500 protocol and focuses on the Kronecker
 The third section presents the chosen methods to implement graph representation and work distribution over the supercomputer nodes. It particularly focuses on the interest of a hybrid CSR and CSC representation.
 We concude by examining the results for different graph scales and load distributions.
 
-\subsection{Related work}
+\section{Related work}
 The most efficient algorithm to compute BFS traversal is used and detailed in \cite{6468459}. 
 It uses a 2D partition of the graph which will be detailed later. 
 This algorithm is used on the BlueGene/P and BlueGene/Q architectures but can be easily adapted to any parallel cluster.
@@ -78,7 +247,7 @@ The scheme used in their approach is quite similar to the one in our study but w
 
 In our work we focus on the GPUDirect usage on the ROMEO supercomputer. 
 
-\subsection{Environment}
+\section{Environment}
 As previously mentioned, a CPU implementation is available on the official Graph500 website. 
 A large range of software technology is covered with MPI, OpenMP, etc. 
 All these versions use the same generator and the same validation pattern which is described in this part below. 
@@ -102,7 +271,7 @@ The real problem is to find an optimized way to use parallelism at several level
 
 
 
-\subsubsection{Generator}
+\subsection{Generator}
 
 The \textit{Kronecker graphs}, based on Kronecker products, represent a specific graph class
 imposed by the Graph500 benchmark. 
@@ -118,14 +287,14 @@ The Graph500 generator uses Stochastic Kronecker graphs, avoiding large scale ma
 	\label{fig:kron_gen_scheme}
 \end{figure}
 
-As presented on Fig~\ref{fig:kron_gen_scheme}, the generation is based on edge presence probability on a part of the adjacency matrix. 
+As presented on figure~\ref{fig:kron_gen_scheme}, the generation is based on edge presence probability on a part of the adjacency matrix. 
 For the Graph500 the probabilities are $a = 0.57$, $b = c = 0.19$ and $d = 0.05$.
 The generator handle can be stored in a file or directly split in the RAM memory of each process. 
 The first option is not very efficient and imposes a lot of I/O for the generation and verification stage but can be very useful for large scale problems.
 The second option is faster but uses a part of the RAM thus less ressources are available for the current BFS execution.
 
 
-\subsubsection{Validation}
+\subsection{Validation}
 The validation stage is completed after the end of each BFS. 
 The aim is to check if the tree is valid and if the edges are in the original graph.
  This is why we must keep a copy of the original graph in memory, file or RAM. 
@@ -138,11 +307,11 @@ a node and its parent are joined by an edge of the original graph.
 
 In order to meet the Graph500 requirements we use the proposed verification function provided in the official code.
 
-\subsection{BFS traversal}
+\section{BFS traversal}
 In this section we present the actual algorithm we used to perform the BFS on a multi-GPU cluster. 
 In a first part we introduce the data structure; then we present the algorithm and the optimizations used.
 
-\subsubsection{Data structure}
+\subsection{Data structure}
 We performed tests of several data structures.
 In a first work we tried to work with bitmap. Indeed the regularity of computation can fit very well with the GPU architecture. But this representation imposes a significant limitation on the graph size. 
 This representation is used on the BlueGene/Q architecture. 
@@ -163,7 +332,7 @@ $$C= \{1,2,0,2,0,1,3,2\}$$
 The M adjacency matrix represents the graph. $R$ vector contains the cumulative number of neighbors for each vertex, of size $(\#vertices +1)$. $C$, of size $(\#edges)$, is, for each index of $R$, the edges of a vertex.
 This representation is very compact and very efficient to work with sparse graphs. 
 
-\subsubsection{General algorithm}
+\subsection{General algorithm}
 
 When looking at the latest Graph500 list we see that the best machines are the BlueGene ones. 
 We count about 26 BlueGene/Q and BlueGene/P machines in the first 50  machines.
@@ -248,7 +417,7 @@ Two functions are not specified:
 
 This algorithm, which is the basis of many implementations, is the main structure of our distribution. 
 
-\subsubsection{Direction optimization}
+\subsection{Direction optimization}
 
 In order to get an optimized computation in terms of TEPS we decided to sacrifice a small part of the memory for storing both the CSC and CSR representations. 
 Indeed during the different BFS iterations the $in\_queue$ size varies a lot and, taking this into account, it is wiser to perform exploration from \textit{top-down} or \textit{bottom-up}. 
@@ -259,7 +428,7 @@ Then if not, it is added to the $out\_queue$.
 When the $in\_queue$ is sparse, like for the first and latest iterations, this method is very efficient. 
 In the second case, \textit{bottom-up}, we start the exploration by the not-yet-visited vertices and verify if there is a link between those vertices and the $in\_queue$ ones. 
 If yes, the not-yet-visited vertex is added to the $out\_queue$. 
-Fig~\ref{fig:csr_csc} presents the two approches, whith the time visiting all the edges, and the benefits of their hybridization.
+figure~\ref{fig:csr_csc} presents the two approches, whith the time visiting all the edges, and the benefits of their hybridization.
 
 %\begin{table}
 %\centering
@@ -296,12 +465,12 @@ Fig~\ref{fig:csr_csc} presents the two approches, whith the time visiting all th
 	\label{fig:csr_csc}
 \end{figure}
 
-\subsubsection{GPU optimization}
+\subsection{GPU optimization}
 
-In algorithm \ref{alg:bfs_bluegene}, two parts are not developed. namely \textit{ExploreFrontier()} and \textit{WritePred()}. Indeed these phases are optimized using the GPU. 
+In algorithm~\ref{alg:bfs_bluegene}, two parts are not developed. namely \textit{ExploreFrontier()} and \textit{WritePred()}. Indeed these phases are optimized using the GPU. 
 Based on the Merill et al. implementation, the algorithm is optimized to use the shared memory and the texture memory of the GPU. 
 For our version we decided to keep the bitmap implementation for the communications and the queues. So we have to fit the CSR and CSC implementations. 
-On algorithm \ref{alg:csr} we present the CSR algorithm;
+On algorithm~\ref{alg:csr} we present the CSR algorithm;
 CSC is based on the same approach but starting from the $visited$ queue. 
 
 In the CSR version each warp is attached to a 32 bit word of the $in\_queue$ bitmap. 
@@ -361,18 +530,15 @@ Then the vertex is added in the bitmap $out\_queue$.
 \end{algorithm}
 
  
-\subsubsection{Communications}
+\subsection{Communications}
 
 Based on the algorithm \ref{alg:bfs_bluegene} communications pattern, we first used MPI with the CPU transferring the data. But the host-device transfer time between the CPU and the GPU was too time-consuming. 
 In order to accelerate the transfers between the GPUs, we used a specific GPU MPI-aware  library. This library allows direct MPI operations from the memory of one GPU to another and also implements direct GPU collective operations. 
 GPUDirect can be used coupled with this library. In the last version we used this optimization with GDRCopy. 
 
-\subsection{Results}
+\section{Results}
 
-\subsubsection{Working environment}
-
-
-\subsubsection{CPU and GPU comparison}
+\subsection{CPU and GPU comparison}
 
 \begin{figure}[!t]
 \centering
@@ -381,7 +547,7 @@ GPUDirect can be used coupled with this library. In the last version we used thi
 \label{fig:single_cpu_accelerators}
 \end{figure}
 
-On Fig~\ref{fig:single_cpu_accelerators} we present the single node implementation. 
+On figure~\ref{fig:single_cpu_accelerators} we present the single node implementation. 
 Here we compare the best CPU implementation proposed by the Graph500 benchmark with our GPU implementation. 
 On our cluster we worked with K20Xm GPUs. 
 The GPU result is twice times better than the CPU one. 
@@ -391,9 +557,9 @@ Indeed all the cores can be used for the Exploration phase.
 
 
 
-\subsubsection{Strong and weak scaling}
+\subsection{Strong and weak scaling}
 
-On Fig~\ref{fig:bfs_strong_scaling} and Fig~\ref{fig:bfs_weak_scaling} we see the result of strong and weak scaling. 
+On figure~\ref{fig:bfs_strong_scaling} and figure~\ref{fig:bfs_weak_scaling} we see the result of strong and weak scaling. 
 In the strong scaling we used a $SCALE$ of $21$ for different numbers of GPUs. 
 The application scales up to 16 GPUs but then the data exchanges are too penalizing;
 performance for 64 GPUs is lower. 
@@ -403,11 +569,11 @@ Using 16 GPUs we were able to perform up to 4.80 GTEPS.
 
 For the weak scaling, the $SCALE$ evolves with the number of GPUs. 
 So the computation part grows and the limitation of communications is reduced. 
-On Fig~\ref{fig:bfs_weak_scaling}, the problem SCALE is presented on each point. 
+On figure~\ref{fig:bfs_weak_scaling}, the problem SCALE is presented on each point. 
 With our method we were able to reach up to 12 GTEPS using this scaling. 
 
 
-\subsubsection{Communications and GPUDirect}
+\subsection{Communications and GPUDirect}
 
 Each node of the ROMEO supercomputer is composed of two CPU sockets and two GPUs, named GPU 0 and GPU 1.
 Yet the node just has one HCA (Host Channel Adapters), linked with CPU 0 and GPU 0. 
@@ -432,13 +598,13 @@ Another problem is that the two GPUs have to share the same HCA for their commun
 \end{figure}
 
 
-On Fig~\ref{fig:full_vs_gpu0}, the tests are based on the GPU-only implementation. 
+On figure~\ref{fig:full_vs_gpu0}, the tests are based on the GPU-only implementation. 
 First we worked with the two GPUs of the nodes. 
 We were able to perform up to to $SCALE$ 29 with 12 GTEPS. 
 The GPUDirect implementation does not allow the communication with a QPI link. 
 So in order to compare the results, we used only the GPU 0 of each node of the supercomputer. 
 Based on our algorithm implementation we need to use a number $2^{2n}$ of GPUs. 
-Then the tests on Fig~\ref{fig:full_vs_gpu0} are for 256 GPUs (with GPU 0 and GPU 1) and with 64 GPUs (using just GPU 0 only). 
+Then the tests on figure~\ref{fig:full_vs_gpu0} are for 256 GPUs (with GPU 0 and GPU 1) and with 64 GPUs (using just GPU 0 only). 
 Thus we were able to reach a better value of GTEPS. 
 As the major limitation is the communications stage, using only GPU 0 allowed us to obtain about 13.70 GTEPS on the ROMEO supercomputer. 
 
@@ -449,7 +615,7 @@ As the major limitation is the communications stage, using only GPU 0 allowed us
 \label{fig:full_vs_gpu0}
 \end{figure}
 
-\subsection{Conclusions}
+\section{Conclusions}
 In this study we present an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster. It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
 This work highlights different key points.
 First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. % data representation. 

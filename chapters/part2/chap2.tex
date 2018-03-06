@@ -1,3 +1,8 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                   %
+% CHAPTER FIVE: COMPUTATIONAL WALL: LANGFORD PROBLEM                %
+%                                                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Computational Wall: Langford Problem}
 
@@ -283,7 +288,7 @@ we implemented both \emph{backtrack} and \emph{regularized} versions of the Mill
 The next section presents the way we hybridize these two schemes in order to get an efficient parallel implementation of the Miller algorithm.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Hybrid parallel implementation}
+\subsection{Hybrid parallel implementation}
 \label{section:parallel_backtrack}
 This part presents our methodology to implement Miller's method on a multiGPU cluster.
 
@@ -320,7 +325,7 @@ for tasks and sub-tasks generated at sever and client levels, the tree developme
 %\item \texttt{CPUs and GPUs} can compute in competition. Whereas CPUs use standard backtrack, GPUs generate leaves using the regularized method and adding successive pairs on their masks without any test.  
 %\end{itemize}
 
-\subsubsection{Experiments tuning}
+\subsection{Experiments tuning}
 
 In order to take advantage of all the computing power of the GPU we have to refine the way we use them: this section presents the experimental study required to choose optimal settings. This tuning allowed us to prove our proposal on significant instances of the Langford problem.
 
@@ -383,7 +388,7 @@ It is the reason why we propose to use some of the CPU cores to take part of the
 Figure~\ref{cores_rep} represents computation time in relation with different task distributions between CPU and GPU.
 We experimentally demonstrated that only 4 or 5 CPU cores are enough to feed GPU, the other ones can be used to perform backtrack resolution in competition with GPUs.
 
-\subsubsection{Results}
+\subsection{Results}
 
 \paragraph{Regularized method results}
 We now can show the results obtained for our massively parallel scheme using the previous optimizations, comparing the computation times of successive instances of the Langford problem. These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/GPU machines.
@@ -757,10 +762,12 @@ This study enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less th
 
 \hspace{3cm} L(2,28) = 1,607,383,260,609,382,393,152
 
-\paragraph{Perspectives: }
+\paragraph{GPU benefit: }
 This study shows the benefit of using GPUs as accelerators for combinatorial problems. 
 In Miller's algorithm they handle 80\% of the computation effort and 65\% in Godfrey's.\\
 As a near-term prospect, we want to scale and show that it is possible to use the order of 1000 or more GPUs for pure combinatorial problems.\\
-The next step of this work is to generalize the method to optimization problems. This adds an order of complexity since shared information has to be maintained over a multiGPU cluster. 
+The next step of this work is to generalize the method to optimization problems. 
+This adds an order of complexity since shared information has to be maintained over a multiGPU cluster. 
 
+We can conclude that even on irregular problems accelerators like GPU can be use and show better results than classical processors. 
  
