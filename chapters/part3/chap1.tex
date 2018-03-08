@@ -25,15 +25,16 @@ The development of new reliable, parallel and distributed tools for this method 
 \centering
 \begin{tikzpicture}
 	
-	% Others
+	% Others and their ellipse
 	\draw [fill,black!40] (.5,1.5) circle (.3em);
 	\draw [fill,black!40] (0,0) circle (.3em);
 	\draw [fill,black!40] (0,3.2) circle (.3em);
+	\draw[black!70] (0,3.2) ellipse (2 and .5);
 	\draw [fill,black!40] (3,.2) circle (.3em);
+	\draw[black!70] (3,.2) ellipse (2.5 and .7);
 	\draw [fill,black!40] (4,4) circle (.3em);
 	% Ellipses 
 	\draw[line width=.8pt,black!70] (2,2) ellipse (4 and 1);
-	\draw[black!70] (0,3.2) ellipse (2 and .5);
 	% Axes
 	\draw[->,line width=1pt] (2,2) -- (7,2) node[anchor=north west] {$r$};
 	\draw[->,line width=1pt] (2,2) -- (2,6);
@@ -172,7 +173,74 @@ There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014g
 Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems  \cite{harada2007smoothed,crespo2011gpus}.
 We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
 
-\subsection{Problems}
+\subsection{Gravitation}
+For classical problems like fluid flow the gravitation can directly be applied on the particles with the force:
+\begin{equation}
+	\vec{a_g} = m\vec{g}
+\end{equation}
+
+In order to consider astrophysics problems we need to introduice self-gravitation. 
+Each particle imply an action on the others base on its distance and mass. 
+The equation of gravitation for a particle $i$ with $j$ other particles is: 
+\begin{equation}
+	\vec{f_a}_i = \sum_j -G \frac{m_i m_j}{|\vec{r_i}-\vec{r_j}|^3} \vec{r_{ij}}
+	\label{eq:gravitation}
+\end{equation}
+
+This computation involve an $O(N^2)$ complexity and thus is not applicable directly. 
+We applied the method called Fast Multipole Method, FMM and discussed in \cite{beatson1997short}.
+In this method we compute the gravitation up a approximations. 
+The user can refine those approximation changing parameters. 
+
+This method is based on Taylor series.
+The gravitation function of equation~\ref{eq:gravitation} can be approximate on a particle at position $\vec{r}$ by the gravitation computed at the centroid at position \vec{r_c}: 
+\begin{equation}
+ \vec{f}(\vec{r}) = \vec{f}(\vec{r_c}) + ||\frac{\partial\vec{f}}{\partial\vec{r}}||\cdot (\vec{r} - \vec{r_c}) + \frac{1}{2} (\vec{r}-\vec{r_c})^\intercal \cdot   ||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}|| \cdot (\vec{r} - \vec{r_c})
+ \end{equation}
+
+ From equation~\ref{eq:gravitation} we compute the term $||\frac{\partial\vec{f}}{\partial\vec{r}}||$:s
+ \begin{equation}
+\frac{\partial\vec{f}}{\partial\vec{r}} =
+- \sum_p \frac{m_p}{|\vec{r_c}-\vec{r_p}|^3}
+\begin{bmatrix}
+1 - \frac{3(x_c-x_p)(x_c-x_p)}{|\overline{r_c}-\overline{r_p}|^2} & -\frac{3(y_c-y_p)(x_c-x_p)}{|\overline{r_c}-\overline{r_p}|^2}  & -\frac{3(z_c-z_p)(x_c-x_p)}{|\vec{r_c}-\vec{r_p}|^2}  \\
+-\frac{3(x_c-x_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2}  & 1 - \frac{3(y_c-y_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2} &  -\frac{3(z_c-z_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2}\\
+- \frac{3(x_c-x_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2}   &  -\frac{3(y_c-y_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2} &  1- \frac{3(z_c-z_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2} \\
+\end{bmatrix}
+ \end{equation}
+
+And we propose a compact version of the matrix with: 
+ 
+\begin{equation}
+ ||\frac{\partial f^a}{\partial r^b}|| = -\sum_c \frac{m_c}{|\vec{r}-\vec{r_c}|^3} \Big[ \delta_{ab} - \frac{3.(r^a-r_c^a)(r^b-r_c^b)}{|\vec{r}-\vec{r_c}|^2} \Big] 
+\end{equation}
+
+With $\delta_{ij}$ the kronecker delta:
+\begin{equation}
+\delta_{ij} = 
+\begin{cases}
+    1, & \text{if $i = j$}.\\
+    0, & \text{if $i\neq j$}.
+  \end{cases}
+\end{equation}
+
+We note that $a$ and $b$ variate from 0 to 2 and $r^0=x$, $r^1=y$, and $r^2=z$ as usual sense. 
+
+For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we give the compact version by:
+\begin{equation}
+||\frac{\partial^2 f^a}{\partial r^b \partial r^c}|| =
+- \sum_c \frac{3 m_c}{|\vec{r}-\vec{r_c}|^5} \left[\frac{5(r^a-r_c^a)(r^b-r_c^b)(r^c-r_c^c)}{|\vec{r}-\vec{r_c}|^2} - \left( \delta_{ab} (r^c-r_c^c)+\delta_{bc} (r^a-r_c^a)+\delta_{ac} (r^b-r_c^b) \right) \right] 
+ \end{equation} 
+
+ \begin{figure}
+ \end{figure}
+
+The method is summed up in figure with the different equations.
+We consider Centers Of Mass, COM, to be the centroid of particles based on their position. 
+In several steps the information is first transmetted to the COMs, computing their position and mass. 
+
+
+\subsection{Problems} 
 
 \subsubsection{Sod shock tube}
 
