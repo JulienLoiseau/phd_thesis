@@ -17,29 +17,109 @@ We based our tests on those devices.
 This chapter also details the architecture of supercomputers themselves. 
 This has to go with the description of interconnection network with the most famous interconnection topologies. 
 
+We choose to present the architectures in a chronological order following the models presented in the previous chapter with: SISD, MIMD and SIMD/SIMT.
+We also present the optimizations of technologies through parallelism and memories.
 
-\section{Architectures}
+
+\section{Architectural improvements and parallel capabilities}
 The processors, as we know them today, begins theirs history around the 1970s.
 It is the reflection of the Von Neumann Machine we presented in Chapter I. 
-Historically more features were added to this simple core machine, going from 4 bits 1971 (Intel 4004), 8 bits in 1972 (Intel 8008), 12 bits, 16 bits, 32 bits and 64 bits bus size for recent CPUs. 
+
+\subsection{Single core processors}
+The first processors around 1970s were built using a single computation core like describe in the Von Neumann model. 
+In order to reach more performances the first factor was to reach higher frequency in the computational cores reaching up to 4-5GHz for best nowadays processors. 
+
+\subsubsection{Memory technologies}
+
+The memories technologies optimizations contain several aspect. 
+In early 1980s the augmentation of bus size from 4 bits, 8 bits, 16 bits for nowadays 32 bits for single precision and 64 bits for double precision. 
+128 bits, 256 bits, \etc buses can also be find allowing technologies like vectorization. 
+Different kind of technologies have to be considered, the SRAM and DRAM memory. 
+
+\paragraph{SRAM: }
+The Static Random Access Memory is built using so called "flip-flop" circuits that can store the data as long as the machine is powered. 
+This kind of memory is very expensive to produce due to the number of component needed and the size of the memory.
+Therefore it is usually limited for small amount of storage. 
+The SRAM is mainly used for cache memory. 
+
+Cache is a memory mechanism that is useful to consider when targeting performance. 
+
+\subparagraph{Cache memory: }
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\node (rect) at (0,0) [draw,minimum width=2cm,minimum height=1cm] (cpu) {CPU};
+\node[right = 1.5cm of cpu] (rect) [draw,minimum width=1cm,minimum height=.6cm] (cache_1) {Level 1};
+\node[right = 1.2cm of cache_1] (rect) [draw,minimum width=1.5cm,minimum height=1cm] (cache_2) {Level 2};
+\node[right = 1.8cm of cache_2] (rect) [draw,minimum width=1.5cm,minimum height=1.4cm] (cache_3) {Level 3};
+\node[right = 1.5cm of cache_3] (rect) [draw,minimum width=4cm,minimum height=2.5cm] (ram) {Main memory};
+
+\draw[thick,draw,red,dotted] (2.4,-1.2) rectangle  (10.1,1.2);
+\node[below,red,thick] at (6.25,-1.2) {Cache}; 
+% links 
+\draw[->] ([yshift=5pt]cpu.east) -- ([yshift=5pt]cache_1.west);
+\draw[<-] ([yshift=-5pt]cpu.east) -- ([yshift=-5pt]cache_1.west) node[midway,yshift=-10pt] {Fastest};
+
+\draw[->] ([yshift=5pt]cache_1.east) -- ([yshift=5pt]cache_2.west);
+\draw[<-] ([yshift=-5pt]cache_1.east) -- ([yshift=-5pt]cache_2.west) node[midway,yshift=-10pt] {Fast};
+
+\draw[->] ([yshift=5pt]cache_2.east) -- ([yshift=5pt]cache_3.west);
+\draw[<-] ([yshift=-5pt]cache_2.east) -- ([yshift=-5pt]cache_3.west) node[midway,yshift=-10pt] {Less fast};
+
+\draw[->] ([yshift=5pt]cache_3.east) -- ([yshift=5pt]ram.west);
+\draw[<-] ([yshift=-5pt]cache_3.east) -- ([yshift=-5pt]ram.west) node[midway,yshift=-10pt] {Slow};
+
+\draw[<->,thick] (1,1.6) node[above]{Words} -- (12,1.6) node[above] {Blocks};
+\node[above] at (6,1.6) {Transfer}; 
+\end{tikzpicture}
+\caption{Cache memory technology on three levels L1, L2 and L3}
+\label{fig:2_HARD:caches}
+\end{figure}
+
+This cache technology is presented on figure~\ref{fig:2_HARD:caches}.
+This little memory is built over several levels. 
+The closer to the CPU is L1, then L2 and generally no more than L3 except on specific architecture. 
+When look for a data the CP will first check the L1 cache, otherwise L2 and L3 to get the data to higher level. 
+This is based on the idea that if a data is used, it shall be use again in the near future.
+Many cache architectures exist like direct, associative, fully associative, etc. 
+
+\paragraph{DRAM: }
+\index{ECC}
+The Dynamic Random Access Memory is based on transistors and capacitors to store the binary information.
+This memory is less expansive to produce but needs to be refresh at a determined frequency however the data are lost. 
+This refresh step is in fact a reading-writing operation on the whole memory at a specific frequency. 
+There is several sub categories of DRAM used in different devices. 
+
+Depending on the way the bus are used we can find Single Data Rate, SDR, Double Data Rate, DDR and QDR, Quad Data Rates DRAM memories. 
+The number of data carried can go from 1x to 4x but the limitation of those products is the price of memory constantly rising. 
+
 The cores/CPUs also get a huge performance gain based on the frequency acceleration, from the 100kHz to GHz nowadays. 
-Plenty of other optimizations were added:
-\begin{description}[noitemsep,nolistsep]
-	\item[Multiple CPU cores:] Multiple CPU cores on the same die. They can have independent or share part of the cache and access to the same main memory. The first machine were the IBM power4 with dual core.
-	\item[In/Out-Of-Order:] In-order-process is the one describes in previous chapter, the control unit fetches instruction in memory, then the operands and the ALU computes, and finally the results is stored in memory. 
-	In this model the time to perform an instruction, cumulation of instruction fetching + operand fetching + computation + store the result, can be high and the ALU itself is busy only one step for computation itself. The idea of Out-of-order is to compute the instructions without following the Program Counter order. Indeed, for independent tasks (this is know based on dependency graphs) while the process fetch the next instructions data, the ALU can perform another operation with already available data. 
-	\item[Pre-fetching:] When a data is not available in L1 cache, it has to be moved from either L2 to L1 or L3 to L2 to L1 or in the worst case RAM to L3 to L2 to L1. Pre-fecthing technology is a way to, knowing the next instructions operands, pre-fetch the data in closer cache. The pre-fetch can either be hardware or software implemented and can concern data and even instructions.
-	\item[Vectorization:] Processors allows the instructions to be executed at the same time in a SIMD manner. If the same instruction is executed on coalescent data they can be executed in the same clock cycle. 
-	Of course this tool require specific care during coding. 
-\end{description}
+Plenty of other optimizations were added to the cores
+
+\subsubsection{In/Out-Of-Order} 
+In-order-process is the one describes in previous chapter, the control unit fetches instruction in memory, then the operands and the ALU computes, and finally the results is stored in memory. 
+In this model the time to perform an instruction, cumulation of instruction fetching + operand fetching + computation + store the result, can be high and the ALU itself is busy only one step for computation itself. The idea of Out-of-order is to compute the instructions without following the Program Counter order. 
+Indeed, for independent tasks (this is know based on dependency graphs) while the process fetch the next instructions data, the ALU can perform another operation with already available data. 
+\subsubsection{Pre-fetching} 
+When a data is not available in L1 cache, it has to be moved from either L2 to L1 or L3 to L2 to L1 or in the worst case RAM to L3 to L2 to L1. 
+Pre-fecthing technology is a way to, knowing the next instructions operands, pre-fetch the data in closer cache. 
+The pre-fetch can either be hardware or software implemented and can concern data and even instructions.
+
+\subsubsection{Pipeline, vectorization} Processors allows the instructions to be executed at the same time in a SIMD manner. 
+If the same instruction is executed on coalescent data they can be executed in the same clock cycle. 
+Of course this tool require specific care during coding. 
+
+
 Those optimizations can be found either in the classical processor model or accelerators.  
 They are of first importance when we detail optimizations on our codes in part 2 and 3. 
 
-\subsection{Multi-core}
+\section{Multi-core processors}
 
 Nowadays processors share mostly the same architecture. 
 They are called multi-cores and provide up to 2 to 16 cores and each constructor have its own specificities. 
 Those processors are called "Host" because they are usually bootable and most of the accelerators need to be attached to them in order to work.
+
+\section{21th century architectures}
 
 \subsubsection{Intel}
 
