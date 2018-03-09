@@ -14,7 +14,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usetikzlibrary{positioning}
-
+\usetikzlibrary{decorations.pathreplacing}
 
 \setcounter{tocdepth}{5}
 
@@ -39,7 +39,7 @@ The Way to Exascale: From Theorics to Applied Problems}
 \begin{document}
 
 
-\newgeometry{left=0.5cm,right=0.5cm,top=2.0cm,bottom=1.5cm}
+\newgeometry{left=0.5cm,right=0.5cm,top=1.0cm,bottom=1.5cm}
 %% Title page -------------------------------------------------------
 \thispagestyle{empty}
 {%%%
@@ -53,15 +53,41 @@ The Way to Exascale: From Theorics to Applied Problems}
 {
 UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
 \vspace{0.5cm}
-INFORMATIQUE\\
-\vspace{0.5cm}
 \'Ecole Doctorale Sciences Technologie Sant\'e
 }
 
-\vspace{1.0cm}
+\vspace{1cm}
+{
+\huge
+\textbf{TH\`ESE}
+}
+\vspace{.5cm}
+
+{
+	Pour obtenir le grade de:\\ 
+	\vspace{.4cm}
+	\Large 
+	\textbf{Docteur de l'Université de Reims Champagne-Ardenne}\\
+	\vspace{.4cm}
+	\large
+	\textbf{\textit{Discipline : }Informatique}\\
+	\vspace{.4cm}
+	\textbf{\textit{Sp\'ecialit\'e : }Calcul Haute Performance}
+}
+
+{
+\vspace{1cm}
+	Pr\'esent\'ee et soutenue par:\\
+	\vspace{1cm}
+\Large
+	\textbf{Julien LOISEAU}
+\vspace{1cm}
+}
+
 {\hrule height 2pt\vspace{2pt}}
 
-\Large
+%\Large
+
 
 % Title 
 {\huge 
@@ -78,22 +104,11 @@ Les Architectures Hybrides pour Atteindre l'Exascale
 \vspace{1.0cm}
 \hrule
 
-\vspace{1.5cm}
-
-{\LARGE
-par \textbf{Julien Loiseau}
-}
-
-\vspace{2cm}
+\vspace{1cm}
 
 {
-Th\`ese de doctorat d'Informatique
-}
-
-\vspace{2cm}
-
-{
-Sous la direction de : \textbf{M. Michaël KRAJECKI, Professeur des Universités}
+Sous la direction de :\\ 
+\textbf{Pr. Michaël KRAJECKI, Professeur des Universités}
 }
 \vspace{0.5cm}
 
@@ -103,14 +118,15 @@ Sous la direction de : \textbf{M. Michaël KRAJECKI, Professeur des Universités
 \begin{tabular}{l l l}
 \textbf{JURY} &  & \\
 &&\\
-?? & ?? & Rapporteur\\
-?? & ?? & Rapporteur\\
-Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Examinateur \\
-Guillaume Colin de Verdiere & Ingénieur au CEA, France & Examinateur\\
+?? & ?? & Pr\'esident\\
 Michaël Krajecki & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
 François Alin & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur  \\
-Christophe Jaillet & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Encadrant \\
-
+Christophe Jaillet & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur \\
+?? & ?? & Rapporteur\\
+Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
+?? & ?? & Examinateur\\
+?? & ?? & Examinateur\\
+Guillaume Colin de Verdiere & Ingénieur au CEA, France & Invit\'e\\
 \end{tabular}
 
 \vspace{0.5cm}
