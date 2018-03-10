@@ -192,6 +192,50 @@ We applied the method called Fast Multipole Method, FMM and discussed in \cite{b
 In this method we compute the gravitation up a approximations. 
 The user can refine those approximation changing parameters. 
 
+\begin{figure}
+\begin{tikzpicture}
+\begin{scope}[
+   		yshift=0,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\foreach \i in {1,2,...,300}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\node at (\x,\y) [circle,fill,inner sep=.7pt]{};
+  	}
+\end{scope}
+\begin{scope}[
+   		yshift=60,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=10mm, black] (0,0) grid (4,4);
+	\foreach \x in {0,1,...,3}{
+		\foreach \y in {0,1,...,3}{
+			\node at (\x*10mm+5mm,\y*10mm+5mm) [red,circle,fill,inner sep=.7pt]{};
+		}
+	}
+\end{scope}
+\begin{scope}[
+   		yshift=120,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=20mm, black] (0,0) grid (4,4);
+	\foreach \x in {0,1}{
+		\foreach \y in {0,1}{
+			\node at (\x*20mm+10mm,\y*20mm+10mm) [red,circle,fill,inner sep=.7pt]{};
+		}
+	}
+\end{scope}
+\end{tikzpicture}
+\end{figure}
+
 This method is based on Taylor series.
 The gravitation function of equation~\ref{eq:gravitation} can be approximate on a particle at position $\vec{r}$ by the gravitation computed at the centroid at position $\vec{r_c}$: 
 \begin{equation}

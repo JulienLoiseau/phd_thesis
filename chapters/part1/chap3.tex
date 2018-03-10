@@ -101,6 +101,7 @@ At first they were targeted for matrix computation with OpenGL or DirectX throug
 The GPGPUs arriving forced an evolution and new dedicated language to appear. 
 
 \subsubsection{CUDA}
+\label{sec:CUDA}
 The Compute Device Unified Architecture is the API develop in C/C++ Fortran by NVIDIA to target its GPGPUs. 
 The API provide high and low level functions. 
 The driver API allows a fine grain control over the executions.
@@ -109,6 +110,39 @@ The CUDA compiler is called NVidia C Compiler, NVCC.
 It converts the device code into Parallel Thread eXecution, PTX, and rely to the C++ host compiler for host code. 
 PTX is a pseudo assembly language translated by the GPU in binary code that is then execute. 
 As the ISA is simpler than CPU ones and able the user to work directly in assembly for very fine grain optimizations. 
+
+\begin{figure*}[t!]
+\centering
+\setlength\fboxsep{0pt}
+\setlength\fboxrule{0.25pt}
+\includegraphics[scale=0.6]{\locpath/figures/chap1/smx}
+\caption{NVIDIA GPU and CUDA architecture overview}
+ \label{fig:chap1_gpu}
+%\vspace{-0.8cm} 
+\end{figure*}
+
+As presented in figure~\ref{fig:chap1_gpu}, NVIDIA GPUs include many \emph{Streaming Multiprocessors} (SM), each of which is composed of many \emph{Streaming Processors} (SP). In the Kepler architecture, the SM new generation is called SMX.
+%
+%In the CUDA programing model~\cite{cuda}, the GPU works as a SIMT co-processor of a conventional CPU. 
+Grouped into \emph{blocks}, \textit{threads} execute \emph{kernels} functions synchronously.
+Threads within a block can cooperate by sharing data on an SMX and synchronizing their execution to coordinate memory accesses; inside a block, the scheduler organizes \emph{warps} of 32 threads which execute the instructions simultaneously.
+The blocks are distributed over the GPU SMXs to be executed independently.
+
+%Memory, bandwidth and streams:
+In order to use data in a device kernel, it has to be first created on the CPU, allocated on the GPU and then transferred from the CPU to the GPU; after the kernel execution, the results have to be transferred back from the GPU to the CPU. 
+GPUs consist of several memory categories, organized hierarchically and differing by size, bandwidth and latency.   
+On the one hand, the device's main memory is relatively large but has a slow access time due to a huge latency. 
+On the other hand, each SMX has a small amount of shared memory and L1 cache, accessible by its SPs, with faster access, and registers organized as an SP-local memory. 
+SMXs also have a constant memory cache and a texture memory cache.
+%, that are linked to the constant and texture memories physically located in the device memory: these are read-only and have faster access time than the rest of the memory categories.
+Reaching optimal computing efficiency requires considerable effort while programming.
+Most of the global memory latency can then be hidden by the threads scheduler if there is enough computational effort to be executed while waiting for the global memory access to complete. Another way to hide this latency is to use streams to overlap kernel computation and memory load. 
+
+%Threads synchronization:
+It is also important to note that branching instructions may break the threads synchronous execution inside a warp and thus affect the program efficiency. 
+This is the reason why test-based applications, like combinatorial problems that are inherently irregular, are considered as bad candidates for GPU implementation.\\ 
+%This is particularly true with regard to combinatorial problems resolution. 
+%Thus we intend to provide a way to regularize their execution, in order to get good acceleration with GPU computation. 
 
 Specific tools have been made for HPC in the NVIDIA GPGPUs. 
 \begin{description}[noitemsep,nolistsep]

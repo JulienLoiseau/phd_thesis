@@ -15,13 +15,24 @@ The results are then presented to show the acceleration using the whole ROMEO su
 
 %\section{The Langford problem}
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
-While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.
-  
+While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.\\
+
 \begin{figure}[htbp]    
 \begin{center}    
-\includegraphics[scale=0.45]{\locpath/figures/langford/lgf_cubes}   
-\caption{L(2,3) arrangement} \label{fig:lang}    
+%\includegraphics[scale=0.45]{\locpath/figures/langford/lgf_cubes}   
+\begin{tikzpicture}
+\node (rect) at (0,0) [fill=yellow!60,draw,minimum width=1cm,minimum height=1cm] (p3_1) {\textbf{3}};
+\node (rect) at (1.5,0) [fill=red!60,draw,minimum width=1cm,minimum height=1cm] (p1_1) {\textbf{1}};
+\node (rect) at (3,0) [fill=blue!50,draw,minimum width=1cm,minimum height=1cm] (p2_1) {\textbf{2}};
+\node (rect) at (4.5,0) [fill=red!60,draw,minimum width=1cm,minimum height=1cm] (p1_2) {\textbf{1}};
+\node (rect) at (6,0) [fill=yellow!60,draw,minimum width=1cm,minimum height=1cm] (p3_2) {\textbf{3}};
+\node (rect) at (7.5,0) [fill=blue!50,draw,minimum width=1cm,minimum height=1cm] (p2_2) {\textbf{2}};
+\draw (p3_1.south) -- ([yshift=-15pt]p3_1.south) -- ([yshift=-15pt]p3_2.south) -- (p3_2.south) ;
+\draw (p2_1.north) -- ([yshift=10pt]p2_1.north) -- ([yshift=10pt]p2_2.north) -- (p2_2.north) ;
+\draw (p1_1.south) -- ([yshift=-10pt]p1_1.south) -- ([yshift=-10pt]p1_2.south) -- (p1_2.south) ;
+\end{tikzpicture}  
 \end{center}
+\caption{L(2,3) arrangement} \label{fig:lang}  
 \end{figure}
   
 This problem has been generalized to any number $n$ of colors and any number $s$ of blocks having the same color. 
