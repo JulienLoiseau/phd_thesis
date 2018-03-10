@@ -16,6 +16,23 @@ We present here the most famous, the TOP500, GRAPH500 and GREEN500 to give their
 
 %\todo{Parler des pitfalls, load balancing, concurrence, ... NON dans la partie 2 avant la metrique mise en place ? }
 
+\section{Parallel and distributed programming Models}
+
+\subsection{Parallel Random Access Machine}
+The PRAM model is charactrized as follow: 
+\begin{itemize}
+  \item[-] blahblah
+  \item[-] Register and local memory per processors
+\end{itemize}
+
+\subsection{Distributed Random Access Machine}
+
+\subsubsection{H-PRAM}
+
+\subsubsection{Bulk Synchronous Parallelism }
+
+\subsection{Hybridation}
+
 \section{Software/API}
 In this section we present the main runtime, API and frameworks use in HPC and in this study in particular. 
 The considered language will be C/C++, the most present in HPC world along with Fortran. 
@@ -242,7 +259,7 @@ In conjunction of the TOP500, the GREEN500\footnote{https://www.top500.org/green
 The scale is based on FLOPS per watts~\cite{feng2007green500}.
 Indeed the energy wall is the main limitation for next generation and exascale supercomputers. 
 In the last list, November 2017, the TOP3 machines are accelerated with PEZY-SC many-core devices. 
-The TOP20 supercomputers are all equiped with many-cores architectures: 5 with PEZY-SC, 14 with NVIDIA P100 and 1 with the Sunway many-core devices. 
+The TOP20 supercomputers are all equipped with many-cores architectures: 5 with PEZY-SC, 14 with NVIDIA P100 and 1 with the Sunway many-core devices. 
 This show clearly that the nowadays energy efficient solutions resides in many-core architecture and more than that, hybrid supercomputers. 
 
 \subsection{GRAPH500}
@@ -258,6 +275,13 @@ The aim is to generate a huge graph to fill all the maximum memory on the machin
 \end{description}
 
 This benchmark will be detailed in Part II Chapter II in our benchmark suite. 
+
+\subsection{HPCG}
+The High Performance Conjugate Gradient benchmark is a new benchmark created in 2015 and presented for the first time at SuperComputing 15. 
+The last list, November 2017 contains 115 supercomputers ranked. 
+The list also offer to compare the results of Linpack compared to Conjugate Gradient. 
+This benchmark is a first implementation of having both computation and 
+communications aspects of HPC. 
 
 \section{Conclusion}
 In this chapter we presented the most used software tools for HPC. 

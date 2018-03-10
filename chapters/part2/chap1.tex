@@ -4,9 +4,25 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Walls and pitfalls}
+\chapter*{Introduction}
 
-\section{Introduction}
+The tools for comprehension of High Performance Computing from theory, hardware and software give us the basis to go toward optimizations and benchmarking. 
+We show that hybrid architectures seems to be the way to reach exascale in few years but many optimizations need to be done to fit the energy envelope. 
+Our study focus on the behavior of accelerators compared to classical processor on irregular application. 
+We showed that the downside of accelerators seems to be the synchronization and regularized work. 
+In this part we propose our metric putting forward accelerators behavior on irregular problems. 
+
+This part is decomposed in three chapters:
+The first one details the mains bottlenecks, pitfalls and walls in HPC.
+We give explanations on our problems choices for the chapters two and three of this part. 
+
+The first problem for our metric characterizing the behavior of accelerators and more specifically GPUs focus on irregular computations. 
+We choose the problem of Langford, known in our laboratory, and show how we can take advantage of the accelerator for this kind of problem. 
+
+The second problem we choose is focused on irregular memory accesses and communications. 
+It is based on a benchmark we presented in the previous part, the Graph500 benchmark.
+s
+
 Domain scientists, chemists, physicists, meteorologists, etc. always need better and more accurate simulations. 
 This is why HPC always need better architecture and faster computation models. 
 As presented on the previous parts several methods allows the computational power to grow from processors optimization but also memories and communications. 
