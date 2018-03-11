@@ -17,21 +17,39 @@ We present here the most famous, the TOP500, GRAPH500 and GREEN500 to give their
 %\todo{Parler des pitfalls, load balancing, concurrence, ... NON dans la partie 2 avant la metrique mise en place ? }
 
 \section{Parallel and distributed programming Models}
+The Flynn taxonomy developed in chapter 1 was a characterization of the executions models. 
+This model can be extended to programming models. 
 
 \subsection{Parallel Random Access Machine}
-The PRAM model is charactrized as follow: 
-\begin{itemize}
-  \item[-] blahblah
-  \item[-] Register and local memory per processors
-\end{itemize}
+The Parallel Random Access Machine, PRAM, is a model in which the global memory is shared between the processes and each process have its own local memory/registers.
+The execution is synchronous, processes execute the same instructions at the same time. 
 
 \subsection{Distributed Random Access Machine}
+For machine that base their memory model on NoRMA the execution model can be qualify of Distributed Random Access Machine, DRAM.
+It is based on NoRMA memories detailed in part \ref{sec:NORMA}.
+This model is in opposition to PRAM because the synchronization between processes is made by communications. 
+Those communications can be of several kind and depend of physical architecture, interconnection network and software used.
 
 \subsubsection{H-PRAM}
+A DRAM can be composed of an ensemble of PRAM system interconnected. 
+Each of them working on their own data and instructions. 
 
 \subsubsection{Bulk Synchronous Parallelism }
+This model was presented in 1990 in \cite{valiant1990bridging}.
+The Bulk Synchronous Parallelism model is based on three elements:
+\begin{itemize}
+  \item[-] a set of processor and their local memory;
+  \item[-] a network for point-to-point communications between processors;
+  \item[-] a unit allowing global synchronization and barriers.
+\end{itemize}
+This model is the most common on HPC clusters. 
+It can be present event on node themselves: a process can be assign on a core or set of cores and the shared memory is separated between the processes. 
+The synchronization can be hardware but in most cases it is handle by the runtime used.
+A perfect example of runtime, presented later, is MPI. 
 
-\subsection{Hybridation}
+In this model the applications apply a succession of \textit{supersteps} separated by \textit{synchronizations} steps and data exchanges.
+
+At opposite to H-PRAM which represent the execution as a succession of independent blocks working synchronously, BSP propose independent blocks of asynchronous applications synchronized by synchronization steps. 
 
 \section{Software/API}
 In this section we present the main runtime, API and frameworks use in HPC and in this study in particular. 
