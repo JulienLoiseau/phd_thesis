@@ -17,7 +17,6 @@ We also present the different memory models based on those elements.
 
 Then we give more details on what is parallelism and how to reach performances though it. 
 And thus we define what performance implies in HPC. 
-
 The Amdahl's and Gustafson's laws are presented and detailed along with the strong and weak scaling used in our study. 
 
 \section{Von Neumann Model}
@@ -76,7 +75,7 @@ We can also identify the Register section which represent data location used for
 Some representation may vary, the Registers can be represented directly inside the ALU or the CU. 
 \paragraph{Buses}
 The links between those elements are called Buses and can be separated between data buses, control buses and addresses buses.
-They will have a huge importance for the first machine optimization, growing the size of the buses from 2, 8, 16 to nowadays 32 and 64.\\
+They will have a huge importance for the first machine optimization, growing the size of the buses from 2, 8, 16, 32, 64 and even more for vector machine with 128 and 256 bits.\\
 
 The usual processing flow on such an architecture can be summarized as a loop: 
 \begin{itemize}[noitemsep,nolistsep]
@@ -126,7 +125,7 @@ Multiple Instruction (MI) & MISD & MIMD \textit{SPMD/MPMD} \\
 \resizebox {.24\columnwidth} {!} {
 \begin{tikzpicture}
 \draw (0.1,5.2) node {SISD}; 
-\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!30] (ip) {Instruction Pool};
+\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!20] (ip) {Instruction Pool};
 \node (rect) at (0,3) [rotate=90,draw,minimum width=3.5cm,fill=black!10] (dp) {Data Pool};
 \node (rect) at (2.6,3) [draw,minimum width=.8cm,minimum height=.8cm] (pu1) {PU};
 \draw [->] (ip) -- (pu1);
@@ -136,7 +135,7 @@ Multiple Instruction (MI) & MISD & MIMD \textit{SPMD/MPMD} \\
 \resizebox {.24\columnwidth} {!} {
 \begin{tikzpicture}
 \draw (0.1,5.2) node {MISD}; 
-\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!30] (ip) {Instruction Pool};
+\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!20] (ip) {Instruction Pool};
 \node (rect) at (0,3) [rotate=90,draw,minimum width=3.5cm,fill=black!10] (dp) {Data Pool};
 \node (rect) at (1.6,3) [draw,minimum width=.8cm,minimum height=.8cm] (pu1) {PU};
 \node (rect) at (3.6,3) [draw,minimum width=.8cm,minimum height=.8cm] (pu2) {PU};
@@ -155,7 +154,7 @@ Multiple Instruction (MI) & MISD & MIMD \textit{SPMD/MPMD} \\
 \resizebox {.24\columnwidth} {!} {
 \begin{tikzpicture}
 \draw (0.1,5.2) node {MIMD}; 
-\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!30] (ip) {Instruction Pool};
+\node (rect) at (2.6,5.2) [draw,minimum width=3.5cm,fill=black!20] (ip) {Instruction Pool};
 \node (rect) at (0,3) [rotate=90,draw,minimum width=3.5cm,fill=black!10] (dp) {Data Pool};
 \node (rect) at (1.5,4.3) [draw,minimum width=.8cm,minimum height=.8cm] (pu1) {PU};
 \node (rect) at (1.5,3.1) [draw,minimum width=.8cm,minimum height=.8cm] (pu2) {PU};
@@ -221,7 +220,7 @@ Every of those execution model correspond to a specific machine and function.
 \subsection{Single Instruction, Single Data: SISD}
 This is the model corresponding to a single core CPU like in the Von Neumann model. 
 This sequential model takes one instruction, operates on one data and the result is then store and the process continues over. 
-SISD is important to consider as a reference computational time and will be considered in the next part for Amdahl's and Gustafson's laws.
+SISD is important to consider as a reference computational time and will be taken in account in the next part for Amdahl's and Gustafson's laws.
 
 \subsection{Multiple Instructions, Single Data: MISD}
 This model can correspond to a pipelined computer.
@@ -230,9 +229,9 @@ This is the least common execution model.
 
 
 \subsection{Multiple Instructions, Multiple Data: MIMD}
-Every element executes its own instructions on its own data set. 
+In MIMD every element executes its own instructions on its own data set. 
 This can represent the behavior of a processor using several cores, threads or even the different nodes of a supercomputer cluster. 
-Two subcategories can be identified in MIMD.
+Two subcategories are identified in this model:
 
 \subsubsection{SPMD}
 The Single Program Multiple Data model, SPMD, is the most famous parallelism way for HPC purpose: each process execute the same program. 
@@ -247,16 +246,16 @@ Generally with a separation between a main program generating data for sub-progr
 This is the model on which we work in part II regarding the Langford problem resolution using split of the resolution tree.
 
 \subsection{Single Instruction, Multiple Data: SIMD}
-This is the execution model corresponding to a many-core architecture like a GPU. 
+This execution model corresponds to a many-core architecture like a GPU. 
 SIMD can be extended from 2 to 16 elements for classical CPUs to hundreds and even thousands of core for GPGPUs. 
 In the same clock, the same operation is executed on every process on different data. 
 The best example stay the work on matrices like a stencil, same instruction executed on every element of the matrix. 
 
 \subsection{SIMT}
 \index{SIMT}
-We can also find another characterization to describe the new GPUs architecture: Single Instruction, Multiple Threads. 
+We find another characterization to describe the new GPUs architecture: Single Instruction, Multiple Threads. 
 This appears in one of NVIDIA's company paper~\cite{lindholm2008nvidia}. 
-This model describes a combination of MIMD and SIMD architectures, every block of threads is working with the same control processor on different data and every block can have its own instruction counter.  
+This model describes a combination of MIMD and SIMD architectures, every block of threads is working with the same control processor on different data and every block has its own instruction counter.  
 This is the model we describe in part \ref{sec:CUDA} used for the \textit{warps} model in NVIDIA CUDA.
 
 \section{Memory}
@@ -303,7 +302,7 @@ Those different types of memory for SIMD/MIMD model are summed up in figure~\ref
 
 \subsection{Shared memory}
 %In case of the SISD the memory access is just serial and no really rules needs to be set for its usage. 
-When it comes to multi-threaded and multi-cores like MIMD or SIMD execution models several kind of memory models are possible. 
+When it comes to multi-threaded and multi-cores like MIMD or SIMD execution models, several kind of memory models are possible. 
 We give a description of the most common shared memories architectures. 
 
 \hspace*{-2cm}
@@ -444,7 +443,7 @@ Some benchmarks also provide their own metrics.
 \subsection{Power consumption}
 Another way to consider machine performance is to estimate the number of operations regarding the power consumption. 
 It can consider all the previous metrics like FLOPS, IPS, IPC or OPS. 
-Benchmarks, like the GREEN500, consider the FLOPS delivered over the watts consumed. 
+Benchmarks, like the Green500, consider the FLOPS delivered over the watts consumed. 
 For nowadays architectures the many-cores architectures like GPUs seems to deliver the best FLOPS per watt ratio.
 
 \subsection{Scalability}

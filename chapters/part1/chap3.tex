@@ -7,37 +7,158 @@
 \chapter{Software in HPC}
 
 \section{Introduction}
-After presenting the rules of HPC and the hardware that compose the cluster, we introduce the most famous ways to target those architectures and supercomputers. 
-Several options are present in the language, the multi-processing API, the distribution and the accelerators code. 
-This chapter details the most important software options for HPC programming and include the choices we made for our applications.
+After presenting the rules of HPC and the hardware that compose the cluster, we introduce the most famous ways to target those architectures and supercomputers with programming models.
+Then, fitting those models, we present the possible options in the language, the API, the distribution and the accelerators code. 
 
+This chapter details the most important programming models and the software options for HPC programming and include the choices we made for our applications.
 Then it presents the software used to benchmark the supercomputers. 
-We present here the most famous, the TOP500, GRAPH500 and GREEN500 to give their advantages and weaknesses. 
-
-%\todo{Parler des pitfalls, load balancing, concurrence, ... NON dans la partie 2 avant la metrique mise en place ? }
+We present here the most famous, the TOP500, GRAPH500, HPGC and GREEN500 to give their advantages and weaknesses. 
 
 \section{Parallel and distributed programming Models}
 The Flynn taxonomy developed in chapter 1 was a characterization of the executions models. 
-This model can be extended to programming models. 
+This model can be extended to programming models which are an extension of MIMD. 
+We consider here a \textit{Random Access Machine} (RAM). 
+The memory of this machine consists of an unbounded sequence of registers each of which may hold an integer value. 
+In this model the applications can access to every memory words directly in write or read manner.
+There is three main operations: load from memory to register; compute operation between data; store from register to memory. 
+This model is use to estimate the complexity of sequential algorithms. 
+If we consider the unit of time of each operation (like in cycle) we can have an idea of the overall time of the application.
+We identify two types of RAM, the Parallel-RAM using shared memory and the Distributed-RAM using distributed memory. 
 
 \subsection{Parallel Random Access Machine}
-The Parallel Random Access Machine, PRAM, is a model in which the global memory is shared between the processes and each process have its own local memory/registers.
+The Parallel Random Access Machine \cite{fortune1978parallelism}, PRAM, is a model in which the global memory is shared between the processes and each process have its own local memory/registers.
 The execution is synchronous, processes execute the same instructions at the same time. 
+In this model each process is identify with its own index enabling to target different data. 
+The problem in this model will be the concurrency in reading (R) and writing (W) data as the memory is shared between the processes.
+Indeed, mutual exclusion have to be set with exclusive (E) or concurrent (C) behaviors and we find 4 combinations: EREW, ERCW, CREW and CRCW.
+As the reading is not critical for data concurrency the standard model will be Concurrent Reading and Exclusive Writing: CREW.
 
 \subsection{Distributed Random Access Machine}
 For machine that base their memory model on NoRMA the execution model can be qualify of Distributed Random Access Machine, DRAM.
 It is based on NoRMA memories detailed in part \ref{sec:NORMA}.
-This model is in opposition to PRAM because the synchronization between processes is made by communications. 
+This model is in opposition to PRAM because the synchronization between processes is made by communications and messages. 
 Those communications can be of several kind and depend of physical architecture, interconnection network and software used.
 
-\subsubsection{H-PRAM}
+\subsection{H-PRAM}
 A DRAM can be composed of an ensemble of PRAM system interconnected. 
 Each of them working on their own data and instructions. 
+This is an intermediate model between PRAM and DRAM having a set of shared memory and synchronous execution, the overall execution being asynchronous and having distributed memory.
 
-\subsubsection{Bulk Synchronous Parallelism }
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[thick]
+% Fork Join model
+\coordinate (begin) at (0,0);
+\coordinate (f0) at (1,0);
+\coordinate (j0) at (3,0);
+
+\coordinate (f1) at (4,0);
+\coordinate (j1) at (7,0);
+
+\coordinate (f2) at (9,0);
+\coordinate (j2) at (11,0);
+
+\coordinate (end) at (12,0);
+
+\node at ([yshift=1.5cm]begin) {\textbf{Fork-Join}};
+
+
+% Main threads and info
+\draw[->,red!70] (0,0) -- (f0) -- (j0) -- (f1) -- (j1) -- (f2) -- (j2) -- (end);
+\node[anchor=east,red,align=left] (0,0) {Parent\\thread};
+\foreach \x in {0,...,2}{
+\draw[fill,black,thick] (f\x) circle [radius=2pt] ;
+\draw[fill,black,thick] (j\x) circle [radius=2pt] ;
+\node at ([yshift=-10pt]f\x) {Fork}; 
+\node at ([yshift=-10pt]j\x) {Join}; 
+}
+
+% Thread
+\foreach \x in {1,...,4}{
+  \draw[thick] (f0) -- ([yshift=\x*.3cm,xshift=.3cm]f0) -- ([xshift=-.3cm,yshift=\x*.3cm]j0) -- (j0);
+
+  \draw[thick] (f1) -- ([yshift=\x*.3cm,xshift=.3cm]f1) -- ([xshift=-.3cm,yshift=\x*.3cm]j1) -- (j1);
+
+  \draw[thick] (f2) -- ([yshift=\x*.3cm,xshift=.3cm]f2) -- ([xshift=-.3cm,yshift=\x*.3cm]j2) -- (j2);
+}
+
+% Name of threads
+\draw[<->] (11.5,0.1) -- (11.5,1.1) node[anchor=south,yshift=7pt,align=left] {Child\\threads};
+
+
+% BSP model
+\coordinate (begin) at (0,3);
+
+\coordinate (s0) at (2,3);
+\coordinate (c0) at (4,3);
+\coordinate (s1) at (7,3);
+\coordinate (c1) at (9,3);
+%\coordinate (s2) at (9,3);
+
+\coordinate (end) at (12,3);
+
+% Figure name 
+\node at ([yshift=2.5cm]begin) {\textbf{BSP model}};
+
+\draw [decorate,decoration={brace,amplitude=8pt,raise=4pt},yshift=0pt] ([yshift=1.1cm,xshift=3pt]begin) -- ([yshift=1.1cm,,xshift=-3pt]s0) node [black,midway,above,yshift=10pt] {Superstep};
+
+\draw [decorate,decoration={brace,amplitude=8pt,raise=4pt},yshift=0pt] ([yshift=1.1cm,xshift=3pt]s0) -- ([yshift=1.1cm,,xshift=-3pt]c0) node [black,midway,above,yshift=13pt] {Comm.};
+
+\draw [decorate,decoration={brace,amplitude=8pt,raise=4pt},yshift=0pt] ([yshift=1.1cm,xshift=3pt]c0) -- ([yshift=1.1cm,,xshift=-3pt]s1) node [black,midway,above,yshift=10pt] {Superstep};
+
+\draw [decorate,decoration={brace,amplitude=8pt,raise=4pt},yshift=0pt] ([yshift=1.1cm,xshift=3pt]s1) -- ([yshift=1.1cm,,xshift=-3pt]c1) node [black,midway,above,yshift=13pt] {Comm.};
+
+\draw [decorate,decoration={brace,amplitude=8pt,raise=4pt},yshift=0pt] ([yshift=1.1cm,xshift=3pt]c1) -- ([yshift=1.1cm,,xshift=-3pt]end) node [black,midway,above,yshift=10pt] {Superstep};
+
+
+% Draw vertical lines 
+\foreach \x in {0,...,1}{
+\draw[red] ([yshift=-.3cm]s\x) -- ([yshift=1.2cm]s\x);
+\node[red] at ([yshift=-.5cm]s\x) {Synchr.};
+
+\draw ([yshift=-.3cm]c\x) -- ([yshift=1.2cm]c\x);
+%\node at ([yshift=-.5cm]s\x) {Synchr.};
+}
+
+\foreach \x in {0,...,3}{
+  \draw[->] ([yshift=\x*.3cm]begin) -- ([yshift=\x*.3cm,xshift=((rnd)*-20pt-2pt)]s0);
+  \draw[->] ([yshift=\x*.3cm]c0) -- ([yshift=\x*.3cm,xshift=((rnd)*-20pt)-2pt]s1);
+  \draw[->] ([yshift=\x*.3cm]c1) -- ([yshift=\x*.3cm,xshift=((rnd)*-20pt)-2pt]end);
+  %\draw[->] ([yshift=\x*.3cm]s2) -- ([yshift=\x*.3cm,xshift=((rnd)*-20pt)-2pt]end);
+}
+
+% Add comms 
+% comm 0 
+\draw[->] ([xshift=1pt,yshift=.3cm]s0) -- ([xshift=-1pt,yshift=.9cm]c0);
+\draw[->] ([xshift=1pt,yshift=0]s0) -- ([xshift=-1pt,yshift=.3cm]c0);
+\draw[->] ([xshift=1pt,yshift=.3cm]s0) -- ([xshift=-1pt,yshift=0]c0);
+\draw[->] ([xshift=1pt,yshift=.6cm]s0) -- ([xshift=-1pt,yshift=.9cm]c0);
+\draw[->] ([xshift=1pt,yshift=.3cm]s0) -- ([xshift=-1pt,yshift=.6cm]c0);
+\draw[->] ([xshift=1pt,yshift=.9cm]s0) -- ([xshift=-1pt,yshift=.6cm]c0);
+
+% comm 1
+\draw[->] ([xshift=1pt,yshift=.6cm]s1) -- ([xshift=-1pt,yshift=.9cm]c1);
+\draw[->] ([xshift=1pt,yshift=.6cm]s1) -- ([xshift=-1pt,yshift=.3cm]c1);
+\draw[->] ([xshift=1pt,yshift=.6cm]s1) -- ([xshift=-1pt,yshift=0]c1);
+\draw[->] ([xshift=1pt,yshift=.3cm]s1) -- ([xshift=-1pt,yshift=.9cm]c1);
+\draw[->] ([xshift=1pt,yshift=.3cm]s1) -- ([xshift=-1pt,yshift=.6cm]c1);
+\draw[->] ([xshift=1pt,yshift=.9cm]s1) -- ([xshift=-1pt,yshift=.6cm]c1);
+
+
+% Time 
+\draw[->] ([yshift=3cm]begin) -- ([yshift=3cm]end) node[midway,above] {Time};
+
+\end{tikzpicture}
+\end{center}
+\caption{Bulk Synchronous Parallel model and Fork-Join model}
+\label{fig:3_SOFT:bsp_fj}
+\end{figure}
+
+\subsection{Bulk Synchronous Parallelism }
 This model was presented in 1990 in \cite{valiant1990bridging}.
+Being the link of HRAM and PRAM 
 The Bulk Synchronous Parallelism model is based on three elements:
-\begin{itemize}
+\begin{itemize}[noitemsep,nolistsep]
   \item[-] a set of processor and their local memory;
   \item[-] a network for point-to-point communications between processors;
   \item[-] a unit allowing global synchronization and barriers.
@@ -50,6 +171,50 @@ A perfect example of runtime, presented later, is MPI.
 In this model the applications apply a succession of \textit{supersteps} separated by \textit{synchronizations} steps and data exchanges.
 
 At opposite to H-PRAM which represent the execution as a succession of independent blocks working synchronously, BSP propose independent blocks of asynchronous applications synchronized by synchronization steps. 
+
+In a communication/synchronization step we can consider the number of received messages $h_r$ and the number of send ones $h_s$.
+
+The time lost in communication in one synchronization step is:
+\begin{equation}
+  T_{comm} = hg + I
+\end{equation}
+
+With $h = max(h_s,h_r)$, $g$ the time to transfer data and $I$ the start-up latency of the algorithm.
+Indeed, the entry points and exit points of communications super-step can be a bottleneck considered in $I$.
+
+The time for computing a super-step is: 
+\begin{equation}
+  T_{comp} = \frac{w}{r} + I
+\end{equation}
+
+With $w$ the maximum number of flops in the computation of this super-step, $r$ the speed of the CPU expressed in FLOPS and $I$ the start-up latency of the algorithm.
+Indeed, the entry points and exit points of communications super-step can be a bottleneck considered in $I$.
+
+
+The BSP model estimates the cost of one super-step with: 
+\begin{equation}
+  T_{comm} + T_{comp} = w + gh + 2l
+\end{equation}
+
+With $T$ a measure of time, a wall clock that measure elapsed time. 
+We also note that usually $g$ and $I$ are function of the number of processes involved. 
+
+It can then be use to compute the overall cost in BSP model summing all super-steps $s$: 
+\begin{equation}
+T = \sum_s \frac{max (w_s)}{r} + h_sg + I
+\end{equation}
+
+The problem of performances in this model can come from unequal repartitions of work, the load balancing. 
+The processes with less than $w$ of work will be idle. 
+
+\subsection{Fork-Join model}
+The Fork-Join model or pattern is presented in figure~\ref{fig:3_SOFT:bsp_fj}.
+A main thread pilot the overall execution. 
+When requested by the application, typically following the idea of \textit{divided-and-conquer} approach, the main thread will fork and then join other threads. 
+The \textit{Fork} operation, called by a logical thread parent, creates new logical threads children working in concurrency.
+There is no limitations in the model and we find nested fork-join where a child can also call fork to generate sub-child and so on. 
+The \textit{Join} can be called by both parents and child. Children call join when done and the parent join by wait until children completion.
+The Fork operation increase concurrency and join decrease concurrency.
 
 \section{Software/API}
 In this section we present the main runtime, API and frameworks use in HPC and in this study in particular. 
@@ -121,7 +286,7 @@ Charm++ also provides a GPU manager implementing data movement, asynchronous ker
 A perfect example can be the hydrodynamics N-body simulation code Charm++ N-body Gravity Solver, ChaNGa~\cite{jetley2010scaling}, implemented with charm++ and GPU support. 
 
 \subsubsection{Legion}
-Legion\footnote{http://legion.stanford.edu/} is a distributed runtime support but Stanford University, Los Alamos National Laboratory (LANL) and NVIDIA. 
+Legion\footnote{http://legion.stanford.edu/} is a distributed runtime support by Stanford University, Los Alamos National Laboratory (LANL) and NVIDIA. 
 This runtime is data-centered targeting distributed heterogeneous architectures. 
 Data-centered runtime focuses to keep the data dependency and locality moving the tasks to the data and moving data only if requested. 
 In this runtime the user defines data organization, partitions, privileges and coherency. 
@@ -191,7 +356,7 @@ OpenCL is a multi-platform framework targeting a large part of nowadays architec
 A large group of company already provided conform version of the OpenCL standard: IBM, Intel, NVIDIA, AMD, ARM, etc.
 This framework allows to produce a single code that can run in all the host or device architectures. 
 It is quite similar to NVIDIA CUDA Driver API and based on kernels that are written and can be used in On-line/Off-line compilation meaning Just In Time (JIT) or not. 
-The idea of OpenCL is great by rely on the 
+The idea of OpenCL is great by rely on the vendors wrapper.
 Indeed, one may wonder, what is the level of work done by NVIDIA on its own CUDA framework compare to the one done to implement OpenCL standards? 
 What is the advantage for NVIDIA GPU to be able to be replace by another component and compare on the same level? 
 Those questions are still empty but many tests prove that OpenCL can be as comparable as CUDA but rarely better\cite{karimi2010performance,fang2011comprehensive}. 
@@ -238,7 +403,7 @@ The little lack of performances can also be explain by the current contribution 
 \label{fig:1_HPC:software}
 \end{figure}
 
-The runtime, libraries, frameworks and APIs are summarized in figure~\ref{fig:1_HPC:software} 
+The runtime, libraries, frameworks and APIs are summarized in figure~\ref{fig:1_HPC:software}.
 They are used in combination. 
 The usual one is MPI for distribution, OpenMP and CUDA to target processors and GPUs. 
 
@@ -250,7 +415,15 @@ The usual one is MPI for distribution, OpenMP and CUDA to target processors and 
 
 \section{Benchmarks}
 
-This section regroup a bunch of the most famous nowadays benchmarks for HPC. 
+All those models, theory, hardware and software leads to better understanding and characterization of machines to produce better algorithm and solve bigger and harder problems. 
+The question that arise is: how to know if a machine is better than another? 
+We answer that question with FLOPS, IPC, OPS or just the frequency of the machine. 
+The models like BSP or law's like Amdahl and Gustafson ones propose to find the best/worst case during the execution.
+
+In real application the only way to really know what will be the behavior of a supercomputer is to try, test real code on it. 
+This is call benchmarking.
+Several kind of benchmarks exists and target a specific application of supercomputers. 
+We present here the most famous benchmarks of HPC and their specificities.
 
 \subsection{TOP500}
 The most famous benchmark is certainly the TOP500\footnote{http://www.top500.org}. 
@@ -295,11 +468,22 @@ The aim is to generate a huge graph to fill all the maximum memory on the machin
 This benchmark will be detailed in Part II Chapter II in our benchmark suite. 
 
 \subsection{HPCG}
-The High Performance Conjugate Gradient benchmark is a new benchmark created in 2015 and presented for the first time at SuperComputing 15. 
+The High Performance Conjugate Gradient benchmark\footnote{http://www.hpcg-benchmark.org/} is a new benchmark created in 2015 and presented for the first time at SuperComputing 2015. 
 The last list, November 2017 contains 115 supercomputers ranked. 
 The list also offer to compare the results of Linpack compared to Conjugate Gradient. 
 This benchmark is a first implementation of having both computation and 
-communications aspects of HPC. 
+communications aspects of HPC in the same test. 
+
+This benchmark is presented and features:
+\begin{itemize}[noitemsep,nolistsep]
+\item[-] Sparse matrix-vector multiplication;
+\item[-] Vector updates;
+\item[-] Global dot products;
+\item[-] Local symmetric Gauss-Seidel smoother;
+\item[-] Sparse triangular solve (as part of the Gauss-Seidel smoother);
+\item[-] Driven by multigrid preconditioned conjugate gradient algorithm that exercises the key kernels on a nested set of coarse grids;
+\item[-] Reference implementation is written in C++ with MPI and OpenMP support.
+\end{itemize}
 
 \section{Conclusion}
 In this chapter we presented the most used software tools for HPC. 
