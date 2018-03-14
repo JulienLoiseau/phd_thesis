@@ -1,3 +1,4 @@
+.DS_store
 *.aux
 *.idx
 *.log
@@ -6,3 +7,7 @@
 *.synctex.gz
 *.toc
 *~
+*.bbl
+*.blg
+*.ind
+*.ilg
