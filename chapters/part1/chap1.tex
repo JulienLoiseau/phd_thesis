@@ -65,6 +65,7 @@ Inside the computational device we find the memory, for the most common nowadays
 Several kind of memory exists and will be discussed later. 
 
 \paragraph{Central Processing Unit}
+\index{Central Processing Unit}
 The Central Processing Unit, CPU, is composed of several elements in this model. 
 On one hand, the \textit{Arithmetic and Logic Unit}, ALU, which takes as input one or two values and apply an operation on those data. 
 They can be either logics with operations such as AND, OR, XOR, etc. or arithmetics with operations such as ADD, MUL, SUB, etc. 
@@ -252,7 +253,7 @@ In the same clock, the same operation is executed on every process on different 
 The best example stay the work on matrices like a stencil, same instruction executed on every element of the matrix. 
 
 \subsection{SIMT}
-\index{SIMT}
+\index{Single Instruction Multiple Threads}
 We find another characterization to describe the new GPUs architecture: Single Instruction, Multiple Threads. 
 This appears in one of NVIDIA's company paper~\cite{lindholm2008nvidia}. 
 This model describes a combination of MIMD and SIMD architectures, every block of threads is working with the same control processor on different data and every block has its own instruction counter.  
@@ -363,6 +364,7 @@ We give a description of the most common shared memories architectures.
 \end{figure}
 
 \subsubsection{UMA}
+\index{Unified Memory Access}
 The Uniform Memory Access is a global memory shared by every threads or cores. 
 In UMA every processor uses its own cache as local private memory. 
 The addresses can be accessed directly by each processor which makes the access time ideal. 
@@ -374,19 +376,20 @@ With the arising of accelerators like GPUs and their own memory, some constructo
 AMD creates the heterogeneous UMA, hUMA~\cite{rogers2013amd}, in 2013 allowing CPU and GPU to target the same memory area.
 
 \subsubsection{NUMA}
-
+\index{Non Unified Memory Access}
 In Non Unified Memory Access every processor have access to its own private memory but allows other processors to access those area though Lightning Data Transport, LDT or Quick Path Interconnect, QPI, for Intel architectures. 
 
 As we mention for the UMA memory, even if the processors does not directly access to the memory cache coherency is important. 
 Two methods are possible: on one hand, the most used is Cache-Coherent NUMA (CC-NUMA) were protocols are used to keep data coherency through the memory. On the other hand No Cache NUMA (NC-NUMA) forces the processes to avoid cache utilization and write results in main memory losing all the benefits of caching data. 
 
 \subsubsection{COMA}
+\index{Cache-Only Memory Access}
 In Cache-Only Memory Accesses, the whole memory is see as a cache from every processes.
 Attraction memory is setting up and will attract the data near the process that will use those data. 
 This model is less commonly use and lead to, in best cases, same results as NUMA.
 
 \subsection{Distributed memory}
-
+\index{No Remote Memory Access}
 The previous models are based on shared memory, in the case where the processes can access memory of their neighbors processes. 
 In some cases, like supercomputers, it would be too heavy for processors to handle the requests of all the others through the network. 
 Each process or node will then possess its own local memory, that can be share with local processes. 
@@ -403,7 +406,9 @@ This information is not perfect because the ALU is not busy all the time due to 
 It can be used to estimate the highest computational power of a machine. 
 
 \subsection{FLOPS}
-The Floating point Operation Per Second considers the number of floating-point operation that the system will executes in a second. 
+
+\index{Floating-point Operations Per Second}
+The Floating point Operations Per Second considers the number of floating-point operation that the system will executes in a second. 
 They are an unit of performance for computers. 
 Higher FLOPS is better. 
 This is also the scale used to consider supercomputers computational power. 
@@ -456,7 +461,7 @@ Scalability can be approach using speedup and efficiency.
 
 \subsection{Speedup and efficiency}
 The latency is the time required to complete a task in a program.
-\index{latency} 
+\index{Latency} 
 Lower latency is better. 
 
 The speedup compare the latency of both sequential and parallel algorithm. 

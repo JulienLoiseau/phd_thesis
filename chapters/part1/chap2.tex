@@ -29,6 +29,7 @@ The first processors, around the 1970s, were built using a single computation co
 Many evolutions were made on those single cores processors from the memory, the order of instruction and the frequency.
 
 \subsubsection{Transistor shrink and frequency}
+\index{Frequency}
 A lot of new ways to produce smaller transistors had been discovered from the 10$\mu m$ of 1971 to nowadays 10$nm$.
 This allows the vendor to add more transistors on the same die, allowing more complex ISA and features for the CPU. 
 %This will also be useful for the multi-core machine presented in the next part. 
@@ -39,6 +40,7 @@ In 1970s the frequency was about 4 MHz allowing a maximum of 4 millions of cycle
 Nowadays core can work at a frequency of 4GHz and even 5GHz performing billions of operations per cycles. 
 
 \subsubsection{In/Out-Of-Order} 
+\index{In/Out of Order}
 In-order-process is the one describes in previous chapter. 
 The control unit fetches instruction in memory and the operands. The ALU computes the operation, and finally the result is stored in memory.
 
@@ -49,6 +51,9 @@ Indeed, for independent tasks (pointed out with dependency graphs) while the pro
 This leads to better usage of computational resources in the CPU and thus better overall performances. 
 
 \subsubsection{Vectorization} 
+\index{Vectorization}
+\index{Unrolling}
+\index{Loop tiling}
 Vector processors allows the instructions to be executed at the same time in a SIMD manner. 
 If the same instruction is executed on coalescent data they can be executed in the same clock cycle. 
 We can, as an example, execute operations simultaneously on 4 to 8 floats with  a bus size of 128 or 256 bits in the same cycle.  
@@ -56,6 +61,7 @@ This tool requires specific care during coding with \textit{unrolling} and \text
 The main downside on latest architectures is that vectorization slightly lower the frequency of processors to operate. 
 This requires even more care during programming to avoid bad behavior leading to bad performances. 
 
+\index{Cray-1}
 The Cray-1 supercomputer\cite{russell1978cray}, installed in 1975 in the Los Alamos National Laboratory, is a perfect example of vector processor supercomputer.
 This supercomputer was designed by Seymour Cray the founder of Cray Research.
 Based on vector processor it was able to deliver up to 160 MFLops.
@@ -143,6 +149,7 @@ In early 1980s the augmentation of bus size from 4 bits, 8 bits, 16 bits for now
 Different kind of technologies are considered: the SRAM and DRAM. 
 
 \paragraph{SRAM: }
+\index{Static Random Access Memory}
 The Static Random Access Memory is built using so called "flip-flop" circuits that can store the data as long as the machine is powered. 
 This kind of memory is very expensive to produce due to the number of components needed and the size of the memory.
 Therefore it is usually limited for small amount of storage. 
@@ -150,6 +157,7 @@ The SRAM is mainly used for cache memory.
 Cache is a memory mechanism that is useful to consider when targeting performance. 
 
 \subparagraph{Cache memory: }
+\index{Cache mechanism}
 \begin{figure}[t!]
 \centering
 \begin{tikzpicture}
@@ -192,6 +200,7 @@ Many cache architectures exist like direct, associative, fully associative, etc.
 In a program the ratio of cache accesses \textit{cache-hits} and \textit{cache-miss} respectively when a data is present in cache and when a data have to be retrieved from lower level or main memory can be very important to reach performances. 
 
 \paragraph{DRAM: }
+\index{Dynamic Random Access Memory}
 The Dynamic Random Access Memory is based on transistors and capacitors to store the binary information.
 This memory is less expansive to produce but needs to be refresh at a determined frequency however the data are lost. 
 This refresh step is in fact a reading-writing operation on the whole memory at a specific frequency. 
@@ -201,6 +210,7 @@ Depending on the way the bus are used we can find Single Data Rate, SDR, Double 
 The number of data carried can go from 1x to 4x but the limitation of those products is the price of memory constantly rising.  
 
 \subsubsection{Pre-fetching} 
+\index{Pre-fetching}
 Based on memory optimization and especially the cache, pre-fecthing was developed.
 When a data is not available in L1 cache, it has to be moved from either L2 to L1 or L3 to L2 to L1 or in the worst case RAM to L3 to L2 to L1. 
 Pre-fecthing technology is a way to, knowing the next instructions operands, pre-fetch the data in closer cache. 
@@ -283,7 +293,7 @@ We start from the most present processors in HPC world, the Intel company ones.
 We also present ARM which is another multi-core architecture base on RISC instructions set.
 
 \subsubsection{Intel}
-
+\index{Intel}
 Intel was created in 1968 by a chemist and a physicists, Gordon E. Moore and Robert Noyce, in Mountain View, California. 
 Nowadays processors are mostly Intel ones, this world leader equips around 90\% of the supercomputers (November 2017 TOP500 list).
 
@@ -305,6 +315,7 @@ This model seems to be hard to maintain due to the difficulties to engrave in le
 This leads to using more many-cores architecture and base next supercomputer generations on hybrid models. 
 
 \paragraph{Hyper-threading}
+\index{Hyper-threading}
 Another specificity of Intel processor is Hyper-threading (HT). 
 This technology makes a single physical processor appearing as two logical processors for user's level.
 In fact a processor embedding 8 cores appears as a 16 cores for user. 
@@ -313,6 +324,7 @@ A lot of studies have been released on HT from Intel itself~\cite{marr2002hypert
 This optimization does not fit to all the cases and can be disable for normal use of the processors. 
 
 \subsubsection{ARM}
+\index{Advanced RISC architecture}
 Back in 1980s, ARM stood for Acorn RISC Machine in reference of the first company implementing this kind of architecture, Acorn Computers. 
 This company later changed the name to Advanced RISC Machine (ARM). 
 ARM is a specific kind of processor based on RISC architecture as its ISA despite usual processors using CISC.
@@ -326,6 +338,7 @@ That makes the instructions sources longer and therefore more single instruction
 The ARM company provide several version of ARM processors named Cortex-A7X, Cortex-A5X and Cortex-A3X respectively balancing highest-performances, performances and efficiency and less power consumption. 
 We find here the same kind of naming as Intel processors. 
 
+\index{Mont-Blanc project}
 The new ARMv8 architecture starts to have the tools to target HPC context~\cite{rico2017arm}.
 The European approach towards energy efficient HPC, Mont-Blanc project\footnote{http://montblanc-project.eu/}, already constructs ARM based supercomputers. 
 For the exascale project in Horizon 2020 this project focus on using ARM-based systems for HPC with many famous contributors with Atos/Bull as a project coordinator, ARM, French Alternative Energies and Atomic Energy Commission (CEA), Barcelona Supercomputing Center (BSC), etc.
@@ -333,6 +346,7 @@ The project is decomposed in several steps to finally reach exascale near 2020.
 The third step, Mont-Blanc 3, is about to work on a pre-exascale prototype powered by Cavium’s ThunderX2 ARM chip based on 64-bits ARMv8.
 
 \subsection{Many-cores, SIMT}
+\index{Single Instruction Multiple Threads}
 Several architectures can be defined as many-cores. 
 Those devices integrate thousands of cores that are usually control by less control units. 
 We can consider those cores as "simpler" since they have to work synchronously and under the coordination of a control unit.
@@ -340,7 +354,7 @@ They are based on SIMD Flynn taxonomy.
 Some devices are specific like the Xeon Phi of Intel integrating a hundred of regular processor cores which can work independently. 
 
 \subsubsection{GPU}
-
+\index{Graphics Processing Unit}
 When a CPU can usually have 2 to 32 computation cores that can operate on different instruction streams, the SIMT architecture of the GPU is slightly different. 
 The cores are grouped and have to share the same instruction at the same clock time but all the groups can have their own instruction. 
 
@@ -392,15 +406,16 @@ The vendor provides then specific GPU for general purpose computing.
 We present here the two main companies providing GPGPUs for HPC world: NVIDIA and AMD.
 
 \paragraph{NVIDIA GPU architecture}
-
+\index{NVIDIA}
 The NVIDIA company was fonded in April 1993 in Santa Clara, Carolina, by three persons in which Jensen Huang, the actual CEO.
 The company name seems to come from \textit{invidia} the Latin word for Envy and vision for graphics rendering. 
 
 Known as the pioneer in graphics, cryptocurrency, portable devices and now Artificial Intelligence (IA), it seems to be even the creator of the name "GPU".
 NVIDIA's GPUs, inspired from visualization and gaming at a first glance, are available as a dedicated device for HPC purpose since the company released the brand named \textit{Tesla}. 
 The public GPUs can also be use for dedicated computation but does not feature ECC memory, double precision or special functions/FFT cores. 
-The different versions of the architecture are named following famous physicists, chronologically: Tesla, Fermi, Kepler, Maxwell, Pascal and Volta. 
+The different versions of the architecture are named following famous physicists, chronologically: Tesla, Fermi, Kepler, Maxwell, Pascal and Volta.
 
+\index{K20Xm}
 We describe here the Kepler brand GPU and more specifically the K20Xm GPU on which we based our study. 
 \begin{figure}
 \centering
@@ -420,6 +435,7 @@ The power consumption is estimated to 225W.
 This GPGPU is expected to produce 1.31 TFLOPS for double-precision and 3.95 TFLOPS of single-precision.
 
 \paragraph{AMD}
+\index{AMD}
 Another company is providing GPUs for HPC, Advanced Micro Devices (AMD). 
 In front of the huge success of NVIDIA GPU that leads from far the HPC market, it is hard for AMD to find a place for its GPGPUs in HPC. 
 Their HPC GPUs are called FirePro.
@@ -431,6 +447,7 @@ In the race to market and performances, AMD found a accord with Intel to provide
 The project is call  Kaby Lake-G and announce for first semester of 2018 but for public, not HPC itself. 
 
 \subsubsection{Intel Xeon Phi}
+\index{Xeon Phi}
 Another specific HPC product from Intel is the Xeon Phi. 
 This device can be considered as a Host or Device/Accelerator machine. 
 Intel describes it as "a bootable host processor that delivers massive parallelism and vectorization".
@@ -445,6 +462,7 @@ This is due to the number of cores that is very high and the fact it can be use 
 
 
 \subsubsection{PEZY}
+\index{PEZY}
 Another many-core architecture just appears in the last benchmarks. 
 The PEZY Super Computer 2, PEZY-SC2, is the third many-core microprocessor developed by the company PEZY. 
 The three first machine ranked in the GREEN500 list are accelerator using this many-core die. 
@@ -454,6 +472,7 @@ We also note that in the November 2017 list the 4th supercomputer, Gyoukou, is a
 Numerous architecture have not been presented because out of scope in this study. 
 We present here two technologies we have been confronted in our researches and that can be tomorrow solution for exascale in HPC. 
 \subsubsection{FPGA}
+\index{Field Programmable Gates Array}
 Field Programmable Gates Array are device that can be reprogram to fit the needs of the user after their construction.
 The leader was historically Altera with the Stratix, Arria and Cyclone FPGAs and is now part of Intel. 
 With the FPGAs the user have access to the hardware itself and can design its own circuit. 
@@ -461,7 +480,8 @@ Nowadays FPGA can be targeted with OpenCL programming language.
 The arrival of Intel in this market promises the best hopes for HPC version of FPGAs. 
 The main gap for users is the circuit building itself, perfect to respond to specific needs but hard to setup. 
 \subsubsection{ASIC}
-ASICs are dedicated device construct for on purpose. 
+\index{Application Specified Integrated Circuits}
+Application Specified Integrated Circuits are dedicated device construct for on purpose. 
 An example of ASIC can be the Gravity Pipe (GRAPE) which is dedicated to compute gravitation given mass/positions.
 Google leads the way for ASIC and just created its dedicated devices to boost AI bots.
 We also find ASIC in some optimized communication devices like in fast interconnection network in HPC.  
@@ -494,6 +514,7 @@ In order to connect node together and allow distributed programming an interconn
 Interconnection network is the way the nodes of a cluster are connected together. 
 
 \subsection{Interconnection topologies}
+\index{Interconnect}
 Several topologies exists from point to point to multi dimensional torus.
 %
 \begin{figure}[t!]
@@ -946,7 +967,7 @@ The Fat Tree presented here is a k-ary Fat Tree, higher the position in the tree
 Another topology, HyperX\cite{ahn2009hyperx}, is base on Hyper-Cube.
 The DragonFly\cite{kim2008technology} interconnect is recent, 2008, and use in nowadays supercomputers.
 
-InfiniBand (IB) is the most spread technology used for interconnect with different kind of bandwidth presented in figure~\ref{fig:1_HPC:infiniband}.
+InfiniBand (IB)\index{Infiniband} is the most spread technology used for interconnect with different kind of bandwidth presented in figure~\ref{fig:1_HPC:infiniband}.
 It provides high bandwidth and small latency and companies like Intel, Mellanox, etc provide directly adapters and switches specifically for IB. 
 
 \begin{table}[t!]
@@ -982,7 +1003,7 @@ Most of the TOP10 machines have specific architectures and, of course, the most 
 In this section we give details on several supercomputers about their interconnect, processors and specific accelerators. 
 
 \subsubsection{Sunway Taihulight}
-
+\index{Sunway Taihulight}
 Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. 
 A recent report from Jack J. Dongarra, a figure in HPC, decrypt the architecture of this supercomputer\cite{dongarra2016report}. 
 The most interesting point is the conception of this machine, completely done in China. 
@@ -1004,16 +1025,19 @@ The total memory is 1.31 PB and the number of cores available is 10,649,600.
 The peak performance is 125.4 PFLOPS and the Linpack is 93 PFLOPS which induce 74.16\% of efficiency. 
 
 \subsubsection{Piz Daint}
+\index{Piz Daint}
 The supercomputer of the CSCS, Swiss National Supercomputing Center, is currently ranked 2nd of the November 2017 TOP500 list. 
 This GPUs accelerated supercomputer is a most powerful representative of GPU hybrid acceleration.
 This is also the most powerful European supercomputer. 
 He is composed of 4761 hybrids and 1210 multi-core nodes. 
+\index{NVIDIA}
 The hybrids nodes embedded an Intel Xeon E5-2690v3 and an NVIDIA Tesla Pascal P100 GPGPU. 
 The interconnect is based on a Dragonfly network topology and Cray Aries routing and communications ASICs. 
 The peak performance is 25.326 TFLOPS using only the hybrid nodes and the Linpack gives 19.590 TFLOPS.
 The low power consumption rank Piz Daint as 10th in the GREEN500 list. 
 
 \subsubsection{K-Computer}
+\index{K-Computer}
 K-Computer was the top 1 supercomputer of TOP500 2011 list. 
 The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} and stands for TOrus FUsion.
 \begin{figure}[t!]
@@ -1023,6 +1047,7 @@ The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} a
 \caption{TOFU Interconnect schematic from \textit{The K-Computer: System Overview}, Atsuya Uno, SC11}
 \label{fig:1_HPC:tofu}
 \end{figure}
+\index{Interconnection}
 This interconnect presented in figure~\ref{fig:1_HPC:tofu} mixes a 6D Mesh/Torus interconnect.
 The basic units are based on a mesh and are interconnected together in a 3 dimensional torus. 
 In this configuration each node can access to its 12 neighbors directly. 
@@ -1031,6 +1056,7 @@ It also provide a fault tolerant network with many routes to reach distant node.
 %\todo{AJouter MIRA/SEQUOIA pour paler de IBM, pour le Graph500 = meilleurs supercomputers}
 %\todo{Parler de CRAY ?}
 \subsubsection{Sequoia/Mira}
+\index{IBM BlueGene}
 Sequoia supercomputer was top 1 of the TOP500 2012 list. 
 It is based on BlueGene from IBM.
 The BlueGene project made up to three main architectures with BlueGene/L, BlueGene/P and BlueGene/Q.
@@ -1038,7 +1064,7 @@ It is very interesting to notice the BlueGene architecture because even in the l
 The algorithm used on these supercomputers will be our basis in the part II regarding our implementation of the GRAPH500 benchmark.
 
 \section{ROMEO Supercomputer}
-
+\index{ROMEO Supercomputer}
 The ROMEO supercomputer center is the computation center of the Champagne-Ardenne region in France. 
 Hosted since 2002 by the University of Reims Champagne-Ardenne, this so called meso-center (French name for software and hardware architectures) is used for HPC for theoretic research and domain science like applied mathematics, physics, biophysics and chemistry. 
 
@@ -1053,6 +1079,7 @@ This supercomputer was ranked 151st in the TOP500 and 5th in the GREEN500 list.
 \label{sec:part1_ROMEO}
 ROMEO is a Bull/Atos supercomputer composed of 130 BullX R421 computing nodes. 
 
+\index{K20Xm}
 Each node is composed of two processors Intel Ivy Bridge 8 cores @ 2,6 GHz. 
 Each processor have access to 16GB of memory for a total of 32GB per node, the total memory if 4.160TB. 
 Each processor if linked, using PCIe-v3, to an NVIDIA Tesla K20Xm GPGPU. 

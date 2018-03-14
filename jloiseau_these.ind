@@ -1,0 +1,135 @@
+\begin{theindex}
+
+  \item Advanced RISC architecture, 23
+  \item AMD, 25
+  \item Amdahl's law, 16
+  \item Application Specified Integrated Circuits, 26
+
+  \indexspace
+
+  \item Benchmarks, 39
+  \item Bulk Synchronous Parallelism, 34
+
+  \indexspace
+
+  \item Cache mechanism, 21
+  \item Cache-Coherency Non Unified Memory Access, 36
+  \item Cache-Only Memory Access, 13
+  \item Central Processing Unit, 10
+  \item Charm++, 37
+  \item Cray-1, 20
+  \item CUDA, 37
+
+  \indexspace
+
+  \item Distributed Random Access Machine, 33
+  \item Divided-and-conquer approach, 35
+  \item Dynamic Random Access Memory, 21
+
+  \indexspace
+
+  \item Efficiency, 15
+
+  \indexspace
+
+  \item Field Programmable Gates Array, 26
+  \item Floating-point Operations Per Second, 14
+  \item Flynn taxonomy, 10
+  \item Fork-Join model, 35, 36
+  \item Frequency, 19
+
+  \indexspace
+
+  \item GRAPH500, 40
+  \item Graphics Processing Unit, 24
+  \item Green500, 40
+  \item Gustafson's law, 16
+
+  \indexspace
+
+  \item High Performance Conjugate Gradient, 40
+  \item Hybrid Parallel Randon Access Machine, 34
+  \item Hyper-threading, 23
+
+  \indexspace
+
+  \item IBM BlueGene, 29
+  \item In/Out of Order, 20
+  \item Infiniband, 28
+  \item Intel, 22
+  \item Interconnect, 27
+  \item Interconnection, 29
+
+  \indexspace
+
+  \item K-Computer, 29
+  \item K20Xm, 25, 30
+
+  \indexspace
+
+  \item Latency, 15
+  \item Legion, 37
+  \item LINPACK, 39
+  \item Loop tiling, 20
+
+  \indexspace
+
+  \item Message Passing Interface, 36
+  \item Mont-Blanc project, 24
+
+  \indexspace
+
+  \item No Remote Memory Access, 13, 33
+  \item Non Unified Memory Access, 13, 35
+  \item NVIDIA, 24, 29, 37, 40
+
+  \indexspace
+
+  \item OpenACC, 39
+  \item OpenCL, 38
+  \item OpenMP, 36
+
+  \indexspace
+
+  \item Parallel Random Access Machine, 33
+  \item PEZY, 26, 40
+  \item Piz Daint, 29
+  \item Pre-fetching, 21
+  \item PThreads, 35
+
+  \indexspace
+
+  \item Random Access Machine, 33
+  \item ROMEO Supercomputer, 30
+
+  \indexspace
+
+  \item Single Instruction Multiple Threads, 12, 24
+  \item Speedup, 15
+  \item Static Random Access Memory, 21
+  \item Strong scaling, 17
+  \item Sunway Taihulight, 28
+
+  \indexspace
+
+  \item TOP500, 39
+
+  \indexspace
+
+  \item Unified Memory Access, 13, 35, 36
+  \item Unrolling, 20
+
+  \indexspace
+
+  \item Vectorization, 20
+  \item Von Neumann Model, 9
+
+  \indexspace
+
+  \item Weak scaling, 17
+
+  \indexspace
+
+  \item Xeon Phi, 26
+
+\end{theindex}

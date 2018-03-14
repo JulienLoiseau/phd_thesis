@@ -44,9 +44,6 @@ The development of new reliable, parallel and distributed tools for this method 
 	\draw [fill,cyan] (2,2) circle (.4em);
 	% Arrows 
 	\draw[->,line width=.8pt] (2,2) -- (.6,1.5) node[midway, above,xshift=-.5em] {$r\leq2h$};
-	
-	
-
 \end{tikzpicture}
 %\includegraphics[scale=.4]{\locpath/figures/flecsph/sph.pdf}
 \caption{SPH kernel $W$ and smoothing length $h$ representation}
@@ -193,47 +190,239 @@ In this method we compute the gravitation up a approximations.
 The user can refine those approximation changing parameters. 
 
 \begin{figure}
+\resizebox {\columnwidth} {!} {
 \begin{tikzpicture}
+\def\nrand{300}
+\def\seed{12}
+\def\gridSize{5mm}
+\def\gridTotal{4}
+% Particles to Multipole
+\pgfmathsetseed{\seed}
 \begin{scope}[
    		yshift=0,every node/.append style={
     		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
     ]
     \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
     \draw[black,very thick] (0,0) rectangle (4,4);
-	\draw[step=5mm, black] (0,0) grid (4,4);
-	\foreach \i in {1,2,...,300}{
+	\draw[step=\gridSize, black] (0,0) grid (\gridTotal,\gridTotal);
+	\foreach \i in {1,2,...,\nrand}{
     	\pgfmathsetmacro{\x}{(rand)*2+2}
     	\pgfmathsetmacro{\y}{(rand)*2+2}
-    	\node at (\x,\y) [circle,fill,inner sep=.7pt]{};
+		% COLOR 
+		\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+			{\node at (\x,\y) [black!50!green,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+			{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+		}
+		{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+	}
+\end{scope}
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=80,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (\gridTotal,\gridTotal);
+	\foreach \x in {0,1,...,7}{\foreach \y in {0,1,...,7}{
+		\ifthenelse{\( \x<3 \OR \x>5 \)}
+		{
+			\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+		}
+		{	\ifthenelse{ \( \y<1 \OR \y>3 \)}
+			{
+			\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[red,circle,fill,inner sep=.7pt,minimum size=3pt]{};	
+			}{}
+		}
+	}}
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm<1.5cm} \OR \lengthtest{\x cm>3cm} \)}
+		{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+		{	\ifthenelse{ \( \lengthtest{\y cm<.5cm} \OR \lengthtest{\y cm>2cm} \)}
+			{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+			{}
+		}
   	}
 \end{scope}
 \begin{scope}[
-   		yshift=60,every node/.append style={
+   		yshift=160,every node/.append style={
     		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
     ]
     \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
     \draw[black,very thick] (0,0) rectangle (4,4);
 	\draw[step=10mm, black] (0,0) grid (4,4);
-	\foreach \x in {0,1,...,3}{
-		\foreach \y in {0,1,...,3}{
-			\node at (\x*10mm+5mm,\y*10mm+5mm) [red,circle,fill,inner sep=.7pt]{};
-		}
-	}
+	\foreach \x in {0,1}{\foreach \y in {0,...,7}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {0,...,7}{\foreach \y in {6,7}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {0}{\foreach \y in {0,...,3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+	}}
+	\foreach \x in {0,...,3}{\foreach \y in {3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+	}}
 \end{scope}
+
+%PARTICLES TO PARTICLES
+\pgfmathsetseed{\seed}
 \begin{scope}[
-   		yshift=120,every node/.append style={
+   		yshift=0,xshift=9cm,every node/.append style={
     		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
     ]
     \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
     \draw[black,very thick] (0,0) rectangle (4,4);
-	\draw[step=20mm, black] (0,0) grid (4,4);
-	\foreach \x in {0,1}{
-		\foreach \y in {0,1}{
-			\node at (\x*20mm+10mm,\y*20mm+10mm) [red,circle,fill,inner sep=.7pt]{};
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm>1.5cm} \AND \lengthtest{\x cm<3cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>.5cm} \AND \lengthtest{\y cm<2cm} \)}
+			{
+				% COLOR 
+				\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+				{	
+					\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+					{\node at (\x,\y) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+					{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+				}
+				{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+			}{}
+		}{}
+    	%\node at (\x,\y) [circle,fill,inner sep=.7pt]{};
+  	}
+\end{scope}
+%MULTIPOLE TO MULTIPOLE
+\begin{scope}[
+   		yshift=160,xshift=9cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+    \draw[step=10mm, black] (0,3) grid (4,4);
+	\draw[step=10mm, black] (0,0) grid (1,3);
+	\draw[step=5mm, black] (1,0) grid (2,3);
+	\draw[step=5mm, black] (2,2) grid (4,3);
+	\draw[step=5mm, black] (2,0) grid (4,.5);
+	\draw[step=5mm, black] (3.5,0) grid (4,2);
+	% add rectangle
+	\draw[black] (2,.5) rectangle (3.5,2);
+	% Big part 
+	\foreach \x in {0}{\foreach \y in {0,...,3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {0,...,3}{\foreach \y in {3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [blue,circle,fill,inner sep=.7pt]{};
+	}}
+	% Smaller one 
+	\foreach \x in {2,3}{\foreach \y in {0,...,3}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {2,...,7}{\foreach \y in {4,5}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {7}{\foreach \y in {0,...,3}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {4,5,6}{\foreach \y in {0}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\node at (5*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+\end{scope}
+
+% Multipole to Particles 
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=0,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+		% COLOR 
+		\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+			{\node at (\x,\y) [black!50!green,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+			{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
 		}
+		{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
 	}
 \end{scope}
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=80,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm>1.5cm} \AND \lengthtest{\x cm<3cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>.5cm} \AND \lengthtest{\y cm<2cm} \)}
+			{
+				% COLOR 
+				\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+				{	
+					\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+					{\node at (\x,\y) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+					{}
+				}{}
+			}{}
+		}{}
+	}
+	\node at (4*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [blue,circle,fill,inner sep=.7pt]{};
+\end{scope}
+%% MULTIPOLE TO LOCAL
+\begin{scope}[
+   		yshift=160,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\node at (4*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+
+	\node at (5*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [blue,circle,fill,inner sep=.7pt]{};
+\end{scope}
+% ARROWS AND TEXT
+\draw[->,very thick] (-3,2.8) -- (-3,4) node[midway,left] {\textbf{P2M}};
+\draw[->,very thick] ([yshift=80]-3,2.8) -- ([yshift=80]-3,4) node[midway,left] {\textbf{M2M}};
+
+\draw[->,very thick] ([yshift=160]3,2.8) -- ([yshift=160]6,2.8) node[midway,above] {\textbf{M2L}};
+\draw[->,very thick] ([yshift=160,xshift=9cm]3,2.8) -- ([yshift=160,xshift=9cm]6,2.8) node[midway,above] {\textbf{L2L}};
+
+\draw[<-,very thick] ([yshift=80]21,2.8) -- ([yshift=80]21,4) node[midway,right] {\textbf{L2P}};
+\draw[<-,very thick] (21,2.8) -- (21,4) node[midway,right] {\textbf{SUM}};
+
+\draw[->,very thick] (3,2.8) -- (6,2.8) node[midway,above] {\textbf{P2P}};
+\draw[->,very thick] ([xshift=9cm]3,2.8) -- ([xshift=9cm]6,2.8) node[midway,above] {\textbf{SUM}};
+
+
+\draw[->,very thick] (-3.5,8.7cm) node[xshift=-5pt,blue,circle,fill,inner sep=.7pt,minimum size=3pt] (a) {} -- 
+ (-3,8.7cm) node[xshift=5pt,red,circle,fill,inner sep=.7pt,minimum size=3pt] (b) {};
+\node[align=left] at (-3,9.5cm) {Data\\direction};
+
+
 \end{tikzpicture}
+}
+\caption{Fast Multipole Method schematics. Particles to Multipole (P2M), Multipole to Multipole (M2M), Multipole to Particles (M2P), Multipole to Local (M2L), Local to Local (L2L) and Particles to Particles (P2P). Schematic inspired from \cite{yokota2011treecode}}
 \end{figure}
 
 This method is based on Taylor series.
@@ -259,12 +448,12 @@ And we propose a compact version of the matrix with:
  ||\frac{\partial f^a}{\partial r^b}|| = -\sum_c \frac{m_c}{|\vec{r}-\vec{r_c}|^3} \Big[ \delta_{ab} - \frac{3.(r^a-r_c^a)(r^b-r_c^b)}{|\vec{r}-\vec{r_c}|^2} \Big] 
 \end{equation}
 
-With $\delta_{ij}$ the kronecker delta:
+With $\delta_{ab}$ the kronecker delta:
 \begin{equation}
-\delta_{ij} = 
+\delta_{ab} = 
 \begin{cases}
-    1, & \text{if $i = j$}.\\
-    0, & \text{if $i\neq j$}.
+    1, & \text{if $a = b$}.\\
+    0, & \text{if $a\neq b$}.
   \end{cases}
 \end{equation}
 
@@ -281,10 +470,12 @@ For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we gi
 
 The method is summed up in figure with the different equations.
 We consider Centers Of Mass, COM, to be the centroid of particles based on their position. 
-In several steps the information is first transmetted to the COMs, computing their position and mass. 
+In several steps the information is first transmitted to the COMs, computing their position and mass. 
 
 
 \subsection{Problems} 
+The previous equations are generic and describe the behavior of SPH method. 
+In order to check our 
 
 \subsubsection{Sod shock tube}
 
@@ -292,6 +483,80 @@ In several steps the information is first transmetted to the COMs, computing the
 
 \subsubsection{Fluid flow}
 
-\subsubsection{Astrophysics: neutron stars coalescing}
+\subsubsection{Astrophysics: neutron stars coalescence}
+
+The final aim of our tests is to simulate astrophysical events. 
+We are interested in one of the most important event recently discovered. 
+Last year the Laser Interferometer Gravitational Wave, LIGO, detected the first gravitational wave generated by binary neutron stars merging \cite{abbott2017gw170817} and also more complexes event with Binary Black Holes coalescence in \cite{abbott2017gw170814}.
+
+
+\paragraph{Solving Lane-Emden Equation}
+
+We need to determine the density function based on the radius. 
+
+As we consider the star as a polytropic fluid, we use the equation of Lane-Emden which is a form of the Poisson equation: 
+
+\begin{equation}\label{eq_LaneEmden}
+  \frac{d^2\theta}{d \xi^2}+ \frac{2}{\xi}\frac{d\theta}{d\xi}+\theta^n = 0
+\end{equation}
+
+With $\xi$ and $\theta$ two dimensionless variables. 
+There is only exact solutions for a polytropic index $n = 0.5$, $1$ and $2$.
+In our work we use a polytropic index of $1$ which can correspond to a NS simulation.
+
+For $n=1$ the solution of equation \ref{eq_LaneEmden} is: 
+
+\begin{equation}
+\theta(\xi)=\frac{sin(\xi)}{\xi}
+\end{equation}
+
+We note $\xi_1 = \pi$, the first value of $\xi$ as $\theta(\xi) = 0$.
+$\theta(\xi)$ is also defined as: 
+\begin{equation}
+ \theta(\xi) = \Big(\frac{\rho(\xi)}{\rho_c}\Big)^{\frac{1}{n}}  = \frac{\rho(\xi)}{\rho_c}
+\end{equation}
+
+With $\rho_c$ the internal density of the star and $\rho$ the density at a determined radius. $\xi$ is defined as:  
+$$ \xi = Ar = \sqrt{\frac{4\pi G}{K(n+1)}\rho_c^{(n-1)/n}} \times r = \sqrt{\frac{2\pi G}{K}}\times r \mbox{ (for } n=1 \mbox{)}$$
+
+With $K$ a proportionality constant.
+
+From the previous equations we can write the stellar radius $R$ as:
+\begin{equation}
+R = \sqrt{\frac{K(n+1)}{4\pi G}}\rho_c^{(1-n)/2}\xi_1 = \sqrt{ \frac{K}{2\pi G} } \times \xi_1
+\end{equation} 
+
+(We note that for $n=1$ the radius does not depend of the central density.)
+
+If, for example, we use dimensionless units as $G=R=M=1$ (for the other results we use CGS with $G = 6.674 \times 10^{-8} cm^3g^{-1}s^{-2}$) 
+We can compute K as: 
+\begin{equation}
+\label{eq:constant}
+K = \frac{R^2  2 \pi G}{\xi_1^2}
+\end{equation}
+
+\begin{center}
+
+\begin{tabular}{c|c|c|c|c|}
+ & $NS_1$ & $NS_2$ & $NS_3$ & $NS_4$ \\ 
+\hline 
+Radius (cm) & $R=G=M=1$ & 1500000 & 1400000 & 960000 \\ 
+\hline 
+K & 0.636619 & 95598.00 & 83576.48 & 39156.94\\ 
+\hline 
+\end{tabular}
+
+\end{center} 
+
+Then we deduce the density function of $r$ as :
+
+$$\rho(\xi) = \frac{sin(A\times r)}{A \times r} \times \rho_c \mbox{ with } A = \sqrt{\frac{2\pi G}{K}}
+$$
+
+As we know the total Mass $M$, the radius $R$ and the gravitational constant $G$ we can compute the central density as: 
+
+$$ \rho_c = \frac{M A^3}{4 \pi (sin(AR)-ARcos(AR)) } $$
+
+Then we normalize the results to fit $R = M = G = 1$: $K' = K/(R^2G) $, $m_i' = m_i/M $, $h_i' = h_i / R$, $\vec{x_i}' = \vec{x_i}/R$ 
 
 \section{Conclusion}

@@ -11,11 +11,11 @@ Our aim is to determine the behavior of accelerators compared to classical proce
 For this purpose we choose the Langford problem which is an academic problem of combinatorial counting.
 We show the optimizations made to the regular processor algorithm to efficiently implement this application on GPU. 
 We compare the two approaches from classical processor to GPU implementation. 
-The results are then presented to show the acceleration using the whole ROMEO supercomputer. 
+The results are then presented to show the acceleration using the whole ROMEO supercomputer.\\
 
 %\section{The Langford problem}
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
-While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red, blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see Fig.~\ref{fig:lang}.\\
+While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red and blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see figure~\ref{fig:lang}.\\
 
 \begin{figure}[htbp]    
 \begin{center}    
@@ -37,8 +37,16 @@ While observing his son manipulating blocks of different colors, he noticed that
   
 This problem has been generalized to any number $n$ of colors and any number $s$ of blocks having the same color. 
 $L(s,n)$ consists in searching for the number of solutions to the Langford problem, up to a symmetry. % ... excepted symmetric ones. 
-In November 1967, Martin Gardner presented $L(2,4)$ (two cubes and four colors) as being part of a collection of small mathematical games and he stated that $L(2,n)$ has solutions for all $n$ such that $n= 4k$ or $n = 4k-1$ ($k \in \mathbb{N} \setminus \{0\}$). 
-The central resolution method consists in placing the pairs of cubes, one after the other, on the free places and backtracking if no place is available (see Fig.~\ref{backtrack} for detailed algorithm).
+In November 1967, Martin Gardner presented $L(2,4)$ (two cubes and four colors) as being part of a collection of small mathematical games and he stated that $L(2,n)$ has solutions for all $n$ such that:
+\begin{equation}
+\text{ solutions for: }
+\begin{cases}
+n= 4k \\ 
+n = 4k-1
+\end{cases}
+ k \in \mathbb{N}^+
+\end{equation}
+The central resolution method consists in placing the pairs of cubes, one after the other, on the free places and backtracking if no place is available (see figure~\ref{backtrack} for detailed algorithm).
 
 \begin{table}[t!]
 \centering
@@ -71,9 +79,11 @@ The central resolution method consists in placing the pairs of cubes, one after 
 \end{table}
 
 The Langford problem has been approached in different ways: discrete mathematics results, specific algorithms, specific encoding, constraint satisfaction problem (CSP), inclusion-exclusion~\ldots~\cite{Mil00,apes-26,Smi00,larsen2009counting}.
-In 2004, the last solved instance, $L(2,24)$, was computed by our team\cite{CReSTIC-711} using a specific algorithm. (see Table \ref{tab:result_base}); $L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
+In 2004, the last solved instance, $L(2,24)$, was computed by our team \cite{CReSTIC-711} using a specific algorithm. 
+Table \ref{tab:result_base} presents the latest results and number of solutions. 
+$L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
 
-The main efficient known algorithms are the following: the Miller backtrack method, the Godfrey algebraic method and the Larsen inclusion-exclusion method.
+The most efficient known algorithms are: the Miller backtrack method, the Godfrey algebraic method and the Larsen inclusion-exclusion method.
 The Miller one is based on backtracking and can be modeled as a CSP; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go further. 
 Then, we use the Godfrey method to achieve $L(2,24)$ more quickly and then recompute $L(2,27)$ and $L(2,28)$, presently known as the last instances.
 The Larsen method is based on inclusion-exclusion \cite{larsen2009counting}; although this method is effective, practically the Godfrey one is better. 
@@ -81,14 +91,25 @@ The latest known work on the Langford Problem is a GPU implementation proposed i
 
 \section{Miller algorithm}
 
-In this part we present our multiGPU cluster implementation of the Miller's algorithm. First, we introduce the backtrack method. Then we present our implementation in order to fit the GPUs architecture. The last section presents our results. 
+In this part we present our multiGPU cluster implementation of the Miller's algorithm. 
+This algorithm is very irregular and the repartition have to be done at runtime on our accelerators. 
+
+First, we introduce the backtrack method. 
+Then we present our implementation in order to fit the GPUs architecture. 
+The last section presents our results. 
 
 \subsection{CSP}
 
-Combinatorial problems are NP-complete\cite{GJ79} and can be described as a SATISFIABILITY problems (SAT) using a polynomial transformation. 
+Combinatorial problems are NP-complete \cite{GJ79} and can be described as SATISFIABILITY problems (SAT) using a polynomial transformation. 
 They can be transformed into CSP formalism.
-A Constraint Satisfaction Problem (CSP), first introduced by Montanari\cite{Mon74}, is defined as a triple $<X,D,C>$ where:
-$X=\{X_1,...,X_n\}$, a finite set of variables, $D=\{D_1,...,D_n\}$, their finite domains of values et $C=\{C_1,...,C_p\}$, a finite set of constraints.
+A Constraint Satisfaction Problem (CSP), first introduced by Montanari \cite{Mon74}, is defined as a triple $<X,D,C>$ where:
+\begin{equation}
+\begin{cases}
+X=\{X_1,...,X_n\}\text{: a finite set of variables} \\ 
+D=\{D_1,...,D_n\}\text{: their finite domains of values}\\
+C=\{C_1,...,C_p\}\text{: a finite set of constraints}
+\end{cases}
+\end{equation}
 
 The goal in this formalism is to assign values in $D$ to $n$-uple $X$ respecting all the $C$ $p$-uple constraints.
 This approach is a large field of research. \cite{arbelaez2014gpu} developed \textit{local search} and compares GPU to CPU. 
@@ -156,27 +177,80 @@ Considering a basic approach, combinatorial problems formed into CSP can be repr
 
 As presented above the Langford problem is known to be a highly irregular combinatorial problem. 
 We first present here the general tree representation and the ways we regularize the computation for GPUs.
-Then we show how to parallelize the resolution over a multiGPU cluster.
+Then we show how to parallelize the resolution over a multi-GPU cluster.
 
 \subsubsection{Langford's problem tree representation}
 \label{sec:LGF_resolution}
 %In~\cite{HKS02}, we propose to formalize the Langford problem as a CSP  ({\it Constraint Satisfaction Problem}), first introduced by Montanari in \cite{Mon74}, and show that an efficient parallel resolution is possible. 
 As explained, CSP formalized problems can be transformed into tree evaluations. %represented as trees. 
 %The tree Here we intend to develop a specific algorithm taking into account the conclusion of our previous studies (memory management of memory and load balance) and transfer the tasks resolution into GPUs.\\
-
-\begin{figure}[htb]
+%\begin{figure}[htb]
+%\includegraphics[scale=.65]{\locpath/figures/langford/arbre_en}
+%\end{figure}
+\begin{figure}[t!]
 \centering
-\includegraphics[scale=.65]{\locpath/figures/langford/arbre_en}
+\resizebox {\columnwidth} {!} {
+\begin{tikzpicture}[sibling distance=12cm]
+\node at (-13.5,-1.5) {pair 3 positions};
+\node at (-13.5,-3) {pair 2 positions};
+\node at (-13.5,-4.5) {pair 1 positions};
+
+\node [align=left] at (8,-.5) {Symmetric\\solution(s)};
+
+\node  [circle,draw,fill,inner sep=1] {}
+  child [line width=2pt] { [sibling distance=4cm] node [fill=black!10] {(1,5)}
+    child [line width=.5pt] { [sibling distance=10mm] node [fill=white] {(1,4)}
+      child {node {(1,3)}}
+      child {node {(2,4)}}
+      child {node {(3,5)}}
+      child {node {(4,6)}}
+    }
+    child [line width=.5pt] { [sibling distance=10mm] node [fill=white] {(2,5)}
+      child {node {(1,3)}}
+      child {node {(2,4)}}
+      child {node {(3,5)}}
+      child {node {(4,6)}}
+    }
+    child { [sibling distance=10mm] node [fill=black!10] {(3,6)}
+      child [line width=.5pt] {node {(1,3)}}
+      child {node [fill=black!10] {(2,4)}}
+      child [line width=.5pt] {node {(3,5)}}
+      child [line width=.5pt] {node {(4,6)}}
+    }
+  }
+  child [dashed,line width=2pt] { [sibling distance=4cm] node [fill=black!10] {(2,6)}
+    child { [sibling distance=10mm] node [fill=black!10] {(1,4)}
+      child [line width=.5pt] {node {(1,3)}}
+      child [line width=.5pt] {node {(2,4)}}
+      child {node [fill=black!10] {(3,5)}}
+      child [line width=.5pt] {node {(4,6)}}
+    }
+    child [line width=.5pt] { [sibling distance=10mm] node [fill=white] {(2,5)}
+      child {node {(1,3)}}
+      child {node {(2,4)}}
+      child {node {(3,5)}}
+      child {node {(4,6)}}
+    }
+    child [line width=.5pt] { [sibling distance=10mm] node [fill=white] {(3,6)}
+      child {node {(1,3)}}
+      child {node {(2,4)}}
+      child {node {(3,5)}}
+      child {node {(4,6)}}
+    }
+  }
+;
+\end{tikzpicture}
+}
 \caption{Search tree for $L(2,3)$}
 \label{fig:arbre}
 \end{figure}
-
 In order to solve $L(2,n)$, we consider a tree of height $n$: see example of $L(2,3)$ in figure~\ref{fig:arbre}.
 
 \begin{itemize}   
-\item Every level of the tree corresponds to a color.
-\item Each node of the tree corresponds to the placement of a pair of cubes without worrying about the other colors. Color $p$ is represented at depth $n-p+1$, where the first node corresponds to the first possible placement (positions 1 and $p+2$) and $i^{th}$ node corresponds to the placement of the first cube of color $p$ in position $i, \ i \in [1, \ 2n-1-p]$.
-\item Solutions are leaves generated without any placement conflict.
+\item[-] Every level of the tree corresponds to a color.
+\item[-] Each node of the tree corresponds to the placement of a pair of cubes without worrying about the other colors. Color $p$ is represented at depth $n-p+1$, where the first node corresponds to the first possible placement (positions 1 and $p+2$) and $i^{th}$ node corresponds to the placement of the first cube of color $p$ in position $i, \ i \in [1, \ 2n-1-p]$.
+\item[-] Solutions are leaves generated without any placement conflict.
+\item[-] As we consider the solution up to a symmetry, the left part is represented dashed and is in fact not traversed.
 \end{itemize}
 
 There are many ways to browse the tree and find the solutions: \emph{backtracking}, \emph{forward-checking}, \emph{backjumping}, etc \cite{prosser93hybrid}. 
@@ -187,7 +261,7 @@ The recommendation for performance on GPU accelerators is to use non test-based 
 Due to its irregularity, the basic \emph{backtracking} algorithm, presented on figure~\ref{backtrack}, is not supposed to suit the GPU architecture.
 Thus a vectorized version is given when evaluating the assignments at the leaves' level, with one of the two following ways: assignments can be prepared on each tree node or totally set on final leaves before testing the satisfiability of the built solution (figure~\ref{regularized}).
 
-\begin{figure}[htb]
+\begin{figure}[t!]
 \begin{minipage}[b]{0.45\linewidth}
 \footnotesize
 \begin{verbatim}
@@ -223,7 +297,7 @@ for pair 1 positions
 
 \subsubsection{Data representation}
 
-\begin{figure}[htb]
+\begin{figure}[t!]
 \begin{minipage}[b]{0.40\linewidth}
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/langford/positions_lgf}
@@ -267,18 +341,17 @@ The last one is used for testing if a global assignment is an available solution
 \centering 
 \includegraphics[scale=.75]{\locpath/figures/langford/graphe_repartition}   
 \caption{Server client distribution} \label{fig:parallel} 
-
 \end{minipage}
 \end{figure}
 
 \paragraph{Add a pair: }
 Top of figure~\ref{fig:test_et} presents the way to add a pair to a given assignment.
-With a \emph{binary or}, the new mask contains the combination of the original mask and of the added pair.
+With a \emph{binary OR}, the new mask contains the combination of the original mask and of the added pair.
 This operation can be performed even if the position is not available for the pair (however the resulting mask is inconsistent). 
 
 \paragraph{Test a pair position: }
 On the bottom part of the same figure, we test the positioning of a pair on a given mask. 
-For this, it is necessary to perform a \emph{binary and} between the mask and the pair.
+For this, it is necessary to perform a \emph{binary AND} between the mask and the pair.
 \begin{itemize}
 	\item[] $=0$: \emph{success}, the pair can be placed here
 	\item[] $\neq0$: \emph{error}, try another position
@@ -362,7 +435,7 @@ This allows us to use the total available memory for the L1 cache for each threa
 \paragraph{Streams:}
 A client has to prepare work for GPU. There are four main steps: generate the tasks, load them into the device memory, process the task on the GPU and then get the results.
 
-\begin{figure}[htb]
+\begin{figure}[t!]
 \begin{minipage}[b]{0.48\linewidth}
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/langford/streams.jpeg}
@@ -402,14 +475,13 @@ We experimentally demonstrated that only 4 or 5 CPU cores are enough to feed GPU
 \subsection{Results}
 
 \paragraph{Regularized method results}
-We now can show the results obtained for our massively parallel scheme using the previous optimizations, comparing the computation times of successive instances of the Langford problem. These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/GPU machines.
+We now show the results obtained for our massively parallel scheme using the previous optimizations, comparing the computation times of successive instances of the Langford problem. These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/GPU machines.
 
 The previous limit with Miller's algorithm was $L(2,19)$, obtained in 1999 after 2.5 years of sequential effort and at the same time after 2 months with a distributed approach\cite{Mil00}. Our computation scheme allowed us to obtain it in less than 4 hours (Table \ref{tab:result_base_regu}), this being not only due to Moore law progress.\\
 Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU cores. In addition, the GPUs compute $200000\times$ more nodes of the search tree than the CPUs, with a faster time.
 
-\begin{table}[htb]
-\begin{minipage}[b]{0.5\linewidth}
-\[
+\begin{table}[t!]
+\begin{subfigure}[b]{0.5\linewidth}
 \centering
 \begin{tabular}{l r r r}
 					\hline
@@ -423,15 +495,10 @@ Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU c
 					19  & 22594.2 & 13960.8 & \\ 
 					\hline
 \end{tabular}
-\]
-					
 \caption{Regularized method (seconds)}
-
 \label{tab:result_base_regu}
-
-\end{minipage}
-\begin{minipage}[b]{0.5\linewidth}
-
+\end{subfigure}
+\begin{subfigure}[b]{0.5\linewidth}
 \centering
 \begin{tabular}{ l r r r }
 					\hline
@@ -444,12 +511,10 @@ Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU c
 					20  & -- & 9436.9 &\\
 					21  & -- & 118512.4& \\ 
 					\hline
-\end{tabular}
-					
+\end{tabular}	
 \caption{Backtrack  (seconds)}
 \label{tab:result_backtrack}
-
-\end{minipage}
+\end{subfigure}
 \end{table}
 
 The computation time between two different consecutive instances being multiplied by $10$ approximately, this could allow us to obtain $L(2,20)$ in a reasonable time.
@@ -458,7 +523,7 @@ The computation time between two different consecutive instances being multiplie
 \paragraph{Backtracking on GPUs}
 
 It appears at first sight that using backtracking on GPUs without any regularization is a bad idea due to threads synchronization issues.
-But in order to compare CPU and GPU computation power in the same conditions we decide to implement the original backtrack method on GPU (see Fig.~\ref{backtrack}) with only minor modifications.
+But in order to compare CPU and GPU computation power in the same conditions we decide to implement the original backtrack method on GPU (see figure~\ref{backtrack}) with only minor modifications.
 In these conditions we observe very efficient work of the NVIDIA scheduler, which perfectly handles threads desynchronization.
 Thus we use the same server-client distribution as in \ref{section:parallel_backtrack}, each client generates masks for both CPU and GPU cores. 
 The workload is then statically distributed on GPU and CPU cores.
@@ -477,19 +542,27 @@ In order to break the limitation of $L(2,24)$ we already used this very efficien
 In this part we describe this algorithm and optimizations, and then our implementation on multiGPU clusters.
 \subsection{Method description}
 Consider $L(2,3)$ and $X=(X_1,X_2,X_3,X_4,X_5,X_6)$. 
-It proposes to modelize $L(2,3)$ by 
-$F(X,3) = (X_1X_3+X_2X_4+X_3X_5+X_4X_6)\times (X_1X_4+X_2X_5+X_3X_6)\times (X_1X_5+X_2X_6) $
-
+It proposes to modelize $L(2,3)$ by: 
+\begin{equation}
+\begin{aligned}
+F(X,3) = & (X_1X_3+X_2X_4+X_3X_5+X_4X_6)\times \\
+& (X_1X_4+X_2X_5+X_3X_6)\times\\
+& (X_1X_5+X_2X_6)
+\end{aligned}
+\end{equation}
 In this approach each term represents a position of both cubes of a given color and a solution to the problem corresponds to a term developed as $(X_1X_2X_3X_4X_5X_6)$; thus the number of solutions is equal to the coefficient of this monomial in the development. More generally, the solutions to $L(2,n)$ can be deduced from $(X_1X_2X_3X_4X_5...X_{2n})$ terms in the development of $F(X,n)$.
 
 If \ \ $G(X,n) = X_1 ... X_{2n} F(X,n)$ then it has been shown that: 
 
 
-$\sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} G(X,n)_{(x_1,...,x_{2n})} =  2^{2n+1}L(2,n)$
+\begin{equation}
+\sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} G(X,n)_{(x_1,...,x_{2n})} =  2^{2n+1}L(2,n)
+\end{equation}
 
 So \hspace*{2cm}
-$\sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} \big( \prod\limits_{i=1}^{2n} x_i \big) \prod\limits_{i=1}^{n} \sum\limits_{k=1}^{2n-i-1} x_kx_{k+i+1} = 2^{2n+1} L(2,n)$
-\\
+\begin{equation}
+\sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} \big( \prod\limits_{i=1}^{2n} x_i \big) \prod\limits_{i=1}^{n} \sum\limits_{k=1}^{2n-i-1} x_kx_{k+i+1} = 2^{2n+1} L(2,n)
+\end{equation}
 
 \noindent That allows to get $L(2,n)$ from polynomial evaluations.
 The computational complexity of $L(2,n)$ is of $O(4^n\times n^2)$ and an efficient big integer arithmetic is necessary. This principle can be optimized by taking into account the symmetries of the problem and using the Gray code: these optimizations are described below.
@@ -530,7 +603,7 @@ So we need few big integer arithmetic functions. After testing existing librarie
 
 Finally, we developed a light CPU and GPU library adapted to our needs.
 In the sum for example, as maintaining carries has an important time penalty, we have chosen to delay the spread of carries by using buffers: carries are accumulated and spread only when useful (for example when the buffer is full).
-Fig.~\ref{fig:big-integer} represents this big integer handling.
+Figure~\ref{fig:big-integer} represents this big integer handling.
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=.5]{\locpath/figures/langford/lgf_grands_entiers}
@@ -587,12 +660,12 @@ Firstly we define the tasks distribution, secondly we set the number of threads 
 
 \paragraph{Tasks distribution depth: }
 This value being set it is important to get a high number of blocks to maintain sufficient GPU load.
-Thus we have to determine the best number of tasks for the distribution. As presented in part \ref{sec:tasks} the number $p$ of bits determines $2^p$ tasks. On the one hand, too many tasks are a limitation for the GPU that cannot store all the tasks in its 6GB memory. On the other hand, not enough tasks means longer tasks and too few blocks to fill the GPU grid. Fig.~\ref{fig:graphe_prof} shows that for the $L(2,23)$ instance the best task number is with generation depth 28.
+Thus we have to determine the best number of tasks for the distribution. As presented in part \ref{sec:tasks} the number $p$ of bits determines $2^p$ tasks. On the one hand, too many tasks are a limitation for the GPU that cannot store all the tasks in its 6GB memory. On the other hand, not enough tasks means longer tasks and too few blocks to fill the GPU grid. figure~\ref{fig:graphe_prof} shows that for the $L(2,23)$ instance the best task number is with generation depth 28.
 
 
 \paragraph{Number of threads per block: }
 In order to take advantage of the GPU computation power, we have to determine the threads/block distribution. Inspired by our experiments with Miller's algorithm we know that the best value may appear at lower occupancy. We perform tests on a given tasks set varying the threads/block number and grid size associated. 
-Fig.~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem: the best distribution is around $128$ threads per block. 
+Figure~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem: the best distribution is around $128$ threads per block. 
 \begin{figure}[htbp]
 \centering 
 \includegraphics[scale=.55]{\locpath/figures/langford/graphe_threads}
@@ -600,30 +673,27 @@ Fig.~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem
 \label{fig:graphe_threads}
 \end{figure}
 
-\begin{figure}[htb]
-\begin{minipage}[b]{0.5\linewidth}
-
+\begin{figure}[t!]
+\begin{subfigure}[b]{0.5\linewidth}
 \centering 
 \includegraphics[scale=.5]{\locpath/figures/langford/graphe_prof}
 \caption{Influence on server generation depth}
 \label{fig:graphe_prof}
-
-\end{minipage}
-\begin{minipage}[b]{0.5\linewidth}
-
+\end{subfigure}
+\begin{subfigure}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=.5]{\locpath/figures/langford/graphe_cpu_gpu}
 \caption{Influence of tasks repartition}
 \label{fig:graphe_rep}
-
-\end{minipage}
+\end{subfigure}
+\caption{Influences of repartitions of depths and CPU-GPU tasks}
 \end{figure}
 
 \subsubsection{CPU vs GPU distribution: }
 The GPU and CPU computation algorithm will approximately be the same. 
 In order to take advantage of all the computational power of both components we have to balance tasks between CPU and GPU. 
 We performed tests by changing the CPU/GPU distribution based on simulations on a chosen set of tasks.  
-Fig.~\ref{fig:graphe_rep} shows that the best distribution is obtained when the GPU handles 65\% of the tasks. 
+Figure~\ref{fig:graphe_rep} shows that the best distribution is obtained when the GPU handles 65\% of the tasks. 
 This optimal load repartition directly results from the intrinsics computational power of each component; this repartition should be adapted if using a more powerful GPU like Tesla K40 or K80.
 
 \subsubsection{Computing context: }
@@ -647,12 +717,12 @@ If another user asks for a reservation and requests this node, the best effort j
 For $L(2,27)$ and even more for $L(2,28)$ the total time required is too important to use the whole machine off a challenge period, thus we chose to compute in a Best-Effort manner.
 In order to fit with this submission method we chose a reasonable time-per-task, sufficient to optimize the treatments with low loading overhead, but not too long so that killed tasks are not too penalizing for the global computation time. We empirically chose to run 15-20 minute tasks and thus we considered $p=15$ for $n=27$ and $p=17$ for $n=28$. 
 
-The best effort based algorithm is presented on Fig.~\ref{fig:graphe_besteffort}.
+The best effort based algorithm is presented on figure~\ref{fig:graphe_besteffort}.
 The task handler maintains a maximum of 256 tasks in the queue; in addition the entire process is designed to be fault-tolerant since killed tasks have to be launched again.
 When finished, the tasks generate an ouput containing the number of solutions and computation time, that is stored as a file or database entry. 
 At the end the outputs of the different tasks are merged and the global result can be provided.  
 
-\begin{figure}[htbp]
+\begin{figure}[t!]
 \centering
 \includegraphics[scale=.6]{\locpath/figures/langford/best_effort}
 \caption{Best-effort distribution}
@@ -708,8 +778,6 @@ At the end the outputs of the different tasks are merged and the global result c
 %\label{algo:client}
 %\end{algorithm}
 
-
-
 \subsection{Results}
 After these optimizations and implementation tuning steps, we conducted tests on the ROMEO supercomputer using best-effort queue to solve $L(2,27)$ and $L(2,28)$. 
 We started the experiment after an update of the supercomputer, that implied a cluster shutdown. 
@@ -725,24 +793,25 @@ For the $L(2,28)$ 131,072 tasks the total computation time was about 1365 days (
 With $L(2,27)$ we used a specific database to maintain information concerning the tasks: 617 tasks were aborted [by regular user jobs] before finishing (1.9\%), with an average computing time of 766" (43\% of the maximum requested time for a task). This consumed 472873", which overhead represents 1.6\% of the effective computing effort.
 
 \textbf{Cluster occupancy -}
-Fig.~\ref{fig:graphe_15minutes_27} presents the tasks resolution over the two computation days for $L(2,27)$.
+Figure~\ref{fig:graphe_15minutes_27} presents the tasks resolution over the two computation days for $L(2,27)$.
 The experiment elapse time was 164700" (1.9 days). Compared to the effective computation time, we used an average of 181.2 machines (CPU-GPU couples): this represents 69.7\% of the entire cluster.
  
-Fig. \ref{fig:graphe_15minutes_28} presents the tasks resolution flow during the 23 days computation for $L(2,28)$. We used about 99 machines, which represents 38\% of the 230 available nodes.
+Figure~\ref{fig:graphe_15minutes_28} presents the tasks resolution flow during the 23 days computation for $L(2,28)$. We used about 99 machines, which represents 38\% of the 230 available nodes.
 
-\begin{figure}[htb]
-\begin{minipage}[b]{0.5\linewidth}
+\begin{figure}[t!]
+\begin{subfigure}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=.6]{\locpath/figures/langford/graphe_15minutes_petit}
 \caption{$L(2,27)$ tasks grouped by 15" slots}
 \label{fig:graphe_15minutes_27}
-\end{minipage}
-\begin{minipage}[b]{0.5\linewidth}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=.6]{\locpath/figures/langford/graphe_15minutes_petit_28}
 \caption{$L(2,28)$ tasks grouped by 1 hour slots}
 \label{fig:graphe_15minutes_28}
-\end{minipage}
+\end{subfigure}
+\caption{Task repartition for $L(2,27)$ and $L(2,28)$ }
 \end{figure}
 
 For $L(2,27)$, these results confirm that the computation took great advantage of the low occupancy of the cluster during the experiment. 

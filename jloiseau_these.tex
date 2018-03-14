@@ -8,11 +8,14 @@
 \usepackage{url}
 \usepackage{python}
 \usepackage{algpseudocode,algorithm}
-\usepackage{tikz}
-%\usepackage{todonotes}
 \usepackage{makeidx}
 \usepackage{enumitem}
 \usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
 \usetikzlibrary{positioning}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{patterns}
@@ -26,44 +29,55 @@
 
 \usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=2.5cm]{geometry}
 
-% Thesis title
-%\title{Energy Efficiency, Exascale and Complex Systems}
-\title{Vers l'Exascale: Des Probl\`emes Th\'eoriques aux Probl\`emes Appliqu\'es\\
-The Way to Exascale: From Theorics to Applied Problems}
-% Author
-\author{Julien Loiseau}
-% Date 
-\date{\today}
+% Hyphenation
+\hyphenation{bench-mark}
+\hyphenation{li-bra-ry}
+\hyphenation{re-porti}
+\hyphenation{Tech-ni-cal}
+\hyphenation{Avail-able}
+\hyphenation{PRO-GRAM-MING}
 
 \makeindex
 
 \begin{document}
 
+%% ------------------------------------------------------------------
+%% DATA OF TITLE PAGE 
+%% ------------------------------------------------------------------
+\newcommand{\phdAuthor}{Julien LOISEAU}
+\newcommand{\defenseDate}{le 18 Mars 2018}
+\newcommand{\phdDiscipline}{Informatique}
+\newcommand{\phdSpeciality}{Calcul Haute Performance}
+\newcommand{\phdTitleEN}{Hybrids Architectures to Reach Exascale}
+\newcommand{\phdTitleFR}{Les Architectures Hybrides pour Atteindre l'Exascale}
+\newcommand{\phdDirector}{Michaël KRAJECKI, Professeur des Universités}
+
+%% ------------------------------------------------------------------
 
 \newgeometry{left=0.5cm,right=0.5cm,top=1.0cm,bottom=1.5cm}
 %% Title page -------------------------------------------------------
 \thispagestyle{empty}
-{%%%
+{
 %
+% LOGO URCA
 \centering
 {
-\includegraphics[scale=1]{figures/style/logo_urca_front_page.jpg}
-\vspace{0.5cm}
+	\includegraphics[scale=1]{figures/style/logo_urca_front_page.jpg}
+	\vspace{0.5cm}
 }
 
+% UNIVERSITE ET ECOLE DOCTORALE
 {
-UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
-\vspace{0.5cm}
-\'Ecole Doctorale Sciences Technologie Sant\'e
+	UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
+	\vspace{0.5cm}
+	\'Ecole Doctorale Sciences Technologie Sant\'e\\
+	\vspace{1cm}
+	\huge
+	\textbf{TH\`ESE}
+	\vspace{.5cm}
 }
 
-\vspace{1cm}
-{
-\huge
-\textbf{TH\`ESE}
-}
-\vspace{.5cm}
-
+%% TITRE ET GRADE + DISCIPLINE ET SPECIALITY
 {
 	Pour obtenir le grade de:\\ 
 	\vspace{.4cm}
@@ -71,78 +85,80 @@ UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
 	\textbf{Docteur de l'Université de Reims Champagne-Ardenne}\\
 	\vspace{.4cm}
 	\large
-	\textbf{\textit{Discipline : }Informatique}\\
+	\textbf{\textit{Discipline : }\phdDiscipline}\\
 	\vspace{.4cm}
-	\textbf{\textit{Sp\'ecialit\'e : }Calcul Haute Performance}
+	\textbf{\textit{Sp\'ecialit\'e : }\phdSpeciality}
 }
 
+%% AUTHOR
 {
-\vspace{1cm}
-	Pr\'esent\'ee et soutenue par:\\
 	\vspace{1cm}
-\Large
-	\textbf{Julien LOISEAU}
-\vspace{1cm}
+	Pr\'esent\'ee et soutenue par:\\
+	\vspace{.4cm}
+	\Large
+	\textbf{\phdAuthor}\\
+	\vspace{.4cm}
+	\large
+	\defenseDate
+	\vspace{.5cm}
+	
 }
-
-{\hrule height 2pt\vspace{2pt}}
-
-%\Large
-
-
-% Title 
-{\huge 
-\vspace{1cm}
-Hybrids Architectures to Reach Exascale
-}
-
-% Subtitle 
-{
-\vspace{0.5cm}
-Les Architectures Hybrides pour Atteindre l'Exascale 
-}
-
-\vspace{1.0cm}
-\hrule
-
-\vspace{1cm}
 
 {
-Sous la direction de :\\ 
-\textbf{Pr. Michaël KRAJECKI, Professeur des Universités}
+	%% LIGNE SEPARATION 
+	\hrule height 2pt
+	\vspace{2pt
+	\huge 
+	% TITRE EN 
+	\vspace{1cm}
+	\phdTitleEN\\
+	\large
+	% TITRE FR 
+	\vspace{0.5cm}
+	\phdTitleFR
+	%% LIGNE SEPARATION
+	\vspace{1.0cm}
+	\hrule
+	\vspace{1cm}
 }
-\vspace{0.5cm}
 
-\vspace{\fill}
+%% UNDER DIRECTION OF 
+{
+	Sous la direction de :\\ 
+	\textbf{\phdDirector}
+	\vspace{0.5cm}
+	\vspace{\fill}
+}
 
-{\normalsize
-\begin{tabular}{l l l}
-\textbf{JURY} &  & \\
-&&\\
-?? & ?? & Pr\'esident\\
-Michaël Krajecki & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
-François Alin & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur  \\
-Christophe Jaillet & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur \\
-?? & ?? & Rapporteur\\
-Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
-?? & ?? & Examinateur\\
-?? & ?? & Examinateur\\
-Guillaume Colin de Verdiere & Ingénieur au CEA, France & Invit\'e\\
+%% JURY 
+{
+	\normalsize
+	\begin{tabular}{l l l}
+		\textbf{JURY} &  & \\
+		&&\\
+		?? & ?? & Pr\'esident\\
+		Michaël Krajecki & Professeur à l'Université de Reims Champagne-Ardenne & Directeur \\
+		François Alin & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur  \\
+		Christophe Jaillet & Maître de Conférences à l'Université de Reims Champagne-Ardenne & Co-directeur \\
+		?? & ?? & Rapporteur\\
+		Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
+		?? & ?? & Examinateur\\
+		?? & ?? & Examinateur\\
+		Guillaume Colin de Verdiere & Ingénieur au CEA, France & Invit\'e\\
 \end{tabular}
-
 \vspace{0.5cm}
-
 \hrule
-
 \vspace{0.5cm}
+}
 
-Centre de Recherche en Sciences et Technologies de l'Information et de la Communication de l'URCA EA3804\\ 
-\'Equipe Calcul et Autonomie dans les Systèmes Hétérogènes
-
+%% LABO 
+{
+	Centre de Recherche en Sciences et Technologies de l'Information et de la Communication de l'URCA EA3804\\ 
+	\'Equipe Calcul et Autonomie dans les Systèmes Hétérogènes
 }
 
 %%%
-}%%%
+}
 \clearpage 
 \newgeometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.5cm}
 % Empty page after title 
@@ -195,5 +211,9 @@ Centre de Recherche en Sciences et Technologies de l'Information et de la Commun
 \bibliographystyle{alpha}
 \nocite{*}
 \bibliography{biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc}
+
+% index just in case it is useful 
+\printindex
+
 
 \end{document}

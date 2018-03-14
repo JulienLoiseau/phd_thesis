@@ -4,7 +4,7 @@
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Communication Wall: GRAPH500} 
+\chapter{Communication Wall: Graph500} 
 
 \section{Introduction}
 In order to face the communication wall in our metric for accelerators, we choose the Graph500 problem. 
@@ -45,7 +45,7 @@ At each step the frontier is expanded with the unvisited neighbors.
 
 The sequential and basic algorithm is well known and is presented on Algorithm~\ref{alg:bfs_squential}.
 
-\begin{figure}
+\begin{figure}[t!]
 \begin{tikzpicture}
 	\node [draw,circle,red] (node A) at (1,3.5) {A};
 	\node [draw,circle] (node B) at (0,2.5) {B};
@@ -318,17 +318,54 @@ This representation is used on the BlueGene/Q architecture.
 Indeed they have some specific hardware bit-wise operations implemented in their processors and have a large amount of memory, allowing them to perform very large scale graph analysis. 
 
 In a second time we used common graph representations, Compressed Sparse Row (CSR) and Compressed Sparse Column (CSC) representation, which fit very well with sparse graphs such as the Graph500 ones.
-The following example illustrates the CSR representation:
-$$M = \begin{pmatrix}
-0 & 1 & 1 & 0 \\ 
-1 & 0 & 1 & 0 \\ 
-1 & 1 & 0 & 1 \\ 
-0 & 0 & 1 & 0
-\end{pmatrix} $$
 
-$$R = \{0,2,4,7,8\}$$
-$$C= \{1,2,0,2,0,1,3,2\}$$
+\begin{figure}[t!]
+\begin{center}
+\begin{tikzpicture}
+\matrix[anchor=south east] at (0,-.8) (m) [matrix of nodes,nodes={rectangle,draw},
+	row 1/.style={nodes={fill=black!20}},
+	row 2/.style={nodes={fill=yellow!20}},
+	row 3/.style={nodes={fill=cyan!20}},
+	row 4/.style={nodes={fill=blue!20}}]
+{
+	0 & 1 & 1 & 0 \\ 
+	1 & 0 & 1 & 0 \\ 
+	1 & 1 & 0 & 1 \\ 
+	0 & 0 & 1 & 0 \\    
+};
+\matrix[anchor=north west] at (1,1.5) (R) [matrix of nodes,nodes={rectangle,draw},
+	column 1/.style={nodes={fill=black!20}},
+	column 2/.style={nodes={fill=yellow!20}},
+	column 3/.style={nodes={fill=cyan!20}},
+	column 4/.style={nodes={fill=blue!20}}]
+{
+	0 & 2 & 4 & 7 &  8\\   
+};
+\node[anchor=east] at (R.west) {R =};
+\matrix[anchor=north west] at (1,0) (C) [matrix of nodes,nodes={rectangle,draw},
+	column 1/.style={nodes={fill=black!20}},
+	column 2/.style={nodes={fill=black!20}},
+	column 3/.style={nodes={fill=yellow!20}},
+	column 4/.style={nodes={fill=yellow!20}},
+	column 5/.style={nodes={fill=cyan!20}},
+	column 6/.style={nodes={fill=cyan!20}},
+	column 7/.style={nodes={fill=cyan!20}},
+	column 8/.style={nodes={fill=blue!20}}]
+{
+	1 & 2 & 0 & 2 & 0 & 1 & 3 & 2 \\  
+};
+\node[anchor=east] at (C.west) {C =};
+\draw[->] ([yshift=-2pt]R-1-1.south) -- ([yshift=2pt]C-1-1.north);
+\draw[->] ([yshift=-2pt]R-1-2.south) -- ([yshift=2pt]C-1-3.north);
+\draw[->] ([yshift=-2pt]R-1-3.south) -- ([yshift=2pt]C-1-5.north);
+\draw[->] ([yshift=-2pt]R-1-4.south) -- ([yshift=2pt]C-1-8.north);
+\end{tikzpicture}
+\end{center}
+\caption{Compressed Sparse Row example}
+\label{fig:csr_representation}
+\end{figure}
 
+Figure~\ref{fig:csr_representation} is an example illustratinf the CSR compression.
 The M adjacency matrix represents the graph. $R$ vector contains the cumulative number of neighbors for each vertex, of size $(\#vertices +1)$. $C$, of size $(\#edges)$, is, for each index of $R$, the edges of a vertex.
 This representation is very compact and very efficient to work with sparse graphs. 
 
@@ -428,41 +465,51 @@ Then if not, it is added to the $out\_queue$.
 When the $in\_queue$ is sparse, like for the first and latest iterations, this method is very efficient. 
 In the second case, \textit{bottom-up}, we start the exploration by the not-yet-visited vertices and verify if there is a link between those vertices and the $in\_queue$ ones. 
 If yes, the not-yet-visited vertex is added to the $out\_queue$. 
-figure~\ref{fig:csr_csc} presents the two approches, whith the time visiting all the edges, and the benefits of their hybridization.
+Table~\ref{table:direction_optimized} shows the advantages of swithing from top-dowm to bottom-up regarding the number of edges travered.
+Figure~\ref{fig:csr_csc} presents the two approches, whith the time visiting all the edges, and the benefits of their hybridization.
 
-%\begin{table}
-%\centering
-%\begin{tabular}{|c|r|r|r|}
-%		\hline 
-%		Iteration & Top-down & Bottom-up & Hybridization \\ 
-%		\hline 
-%		%\hline 
-%		0 & \color{red}{27} & 22 090 111 & \color{red}{27} \\ 
-%		%\hline 
-%		1 & \color{red}{8 156} & 1 568 798 & \color{red}{8 156} \\ 
-%		%\hline 
-%		2 & 3 695 684 & \color{blue}{587 893} & \color{blue}{587 893} \\ 
-%		%\hline 
-%		3 & 19 565 465 & \color{blue}{12 586} & \color{blue}{12 586} \\ 
-%		%\hline 
-%		4 & 214 578 & \color{blue}{8 256} & \color{blue}{8 256} \\ 
-%		%\hline 
-%		5 & 5 865 & \color{blue}{1 201} & \color{blue}{1 201} \\ 
-%		%\hline 
-%		6 & \color{red}{12} & 156 & \color{red}{12} \\ 
-%		\hline
-%		Total & 23,489,787 & 24,269,001 & 618,131 \\
-%		\hline 
-%\end{tabular} 
-%\caption{BFS directions}	
-%\label{table:direction_optimized}
-%\end{table}
+\begin{table}[t!]
+\centering
+\begin{tabular}{c||r|r|r}
+		%\hline 
+		\textbf{Iteration} & \textbf{Top-down} & \textbf{Bottom-up} & \textbf{Hybridization} \\ 
+		\hline 
+		\hline 
+		0 & \color{red}{27} & 22 090 111 & \color{red}{27} \\ 
+		%\hline 
+		1 & \color{red}{8 156} & 1 568 798 & \color{red}{8 156} \\ 
+		\hline 
+		2 & 3 695 684 & \color{blue}{587 893} & \color{blue}{587 893} \\ 
+		%\hline 
+		3 & 19 565 465 & \color{blue}{12 586} & \color{blue}{12 586} \\ 
+		%\hline 
+		4 & 214 578 & \color{blue}{8 256} & \color{blue}{8 256} \\ 
+		%\hline 
+		5 & 5 865 & \color{blue}{1 201} & \color{blue}{1 201} \\ 
+		\hline 
+		6 & \color{red}{12} & 156 & \color{red}{12} \\ 
+		\hline
+		\textbf{Total} & 23,489,787 & 24,269,001 & 618,131 
+		%\hline 
+\end{tabular} 
+\caption{BFS directions change from top-down to bottom-up}	
+\label{table:direction_optimized}
+\end{table}
 
 \begin{figure}[!t]
+\begin{subfigure}[t]{.48\textwidth}
 	\centering
-	\includegraphics[width=.8\columnwidth]{\locpath/figures/graph500/csr_csc_hybrid_iteration}
+	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/csr_csc_hybrid_iteration}
 	\caption{CSR and CSC approach comparison. On a 6 iterations BFS, the time with the two method is compared. The hybridization just takes the best time of each method}
 	\label{fig:csr_csc}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{.48\textwidth}
+	\centering
+	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/comparatif_GPU}
+	\caption[]{Single CPU and accelerators comparison. CPU Graph500 represent the best implementation proposed by the Graph500 website. }
+	\label{fig:single_cpu_accelerators}
+\end{subfigure}
 \end{figure}
 
 \subsection{GPU optimization}
@@ -540,13 +587,6 @@ GPUDirect can be used coupled with this library. In the last version we used thi
 
 \subsection{CPU and GPU comparison}
 
-\begin{figure}[!t]
-\centering
-\includegraphics[width=.8\columnwidth]{\locpath/figures/graph500/comparatif_GPU}
-\caption[]{Single CPU and accelerators comparison. CPU Graph500 represent the best implementation proposed by the Graph500 website. }
-\label{fig:single_cpu_accelerators}
-\end{figure}
-
 On figure~\ref{fig:single_cpu_accelerators} we present the single node implementation. 
 Here we compare the best CPU implementation proposed by the Graph500 benchmark with our GPU implementation. 
 On our cluster we worked with K20Xm GPUs. 
@@ -583,18 +623,20 @@ Another problem is that the two GPUs have to share the same HCA for their commun
 
 
 \begin{figure}[htb]
-\begin{minipage}[b]{0.45\linewidth}
+\begin{subfigure}[t]{0.48\linewidth}
 \centering
-\includegraphics[width=.7\linewidth]{\locpath/figures/graph500/weak_scaling}
+\includegraphics[width=1\linewidth]{\locpath/figures/graph500/weak_scaling}
 \caption[]{CPU \textit{vs} GPU weak scaling. The number of CPUs is the same as the number of GPUs.}
 \label{fig:bfs_weak_scaling}
-\end{minipage}
-\begin{minipage}[b]{0.45\linewidth}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\linewidth}
 \centering
-\includegraphics[width=.7\linewidth]{\locpath/figures/graph500/strong_scaling}
+\includegraphics[width=1\linewidth]{\locpath/figures/graph500/strong_scaling}
 \caption[]{CPU \textit{vs} GPU strong scaling. The $SCALE$ is showed on the GPU line. The number of CPUs is the same as the number of GPUs.}
 \label{fig:bfs_strong_scaling}
-\end{minipage}
+\end{subfigure}
+\caption{Weak and Strong scaling between CPU and GPU}
 \end{figure}
 
 
@@ -610,7 +652,7 @@ As the major limitation is the communications stage, using only GPU 0 allowed us
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=.8\columnwidth]{\locpath/figures/graph500/full_vs_gpu0}
+\includegraphics[width=.5\columnwidth]{\locpath/figures/graph500/full_vs_gpu0}
 \caption[]{Full node GPUs \textit{vs} GPU 0. The GPU 0 implementation not use the QPI link of the two CPU socket.}
 \label{fig:full_vs_gpu0}
 \end{figure}

@@ -15,6 +15,7 @@ clean:
 
 $(FILE).pdf: $(FILE).tex biblio/*.bib chapters/part1/*.tex chapters/part2/*.tex chapters/part3/*.tex 
 	pdflatex $(FILE)
+	makeindex $(FILE).idx
 	bibtex $(FILE)
 	pdflatex $(FILE)
 	pdflatex $(FILE)
