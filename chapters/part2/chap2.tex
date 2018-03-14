@@ -515,6 +515,7 @@ Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU c
 \caption{Backtrack  (seconds)}
 \label{tab:result_backtrack}
 \end{subfigure}
+\caption{Comparison between multi-core processors and GPUs for regularized and backtrack method}
 \end{table}
 
 The computation time between two different consecutive instances being multiplied by $10$ approximately, this could allow us to obtain $L(2,20)$ in a reasonable time.
@@ -524,7 +525,7 @@ The computation time between two different consecutive instances being multiplie
 
 It appears at first sight that using backtracking on GPUs without any regularization is a bad idea due to threads synchronization issues.
 But in order to compare CPU and GPU computation power in the same conditions we decide to implement the original backtrack method on GPU (see figure~\ref{backtrack}) with only minor modifications.
-In these conditions we observe very efficient work of the NVIDIA scheduler, which perfectly handles threads desynchronization.
+In these conditions we observe very efficient work of the NVIDIA scheduler, which perfectly handles threads de-synchronization.
 Thus we use the same server-client distribution as in \ref{section:parallel_backtrack}, each client generates masks for both CPU and GPU cores. 
 The workload is then statically distributed on GPU and CPU cores.
 Executing the backtrack algorithm on a randomly chosen set of sub-problems allowed us to set the GPU/CPU distribution ratio experimentally to 80/20\%, 

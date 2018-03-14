@@ -25,10 +25,37 @@
 
 \input{\locpath/chapters/part2/chap3}
 
-\section*{Conclusion}
+\chapter*{Conclusion}
 In this part we show the real advantage of accelerators toward classical processor utilization. 
-In the Langford problem the GPU have an acceleration of ***** regarding processors. 
-It allows us to beat a new world record in term of computational speed in 2015 solving the last instance $L(2,28)$. 
+In the two exemples presented in this chapter we confronted the GPU to worst behaviors for many-core architectures: irregular applications. 
+In the first one, with the problem of Langford, we worked on an irregular and computationally heavy application that does not requires much communications. 
+The second one, the Graph500 BFS, was based on irregular communication over irregular memory usage. 
+IN both cases we showed better results using GPU compared to classical multi-core processors. 
+
+\subsection{Computational wall}
+We studies the Langford problem under two methods of resolution. 
+In the first one, the Miller algorithm, the resolution was based on a tree traversal. 
+We showed that even using the irregular algorithm directly on the GPU gave us way better results than on multi-core processors. 
+We showed an acceleration of quad times using the GPUs with the backtrack method.
+
+For the second method, the Godfrey algorithm, we presented it to show how we used the GPU in order to beat a new speed record for the last instances $L(2,27)$ and $L(2,28)$.
+We used the whole ROMEO supercomputer and were able to recompute them in 23 using best-effort on the cluster, a mean of 38\% of the machine.
+This result can be theoretically reduce to 10 days by using the whole cluster in the same time:
+ using a linear scaling which is not accurate because augmenting the number of node does not impact communications and will just allow the code to have less registers used. 
+
+\subsection{Communication wall}
+Several aspect of the Graph500 BFS makes it a good benchmark. 
+The graph generated is completely random and we cannot know in advance the exact number of edges and thus the perfect behavior for distribute the data. 
+During the search of the BFS algorithm the memory is completely traversed with an irregular behavior due to the random generation of the graph. 
+
+In order to get performances we imposed regularization over our data.
+The Compressed Sparse Row and Compressed Sparse Column compression methods were used and the communications were based on bitmap transfers. 
+
+We showed that despite of the irregularity downside we were able to provide an efficient GPU algorithm, faster that the CPU algorithm and the reference code from Graph500 itself.
+We provided an acceleration of two times using our CPU algorithm and quad times using our GPU algorithm.\\
 
 
-In the Graph500
+From this first study, on both applications, we shows that the 
+The question that arise is now: what will be the behavior of GPUs confronted to both of those aspect ? 
+In order to answer this question we present in the next part the Smoothed Particle Hydrodynamics problem on which we base the last part of this study. 
+We show that GPUs can also be use in this context, targeting domain scientists codes.
