@@ -253,8 +253,14 @@ It is available in C/C++ and Fortran.
 The user is provided with pragmas and functions to declare parallel loop and regions in the code. 
 In this model the main thread, the first one before forks, command the fork-join operations. 
 
-The last versions of OpenMP also allow the user to target accelerators. 
+The last versions of OpenMP 4.0 also allow the user to target accelerators. 
 During compilation the user specify on which processor or accelerator the code will be executed in parallel. 
+
+We use OpenMP as a basis for the implementation of our CPU algorithms. 
+Perfect for loop parallelization and parallel sections, we show that we can have the best results for CPU algorithms in most of the case. 
+In our case, OpenMP is always use on the node to target all the processors cores in the shared memory. 
+
+We note that the new versions of OpenMP also allows to target directly accelerators like NVIDIA ones. 
 
 \subsection{Distributed programming}
 In the cluster once the code have been developed locally and using the multiple cores available, the new step is to distribute it all over the nodes of the cluster. 
@@ -274,6 +280,9 @@ A process can be a whole node or one or several cores on a processor.
 Some MPI implementations offer a support for accelerators targeting directly their memory through the network without multiple copies on host memory. 
 The data go through one GPU to the other through network and PCIe.
 This feature is used in our code in part 2 and 3.
+
+Most of our code presented here are based on MPI for the distribution on the cluster. 
+The advantage is its presence on all the cluster and the control over the data transfers. 
 
 \begin{figure}
 \begin{center}
@@ -365,7 +374,7 @@ This is the reason why test-based applications, like combinatorial problems that
 
 Specific tools have been made for HPC in the NVIDIA GPGPUs. 
 \begin{description}[noitemsep,nolistsep]
-  \item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themselves. This feature 
+  \item[Dynamic Parallelism] This feature allow the GPU kernels to run other kernels themselves. When more sub-tasks have to be generated this can be done directly on the GPU using dynamic parallelism.
   \item[Hyper-Q] This technology enable several CPU threads to execute kernels on the same GPU simultaneously. This can help to reduce the synchronization time and idle time of CPU cores for specific applications.
   \item[NVIDIA GPU-Direct] GPUs' memory and CPU ones are different and the Host much push the data on GPU before allowing it to compute. GPU-Direct allows direct transfers from GPU devices through the network. Usually implemented using MPI.  
 \end{description}
@@ -509,8 +518,18 @@ This benchmark is presented and features:
 \item[-] Local symmetric Gauss-Seidel smoother;
 \item[-] Sparse triangular solve (as part of the Gauss-Seidel smoother);
 \item[-] Driven by multigrid preconditioned conjugate gradient algorithm that exercises the key kernels on a nested set of coarse grids;
-\item[-] Reference implementation is written in C++ with MPI and OpenMP support.
+\item[-] Reference implementation is written in C++ with MPI and OpenMP support.\\
 \end{itemize}
+
+The benchmarks presented in this section are the most famous of HPC world. 
+Indeed, they are not the perfect representative of the nowadays application. 
+The upcoming of big data and artificial intelligence in addition to classical "real life" applications impose HPC to evolute and find new ways to target new architectures. 
+The TOP500 target the computational problem but does not handle a lot of irregularity. 
+Indeed, solving dense linear equation is straight forward and also use the memory in a regular way.
+The Graph500 is very interesting to focus on communication and does handle irregular behavior for communications and memory. 
+The Green500 does target energy wall but can also be applied to any benchmark. 
+The most interesting one may be the HPCG benchmark. 
+It does create irregularity during computation and communication along to memory traversal. 
 
 \section{Conclusion}
 In this chapter we presented the most used software tools for HPC. 

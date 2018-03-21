@@ -58,9 +58,9 @@
 %% Title page -------------------------------------------------------
 \thispagestyle{empty}
 {
-%
-% LOGO URCA
 \centering
+
+% LOGO URCA
 {
 	\includegraphics[scale=1]{figures/style/logo_urca_front_page.jpg}
 	\vspace{0.5cm}
@@ -100,14 +100,13 @@
 	\vspace{.4cm}
 	\large
 	\defenseDate
-	\vspace{.5cm}
-	
+	\vspace{.5cm}	
 }
 
 {
 	%% LIGNE SEPARATION 
 	\hrule height 2pt
-	\vspace{2pt
+	\vspace{2pt}
 	\huge 
 	% TITRE EN 
 	\vspace{1cm}
@@ -132,8 +131,8 @@
 
 %% JURY 
 {
-	\normalsize
-	\begin{tabular}{l l l}
+\normalsize
+\begin{tabular}{l l l}
 		\textbf{JURY} &  & \\
 		&&\\
 		?? & ?? & Pr\'esident\\
@@ -144,21 +143,25 @@
 		Benjamin Bergen & Docteur-Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
 		?? & ?? & Examinateur\\
 		?? & ?? & Examinateur\\
-		Guillaume Colin de Verdiere & Ingénieur au CEA, France & Invit\'e\\
+		Guillaume Colin de Verdiere & Ingénieur au CEA, France & Invit\'e
 \end{tabular}
 \vspace{0.5cm}
 \hrule
-\vspace{0.5cm}
+\vspace{0.3cm}
 }
 
 %% LABO 
 {
-	Centre de Recherche en Sciences et Technologies de l'Information et de la Communication de l'URCA EA3804\\ 
+	Centre de Recherche en Sciences et Technologies de l'Information et de la Communication de l'URCA EA3804
+}
+% EQUIPE
+{
 	\'Equipe Calcul et Autonomie dans les Systèmes Hétérogènes
 }
 
 %%%
 }
+
 \clearpage 
 \newgeometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.5cm}
 % Empty page after title 
@@ -201,18 +204,17 @@
 \input{chapters/conclusion}
 
 % Annexes
-`\addcontentsline{toc}{chapter}{Annexes}
-\input{chapters/annexes}
-
-\printindex
+%\addcontentsline{toc}{chapter}{Annexes}
+%\input{chapters/annexes}
 
 % Bibliography
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{alpha}
 \nocite{*}
-\bibliography{biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc}
+\bibliography{biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc,biblio/biblio_part2_chap1}
 
 % index just in case it is useful 
+\addcontentsline{toc}{chapter}{Index}
 \printindex
 
 

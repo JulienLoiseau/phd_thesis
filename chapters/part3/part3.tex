@@ -1,6 +1,18 @@
 \part{Application}
 
 \chapter*{Introduction}
+The first part presented the tools needed to understand and target performance in HPC. 
+The second part presented a metric showing the benefit of accelerators, in this case GPUs, over classical GPU in two contexts: irregular computation and irregular communication/memory behaviors.
+We showed that the accelerators gave a real advantage on those two problems and allows us to push the limits.
+
+In order to conclude this study and our metric we decided to target another irregular behavior problem embedding both computation/communication/memory wall behavior. 
+In order to show how accelerators handle real world problems, we searched for an application fulfilling our needs. 
+Our choose fell on the Smoothed Particle Hydrodynamics problem applied to fluid and astrophysics. 
+The first version of this application was developed during a 2 months internship at the Los Alamos National Laboratory from the FleCSI framework.
+
+In this part we first present the Smoothed Particle Hydrodynamics method from a physical point of view and making a parallel with the computer science problems involved. 
+The second chapter present our application, FleCSPH. 
+Starting from the current FleCSI version we introduce the algorithm and methods to solve efficiently this problem on classical processor and the acceleration generated adding GPUs. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                   %
@@ -19,3 +31,4 @@
 
 
 \chapter*{Conclusion}
+In this part we presented the 

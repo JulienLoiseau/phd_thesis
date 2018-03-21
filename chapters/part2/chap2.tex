@@ -11,9 +11,10 @@ Our aim is to determine the behavior of accelerators compared to classical proce
 For this purpose we choose the Langford problem which is an academic problem of combinatorial counting.
 We show the optimizations made to the regular processor algorithm to efficiently implement this application on GPU. 
 We compare the two approaches from classical processor to GPU implementation. 
-The results are then presented to show the acceleration using the whole ROMEO supercomputer.\\
+The results are then presented to show the acceleration using the whole ROMEO supercomputer.
+This study shows two approaches to the Langford problem.
+The Miller's algorithm, irregular tree backtracking and the the Godfrey's method which is use in order to beat a time record on this problem.\\
 
-%\section{The Langford problem}
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
 While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red and blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see figure~\ref{fig:lang}.\\
 
@@ -69,8 +70,8 @@ The central resolution method consists in placing the pairs of cubes, one after 
   L(2,23) & 3,799,455,942,515,488 & &  4 days with CONFIIT \\
   %\cline{1-3}
   L(2,24) & 46,845,158,056,515,936 & & 3 months with CONFIIT \\
-  L(2,27) & 111,683,611,098,764,903,232 & & - \\
-  L(2,28) & 1,607,383,260,609,382,393,152 & & - \\
+  L(2,27) & 111,683,611,098,764,903,232 & & 2 days on ROMEO \\
+  L(2,28) & 1,607,383,260,609,382,393,152 & & 23 days on ROMEO \\
   \hline
 \end{tabular}
 \]
@@ -91,7 +92,7 @@ The latest known work on the Langford Problem is a GPU implementation proposed i
 
 \section{Miller algorithm}
 
-In this part we present our multiGPU cluster implementation of the Miller's algorithm. 
+In this part we present our multi-GPU cluster implementation of the Miller's algorithm. 
 This algorithm is very irregular and the repartition have to be done at runtime on our accelerators. 
 
 First, we introduce the backtrack method. 
@@ -194,9 +195,7 @@ As explained, CSP formalized problems can be transformed into tree evaluations. 
 \node at (-13.5,-1.5) {pair 3 positions};
 \node at (-13.5,-3) {pair 2 positions};
 \node at (-13.5,-4.5) {pair 1 positions};
-
 \node [align=left] at (8,-.5) {Symmetric\\solution(s)};
-
 \node  [circle,draw,fill,inner sep=1] {}
   child [line width=2pt] { [sibling distance=4cm] node [fill=black!10] {(1,5)}
     child [line width=.5pt] { [sibling distance=10mm] node [fill=white] {(1,4)}
@@ -475,10 +474,13 @@ We experimentally demonstrated that only 4 or 5 CPU cores are enough to feed GPU
 \subsection{Results}
 
 \paragraph{Regularized method results}
-We now show the results obtained for our massively parallel scheme using the previous optimizations, comparing the computation times of successive instances of the Langford problem. These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/GPU machines.
+We now show the results obtained for our massively parallel scheme using the previous optimizations, comparing the computation times of successive instances of the Langford problem. 
+These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/GPU machines.
 
-The previous limit with Miller's algorithm was $L(2,19)$, obtained in 1999 after 2.5 years of sequential effort and at the same time after 2 months with a distributed approach\cite{Mil00}. Our computation scheme allowed us to obtain it in less than 4 hours (Table \ref{tab:result_base_regu}), this being not only due to Moore law progress.\\
-Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU cores. In addition, the GPUs compute $200000\times$ more nodes of the search tree than the CPUs, with a faster time.
+The previous limit with Miller's algorithm was $L(2,19)$, obtained in 1999 after 2.5 years of sequential effort and at the same time after 2 months with a distributed approach\cite{Mil00}. 
+Our computation scheme allowed us to obtain it in less than 4 hours (Table \ref{tab:result_base_regu}), this being not only due to Moore law progress.\\
+Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU cores. 
+In addition, the GPUs compute $200000\times$ more nodes of the search tree than the CPUs, with a faster time.
 
 \begin{table}[t!]
 \begin{subfigure}[b]{0.5\linewidth}
@@ -528,13 +530,14 @@ But in order to compare CPU and GPU computation power in the same conditions we 
 In these conditions we observe very efficient work of the NVIDIA scheduler, which perfectly handles threads de-synchronization.
 Thus we use the same server-client distribution as in \ref{section:parallel_backtrack}, each client generates masks for both CPU and GPU cores. 
 The workload is then statically distributed on GPU and CPU cores.
-Executing the backtrack algorithm on a randomly chosen set of sub-problems allowed us to set the GPU/CPU distribution ratio experimentally to 80/20\%, 
+Executing the backtrack algorithm on a randomly chosen set of sub-problems allowed us to set the GPU/CPU distribution ratio experimentally to 80/20\%.
 
 The experiments were performed on 129 nodes of the ROMEO supercomputer, hence 258 CPU/GPU machines and one node for the server. 
 Table \ref{tab:result_backtrack} shows the results with this configuration. 
 This method first allowed us to perform the computation of $L(2,19)$ in less than 15 minutes, $15\times$ faster than with the regularized method; then, we pushed the limitations of the Miller algorithm up to $L(2,20)$ in less than 3 hours and even $L(2,21)$ in about $33$ hours\footnote{Even if this instance has no interest since it is known to have no solution}.
 
-This exhibits the ability of the GPU scheduler to manage highly irregular tasks. It proves that GPUs are adapted even to solve combinatorial problems, which they were not supposed to be.
+This exhibits the ability of the GPU scheduler to manage highly irregular tasks. 
+It proves that GPUs are adapted even to solve combinatorial problems, which they were not supposed to be.
 
 \section{Godfrey's algebraic method}
 The previous part presents the Miller algorithm for the Langford problem, this method cannot achieve bigger instances than the $L(2,21)$.\\
@@ -551,10 +554,10 @@ F(X,3) = & (X_1X_3+X_2X_4+X_3X_5+X_4X_6)\times \\
 & (X_1X_5+X_2X_6)
 \end{aligned}
 \end{equation}
-In this approach each term represents a position of both cubes of a given color and a solution to the problem corresponds to a term developed as $(X_1X_2X_3X_4X_5X_6)$; thus the number of solutions is equal to the coefficient of this monomial in the development. More generally, the solutions to $L(2,n)$ can be deduced from $(X_1X_2X_3X_4X_5...X_{2n})$ terms in the development of $F(X,n)$.
+In this approach each term represents a position of both cubes of a given color and a solution to the problem corresponds to a term developed as $(X_1X_2X_3X_4X_5X_6)$; thus the number of solutions is equal to the coefficient of this monomial in the development. 
+More generally, the solutions to $L(2,n)$ can be deduced from $(X_1X_2X_3X_4X_5...X_{2n})$ terms in the development of $F(X,n)$.
 
 If \ \ $G(X,n) = X_1 ... X_{2n} F(X,n)$ then it has been shown that: 
-
 
 \begin{equation}
 \sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} G(X,n)_{(x_1,...,x_{2n})} =  2^{2n+1}L(2,n)
@@ -566,10 +569,12 @@ So \hspace*{2cm}
 \end{equation}
 
 \noindent That allows to get $L(2,n)$ from polynomial evaluations.
-The computational complexity of $L(2,n)$ is of $O(4^n\times n^2)$ and an efficient big integer arithmetic is necessary. This principle can be optimized by taking into account the symmetries of the problem and using the Gray code: these optimizations are described below.
+The computational complexity of $L(2,n)$ is of $O(4^n\times n^2)$ and an efficient big integer arithmetic is necessary. 
+This principle can be optimized by taking into account the symmetries of the problem and using the Gray code: these optimizations are described below.
 
 \subsection{Optimizations}
-Some works focused on finding optimizations for this arithmetic method\cite{CReSTIC-1154}. Here we explain the symmetric and computation optimizations used in our algorithm.
+Some works focused on finding optimizations for this arithmetic method\cite{CReSTIC-1154}. 
+Here we explain the symmetric and computation optimizations used in our algorithm.
 
 \subsubsection{Evaluation parity: }
 As $[F(-X,n) = F(X,n)]$, $G$ is not affected by a global sign change. 
@@ -585,7 +590,7 @@ The result is divided by 2.
 
 \subsubsection{Sums order: }
 Each evaluation of $ S_i(x) = \sum_{k=1}^{2n-i-1} x_kx_{k+i+1} $, before multiplying might be very important regarding to the computation time for this sum. 
-Changing only one value of $ x_i $ at a time, we can recompute the sum using the previous one without global recomputation. 
+Changing only one value of $ x_i $ at a time, we can recompute the sum using the previous one without global re-computation. 
 Indeed, we order the evaluations of the outer sum using Gray code sequence. 
 Then the computation time is considerably reduced.  
 
@@ -658,16 +663,14 @@ This study has similar goals as for the Miller's resolution experiments.
 We present here the way the experimental settings were chosen.
 Firstly we define the tasks distribution, secondly we set the number of threads per GPU block; finally, we set the CPU/GPU distribution.
 
-
 \paragraph{Tasks distribution depth: }
 This value being set it is important to get a high number of blocks to maintain sufficient GPU load.
 Thus we have to determine the best number of tasks for the distribution. As presented in part \ref{sec:tasks} the number $p$ of bits determines $2^p$ tasks. On the one hand, too many tasks are a limitation for the GPU that cannot store all the tasks in its 6GB memory. On the other hand, not enough tasks means longer tasks and too few blocks to fill the GPU grid. figure~\ref{fig:graphe_prof} shows that for the $L(2,23)$ instance the best task number is with generation depth 28.
 
-
 \paragraph{Number of threads per block: }
 In order to take advantage of the GPU computation power, we have to determine the threads/block distribution. Inspired by our experiments with Miller's algorithm we know that the best value may appear at lower occupancy. We perform tests on a given tasks set varying the threads/block number and grid size associated. 
 Figure~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem: the best distribution is around $128$ threads per block. 
-\begin{figure}[htbp]
+\begin{figure}[t!]
 \centering 
 \includegraphics[scale=.55]{\locpath/figures/langford/graphe_threads}
 \caption{$L(2,20)$, number of threads per block}
@@ -720,7 +723,7 @@ In order to fit with this submission method we chose a reasonable time-per-task,
 
 The best effort based algorithm is presented on figure~\ref{fig:graphe_besteffort}.
 The task handler maintains a maximum of 256 tasks in the queue; in addition the entire process is designed to be fault-tolerant since killed tasks have to be launched again.
-When finished, the tasks generate an ouput containing the number of solutions and computation time, that is stored as a file or database entry. 
+When finished, the tasks generate an output containing the number of solutions and computation time, that is stored as a file or database entry. 
 At the end the outputs of the different tasks are merged and the global result can be provided.  
 
 \begin{figure}[t!]
@@ -822,7 +825,7 @@ Thus we are confident in good perspectives for the $L(2,31)$ instance if compute
 
 \section{Conclusion}
 
-This study presents two methods to solve the Langford pairing problem on multiGPU clusters. 
+This study presents two methods to solve the Langford pairing problem on multi-GPU clusters. 
 In its first part the Miller's algorithm is presented. 
 Then to break the problem limitations we show optimizations and implementation of Godfrey's algorithm.
 
@@ -833,11 +836,13 @@ MPI or Best-Effort are used to spread tasks over the cluster, OpenMP for the CPU
 We were able to compute $L(2,20)$ with this regularized method and to get an even better time with the basic backtrack. 
 This proves the proposed approach and also exhibits that the GPU scheduler is very efficient at managing highly divergent threads.
 
-\subsection{MultiGPU clusters and best-effort -}
-In addition and with the aim to beat the Langford limit we present a new implementation of the Godfrey method using GPUs as accelerators. In order to use the supercomputer ROMEO, which is shared by a large scientific community, we have implemented a distribution that does not affect the machine load, using a best-effort queue. The computation is fault-tolerant and totally asynchronous.
+\subsection{MultiGPU clusters and best-effort}
+In addition and with the aim to beat the Langford limit we present a new implementation of the Godfrey method using GPUs as accelerators. 
+In order to use the supercomputer ROMEO, which is shared by a large scientific community, we have implemented a distribution that does not affect the machine load, using a best-effort queue. The computation is fault-tolerant and totally asynchronous.
 
 \paragraph{Langford problem results: }
-This study enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. The total number of solutions is: 
+This study enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. 
+The total number of solutions is: 
 
 \hspace{3cm} L(2,27) = 111,683,611,098,764,903,232
 

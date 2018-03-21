@@ -658,7 +658,9 @@ As the major limitation is the communications stage, using only GPU 0 allowed us
 \end{figure}
 
 \section{Conclusions}
-In this study we present an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster. It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
+
+In this study we presented an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster. 
+It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
 This work highlights different key points.
 First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. % data representation. 
 Although this representation requires more memoriy, it significantly reduces  the computation workload and allows us to achieve outstanding performance.
@@ -672,9 +674,12 @@ Indeed, by using GPUDirect on 64 GPUs,  we are able to achieve 13,70 GTEPS.
 In this configuration CPUs are only used to synchronize GPUs kernels. 
 All the communications are directly GPU to GPU using a CUDA-aware MPI library and GPUDirect.
 
-These results will be published in the next Graph500 list. With a total of 13.70 GTEPS the ROMEO supercomputer could be ranked at the 91th position. 
+These results have been published in the Graph500 list of November 2016 list. 
+The ROMEO supercomputer was ranked 105th. 
 
 Today we can identify some interesting perspectives to carry on the study. 
 Communication cost is the major limitation and a better control of load distribution is needed between communication and computation in order to obtain even better performance.
 Part of the solution might come from new technologies developed by Nvidia, such as the new PASCAL architecture or NVlink buses.
+
+With this work we showed that the GPU is able to handle irregular memory and communication behavior and still deliver better performances than classical processors. 
  

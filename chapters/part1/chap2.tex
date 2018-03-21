@@ -17,7 +17,7 @@ This chapter also details the architecture of some remarkable supercomputers.
 This has to go with the description of interconnection network with the most famous interconnection topologies. 
 
 We choose to present the architectures in a chronological order following the models presented in the previous chapter with: SISD, MIMD and SIMD/SIMT and presenting the last released technologies.
-We also present the optimizations of technologies through parallelism and memories.
+We also present the optimizations of technologies with the arising of parallelism and new types of memories.
 
 \section{Early improvements to Von Neumann machine}
 In this section we present the different hardware from 1970s single core processors to nowadays multi-core and many-core architectures. 
@@ -151,7 +151,7 @@ Different kind of technologies are considered: the SRAM and DRAM.
 \paragraph{SRAM: }
 \index{Static Random Access Memory}
 The Static Random Access Memory is built using so called "flip-flop" circuits that can store the data as long as the machine is powered. 
-This kind of memory is very expensive to produce due to the number of components needed and the size of the memory.
+This kind of memory is very expensive to produce due to the number of transistor by memory cell needed and the size of the memory.
 Therefore it is usually limited for small amount of storage. 
 The SRAM is mainly used for cache memory. 
 Cache is a memory mechanism that is useful to consider when targeting performance. 
@@ -454,7 +454,7 @@ Intel describes it as "a bootable host processor that delivers massive paralleli
 This architecture embedded multiple multi-cores processors interconnected. 
 This is call Intel's Many Integrated Core (MIC).
 The architectures names are Knights Ferry, Knights Corner and Knight Landing~\cite{sodani2016knights}. 
-The last architecture, Knight Hill, was recently canceled by Intel due to performances and to focus the Xeon Phi for Exascale.
+The last architecture, Knight Hill, was recently canceled by Intel due to low performances and to focus the Xeon Phi for Exascale.
 The main advantage of this architecture compared to GPGPUs is the x86 compatibility of the embedded cores and the fact this device can boot and use to drive other accelerators. 
 They also feature more complex operations and handle double precision natively.
 We considered the Xeon Phi in the many-cores architecture despite the fact that it is composed of completely independent processors. 
@@ -506,7 +506,7 @@ They can also share the accelerator usage.
 \item[Computation node: ] The next layer of our HPC system if the computation node. Grouping together several socket and accelerators sharing memory;
 \item[Rack: ] A rack is a set of computation nodes, generally a vertical stack. 
 It can also include specific nodes dedicated to the network or the Input/Output.
-\item[Interconnection: ] The node are grouped together with hard wire connection following a specific interconnection topology with very high bandwidth.
+\item[Interconnection: ] The nodes are grouped together with hard wire connection following a specific interconnection topology with very high bandwidth.
 \item[System/Cluster/Supercomputer] The cluster group several racks though an interconnection network.
 \end{description}
 

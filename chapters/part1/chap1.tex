@@ -404,6 +404,9 @@ The performance can be of several kind.
 It can first be define by the speed of the processor itself with the frequency defined in GHz. 
 This information is not perfect because the ALU is not busy all the time due to memory accesses, communications or side effects. 
 It can be used to estimate the highest computational power of a machine. 
+We define the notion of \textit{cycle} to be the number that determine the speed of a processor. 
+This is the amount of time between two pulses of the oscillator. 
+Higher cycles per seconds is better. 
 
 \subsection{FLOPS}
 
@@ -416,6 +419,8 @@ For a cluster we can compute the theoretical FLOPS (peak) based on the processor
 \begin{equation}
 FLOPS_{cluster} = \#nodes \times \frac{\#sockets}{\#node} \times \frac{\#cores}{\#socket} \times \frac{\#GHz}{\#core} \times \frac{FLOPS}{cycle}
 \end{equation}
+With $\#nodes$ the number of computational node of the system, $\frac{\#sockets}{\#node}$ the number of sockets ( = processor) per node, $\frac{\#cores}{\#socket}$ the number of core in the processor, $\frac{\#GHz}{\#core}$ the frequency of each core and finally $\frac{\#FLOP}{\#cycle}$ the number of floating-point operations per cycles for this architecture. 
+
 
 On figure~\ref{tab:1_HPC:flops_year}, the scale of FLOPS and the year of the first world machine is presented.
 The next milestone, the exascale, is expected to be reach near 2020.  
@@ -496,9 +501,9 @@ The speedup can be defined using the latency by the formula:
 \end{figure}
 
 As shown on figure \ref{fig:1_HPC:speedup_obs} several kind of speedup can be observed. 
-\paragraph{Linear}
+\paragraph{Linear: reference}
 The linear speedup usually represents the target for every program in HPC. 
-Indeed, having the speedup growing exactly as the number of processors grows is the ideal case. 
+Indeed, having the speedup growing linearly as the number of processors grows is the ideal case. 
 Codes fall typical into two cases, typical and hyper-linear speedup. 
 \paragraph{Typical speedup}
 This represents the most common observed speedup. 

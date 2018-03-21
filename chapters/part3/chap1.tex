@@ -9,8 +9,7 @@
 In this section we give details on our choices for the generic application confronted to both computation and communication walls on irregular context. 
 This problem, Smoothed Particle Hydrodynamics, is described on the physics aspect and the difficulties involved in the resolution on supercomputers.  
 
-\section{Combining irregular behaviors}
-
+%\section{Combining irregular behaviors}
 
 \section{Smoothed Particle Hydrodynamics}
 
@@ -461,9 +460,11 @@ We note that $a$ and $b$ variate from 0 to 2 and $r^0=x$, $r^1=y$, and $r^2=z$ a
 
 For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we give the compact version by:
 \begin{equation}
-||\frac{\partial^2 f^a}{\partial r^b \partial r^c}|| =
-- \sum_c \frac{3 m_c}{|\vec{r}-\vec{r_c}|^5} \left[\frac{5(r^a-r_c^a)(r^b-r_c^b)(r^c-r_c^c)}{|\vec{r}-\vec{r_c}|^2} - \left( \delta_{ab} (r^c-r_c^c)+\delta_{bc} (r^a-r_c^a)+\delta_{ac} (r^b-r_c^b) \right) \right] 
- \end{equation} 
+\begin{aligned}
+||\frac{\partial^2 f^a}{\partial r^b \partial r^c}|| = - \sum_c \frac{3 m_c}{|\vec{r}-\vec{r_c}|^5} \Big[ & \frac{5(r^a-r_c^a)(r^b-r_c^b)(r^c-r_c^c)}{|\vec{r}-\vec{r_c}|^2} - \\ 
+		 & \left( \delta_{ab} (r^c-r_c^c)+\delta_{bc} (r^a-r_c^a)+\delta_{ac} (r^b-r_c^b) \right) \Big] 
+\end{aligned}
+\end{equation} 
 
  \begin{figure}
  \end{figure}
@@ -478,10 +479,108 @@ The previous equations are generic and describe the behavior of SPH method.
 In order to check our 
 
 \subsubsection{Sod shock tube}
+The Sod shock tube is the test consisting of a one-dimensional Riemann problem with the following initial parameters~\cite{sod1978}.
+\begin{equation}
+(\rho, v, p)_{t=0} = \begin{cases}
+(1.0,0.0,1.0) & \text{if} \indent 0 < x \leq 0.5 \\
+(0.125,0.0,0.1) & \text{if} \indent 0.5 < x < 1.0
+\end{cases}
+\end{equation}
+In our code, we use the same initial data as in section \ref{sec:intro_sph} with ideal gas EOS such as:
+\begin{equation}
+P(\rho,u) = (\Gamma - 1) \rho u
+\end{equation}
+where $\Gamma$ is the adiabatic index of the gas, we set $\Gamma = 5/3$. 
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\columnwidth]{\locpath/figures/sph/{sodtube_width}.png}
+\caption{Sod shock tube with FleCSPH}
+\label{fig:sodtube}
+\end{figure}
+
+This test is used to check the physical accuracy of the code and thus the tree search itself.
+A simulation of our Sod shock experimentation is presented on Fig.~\ref{fig:sodtube} and shows physically correct results. 
 
 \subsubsection{Sedov blast wave}
+A blast wave is the pressure and flow resulting from the deposition of a large amount of energy in a small very localized volume. 
+There are different versions of blast wave test and we consider comparing it with the analytic solution for a point explosion as given by Sedov~\cite{sedov1946}, making the assumption that the atmospheric pressure relative to the pressure insider the explosion negligible. 
+Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gamma = 5/3$ and we are assuming that the undistributed area is at rest with a pressure $P_0 = 1.0 \time 10^{-5}$. The density is constant $\rho_0$, also in the pressurized region. 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.8\columnwidth]{\locpath/figures/sph/{sedov_flecsph_results}}
+\caption{Sedov Blast Wave with FleCSPH at respectively $t=0.01$, $t=0.03$, $t=0.06$ and $t=0.1$}
+\label{fig:sedov}
+\end{figure}
+
+An example of our Sedov Blast wave experimentation is presented on Fig.~\ref{fig:sedov} and shows physically correct results.
 
 \subsubsection{Fluid flow}
+After performing the tests regarding the physics reliability, we worked on fluid flow problem in 2D and 3D to reach high number of particles. 
+The details can be found in \cite{gomez2012sphysics}.
+This test is based on an ideal EOS given by:
+\begin{equation}
+P = B \Big[ \big( \frac{\rho}{\rho_0} \Big)^\gamma -1 \Big] 
+\end{equation}
+with $\gamma = 7$ and $B = c_0\rho_0/\gamma$ being $\rho_0 = 1000 \, kg.m^{-3}$ the reference density.
+
+For this experiment, realistic boundaries conditions were needed. 
+Several methods are possible with SPH we focused on the main ones, the mirror particles \cite{libersky1991smooth} or the dummies particles implementation \cite{adami2012generalized}. 
+
+\begin{figure}[t!]
+\centering
+\begin{tikzpicture}[thick]
+% Mathematical reflection
+\draw (1,.5) circle (.25cm) node[pos=.5] (m1) {};
+\draw[dashed] (2,.8) circle (.25cm) node[pos=.5] (m2) {};
+\draw[dashed,->] (1,.5) -- (1.45,0) -- (2,.8);
+\draw (0,0) -- (3,0);
+\foreach \i in {1,...,6}{
+	\draw[black!20] (.5*\i-.5,-1) -- (.5*\i,0);
+}
+
+% Mirror 
+\draw (4.3,.6) circle (.25cm) node[pos=.5] (mi1) {};
+\draw (5,.4) circle (.25cm) node[pos=.5] (mi2) {};
+\draw (6.3,.8) circle (.25cm) node[pos=.5] (mi3) {};
+\draw[black!50] (4.3,-.6) circle (.25cm) node[pos=.5] (mii1) {};
+\draw[black!50] (5,-.4) circle (.25cm) node[pos=.5] (mii2) {};
+\draw[black!50] (6.3,-.8) circle (.25cm) node[pos=.5] (mii3) {};
+\draw[-] (mi1) -- (mii1);
+\draw (4,0) -- (7,0);
+\foreach \i in {1,...,6}{
+	\draw[black!20] (.5*\i-.5+4,-1) -- (.5*\i+4,0);
+}
+
+% Dummies
+\draw[black!50] (8.25,0) circle (.25cm) node[pos=.5] (d0) {};
+\draw[black!50] (9.08,0) circle (.25cm) node[pos=.5] (d1) {};
+\draw[black!50] (9.91,0) circle (.25cm) node[pos=.5] (d2) {};
+\draw[black!50] (10.75,0) circle (.25cm) node[pos=.5] (d3) {};
+% second layer
+\draw[black!50] (8.66,-.5) circle (.25cm) node[pos=.5] (d4) {};
+\draw[black!50] (9.50,-.5) circle (.25cm) node[pos=.5] (d5) {};
+\draw[black!50] (10.33,-.5) circle (.25cm) node[pos=.5] (d6) {};
+%\draw (1,-.25) circle (.25cm) node[pos=.5] (d4) {};
+%normal parts
+\draw (8.3,.8) circle (.25cm) node[pos=.5] (p0) {};
+\draw (9,.6) circle (.25cm) node[pos=.5] (p1) {};
+\draw (10.3,1) circle (.25cm) node[pos=.5] (p2) {};
+\draw (8,0) -- (11,0);
+\foreach \i in {1,...,6}{
+	\draw[black!20] (.5*\i-.5+8,-1) -- (.5*\i+8,0);
+}
+
+\end{tikzpicture}
+\caption{Boundaries conditions with respectively: mathematics, mirror and dummies particles}
+\label{fig:SPH:boundaries}
+\end{figure}
+
+For the current implementation, we used the dummies particles method.
+The wall particles are just considered as normal particles, with specific equations, and their quantities are evolved during the run. 
+The main difference is that their position does not evolve at the end of the step.
+They are identified in the code with a specific type, provided during the data generation. 
 
 \subsubsection{Astrophysics: neutron stars coalescence}
 
