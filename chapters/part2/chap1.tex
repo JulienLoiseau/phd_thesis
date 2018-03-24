@@ -8,12 +8,22 @@
 
 % Link and walls
 The tools for comprehension of High Performance Computing from theory, hardware and software give us the basis elements to go toward optimizations and benchmarking. 
-We show that hybrid architectures seems to be the way to reach exascale in few years but many optimizations need to be done to fit the energy envelope and the ability to target all kind of applications. 
-Our study focuses on the behavior of accelerators compared to classical processor applied on irregular applications. 
-We showed that the downside of accelerators seems to be confronted to de-synchronization and irregular work. 
-In this part we propose our metric putting forward accelerators behavior on irregular problems. 
+We showed through examples that hybrid architectures seems to be the way to reach exascale in few years.
+In the same time many optimizations need to be done to fit the energy envelope and the ability to target all kind of applications. 
+The need of regular memory accesses, synchronization and the host-device memory separation put some constraint on their usage.
+As many-cores architectures presented nowadays come with several downsides we need to confront them to classical processor in a specific set of problems, a metric, a dedicated benchmark suite. 
 
-From the previous part we identify several bottlenecks and limitations in HPC. 
+
+In benchmarks like the TOP500 the target is to solve a problem with regular computation and communication behavior. 
+We think that this behavior does not fit realistic (production) applications.
+In many domains like meteorology, oceanography, astrophysics, big data, \dots the underlying issue are the irregular input and behavior.
+The irregularity in an application can have several definitions. 
+This is defined by \cite{javairregular} as a problem which: can not be characterize a priori, is input data dependent and evolves with the computation itself. 
+In \cite{suss2006implementing} the author specifies that the work involve subcomputations which cannot be determined before and thus work distribution during runtime.
+The irregularity can then spread on all the layers of the resolution:
+the communications, the computation and the memory searches. 
+
+In order to target interesting applications, we identify several bottlenecks and limitations in HPC. 
 Those limitations are called \textit{walls} against which nowadays architectures are confronted to reach exascale. 
 
 \paragraph{Memory Wall: }
@@ -21,39 +31,58 @@ This problem is targeted for the first time in \cite{wulf1995hitting}.
 The author explains that:
 \begin{quotation} We all know that the rate of improvement in microprocessor speed exceeds the rate of improvement in DRAM memory speed, each is improving exponentially, but the exponent for microprocessors is substantially larger than that for DRAMs.
 \end{quotation}
-The new release of accelerators also have an impact on the memory wall, the memory of the host processors and devices accelerators cannot be accessed directly and copies from one to the other are requested.
-The problems of coalescent access will also be address in this study.
+In the case of accelerator another layer of memory is added. 
+The memory of the host processors and devices accelerators cannot be accessed directly and copies from one to the other are requested.
+The problems of coalescent access are also addressed in this study.
+Some companies try to find way using shared memory between host and device but this technology is always under developments and tests for HPC purpose. \\
+%The memory banks have to be accessed in a coalescent way to reach performance. 
+
+The two problems we propose for our metric implement heavy memory utilization. 
+The first one dynamically use the memory in an irregular way. 
+The tree traversal of the first method generates temporary data and binary tests. 
+The algebraic method use a dedicated big integers library and carries propagation are applied just when necessary. 
+In the second benchmark the memory is saturated and prepared at the startup.
+It is then accessed in an irregular way during all the computation. 
 
 \paragraph{Communication wall: } 
-The multiplicity of racks, nodes and accelerators add a communication wall. 
+We showed that the supercomputer architecture is based on a set of racks, composed of nodes composed of computation units. 
 The network topology can never be perfect for all the kind of problems and even the fastest technologies are limited to the software handling. 
 Limiting the big synchronizations steps, like in the BSP model, allows the system to be asynchronous and hide computation by communications. 
-Unfortunately this is not applicable to all the applications and a huge care have to be taken to approach perfect scaling. 
+Unfortunately this is not applicable to all the applications and a huge care have to be taken to approach perfect scaling.\\
+
+We decided to target this problem in two main ways. 
+In the first benchmark the model corresponds to FIIT: Finite number of Independent and Irregular Tasks, introduced in \cite{flauzac2003confiit}.
+The tasks can be solved independently and then merged at the end. 
+We show that the accelerators can also take advantage of specific distribution methods like Best-Effort. 
+In the second problem communications are central because the data are too big to be represented on a single machine. 
+The irregularity in communication is very high.
+In this benchmark the number of data shared is never know before reaching the end of a superstep.
 
 \paragraph{Power wall: }
 The energy consumption of nowadays and future supercomputers is the main wall in HPC. 
-Indeed, an exascale supercomputer could be construct using several petascale supercomputer but, with todays architectures, will require a full nuclear plant to operate. 
-In this objective low energy consumption now and innovative architectures need to be find. 
-Power wall can be of two kind: the energy to power the machine itself and the many nodes, processors and accelerators but also, and not the least, the energy requires to handle the heat generated by the machine. 
-For the second part many new technologies arise with ideas like direct water cooling in the system racks.
+Indeed, an exascale supercomputer could be construct using several petascale supercomputers but, with todays architectures, will require a full nuclear plant to operate. 
+In this objective low energy consumption and innovative architectures need to be find. 
+The energy considered is required to power the machine itself but also handle the heat generated.\\
+
+This wall is the underlying goal of this study. 
+The hybrid architectures seems to deliver better performances for less watts of consumption.
+This thesis shows through different benchmarks what is the real benefit of accelerators on realistic problems and that the performances can be even better for less watts of consumption.
 
 \paragraph{Computational wall: }
-The computational wall is a conjugation of the wall cited before. 
+The computational wall is a combination of the wall presented before. 
 By increasing the memory wall, the energy consumption and the communications we can increase the overall computation power of the supercomputer. 
-The limitation in computational power also cone from the fact that the Moore's law seems to be over. 
+The limitation in computational power also come from the fact that the Moore's law seems to be over. 
 Vendors have more difficulties to shrink transistors due to physicals side effects. 
-The frequency itself seems to reach its highest values due to the energy require to operate and the heat dissipated. 
+The frequency itself seems to reach its highest values due to the energy require to operate, the heat dissipated and synchronization issues.\\ 
 
-\paragraph{Irregular application: }
-The irregularity in an application can have several definitions. 
-This is defined by \cite{javairregular} as a problem which: can not be characterize a priori, is input data dependent and evolves with the computation itself. 
-In \cite{suss2006implementing} the author specifies that the work involve subcomputations which cannot be determined before and thus work distribution during runtime.
-The irregularity can then spread on all the layers of the resolution:
-The communications, the computation and the memory searches. 
+This is targeted in the first benchmark we propose. 
+The algebraic method is heavy in computation with irregular memory accesses. 
+The second one does focus on irregular communication and memory usage with just simple operations.\\
 
+This is why we present in this part a new metric the main HPC walls to confront many-core architectures to multi-core architectures. 
 % This part 
-The first problem for our metric characterizes the behavior of accelerators and more specifically GPUs focusing on irregular computations. 
-We choose the problem of Langford, known in our laboratory, and show how we can take advantage of accelerators for this kind of problem. 
+The first academic problem we choose for our benchmark characterizes the behavior of accelerators and more specifically GPUs focusing on irregular computations and memory accesses. 
+It is the problem of Langford and show how we can take advantage of accelerators for this kind of problem. 
 
 The second problem we choose is focused on irregular memory accesses and communications. 
 It is based on a benchmark we presented in the previous part, the Graph500 benchmark.

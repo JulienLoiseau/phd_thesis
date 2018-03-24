@@ -6,18 +6,17 @@
 \chapter{General problem}
 
 \section{Introduction}
-In this section we give details on our choices for the generic application confronted to both computation and communication walls on irregular context. 
-This problem, Smoothed Particle Hydrodynamics, is described on the physics aspect and the difficulties involved in the resolution on supercomputers.  
-
-%\section{Combining irregular behaviors}
+In this section we give details on our choices for the generic application confronted to both computation and communication walls in irregular context. 
+This problem, the Smoothed Particle Hydrodynamics method implementation, is described on the physics aspect and the difficulties involved in the resolution on supercomputers and accelerators.  
 
 \section{Smoothed Particle Hydrodynamics}
 
 \subsection{General description}
-Smoothed Particle Hydrodynamics (SPH) is an explicit numerical mesh-free Lagrangian method used to solve hydrodynamical partial differential equations (PDEs) by discretized it into a set of fluid elements called particles. 
+Smoothed Particle Hydrodynamics (SPH) is an explicit numerical mesh-free Lagrangian method.
+It is used to solve hydrodynamical partial differential equations (PDEs) by discretized them into a set of fluid elements called particles. 
 This computational method was invented for the purpose of astrophysics simulations by Monaghan, Gingold and Lucy in 1977 \cite{lucy1977numerical,gingold1977smoothed}. 
 This first SPH work conserved mass and they later proposed a method which also conserves linear and angular moment \cite{gingold1982kernel}. 
-The method was extended for general fluid simulation and many more fields from ballistics to oceanography. 
+The method was extended for general fluid simulation and many more fields from ballistics to oceanography.
 The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming Exascale systems.
 
 \begin{figure}
@@ -25,13 +24,13 @@ The development of new reliable, parallel and distributed tools for this method 
 \begin{tikzpicture}
 	
 	% Others and their ellipse
-	\draw [fill,black!40] (.5,1.5) circle (.3em);
-	\draw [fill,black!40] (0,0) circle (.3em);
-	\draw [fill,black!40] (0,3.2) circle (.3em);
+	\draw [black!90,fill=black!40] (.5,1.5) circle (.3em);
+	\draw [black!90,fill=black!40] (0,0) circle (.3em);
+	\draw [black!90,fill=black!40] (0,3.2) circle (.3em);
 	\draw[black!70] (0,3.2) ellipse (2 and .5);
-	\draw [fill,black!40] (3,.2) circle (.3em);
+	\draw [black!90,fill=black!40] (3,.2) circle (.3em);
 	\draw[black!70] (3,.2) ellipse (2.5 and .7);
-	\draw [fill,black!40] (4,4) circle (.3em);
+	\draw [black!90,fill=black!40] (4,4) circle (.3em);
 	% Ellipses 
 	\draw[line width=.8pt,black!70] (2,2) ellipse (4 and 1);
 	% Axes
@@ -40,7 +39,7 @@ The development of new reliable, parallel and distributed tools for this method 
 	% bezier for kernel 
 	\draw[red,line width=1pt]  (6,2) .. controls (4,2.5) and (3.5,5) .. (2,5) node[red,anchor=east] {$W$};
 	% main particle, at the end to cover
-	\draw [fill,cyan] (2,2) circle (.4em);
+	\draw [black!90,fill=black!20!blue!60] (2,2) circle (.4em);
 	% Arrows 
 	\draw[->,line width=.8pt] (2,2) -- (.6,1.5) node[midway, above,xshift=-.5em] {$r\leq2h$};
 \end{tikzpicture}
@@ -49,7 +48,7 @@ The development of new reliable, parallel and distributed tools for this method 
 \label{fig:sph_base}
 \end{figure}
 
-The method, as illustrated in Fig.~\ref{fig:sph_base}, computes the evolution of physical quantities for every particle regarding its neighbors in the radius of its smoothing length $h$. 
+The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of physical quantities for every particle regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel. 
 The fundamental SPH formulation for any physical quantity $A$ is then to compute with all the neighbors of $b$ of a particle by:
 \begin{equation}
@@ -447,7 +446,7 @@ And we propose a compact version of the matrix with:
  ||\frac{\partial f^a}{\partial r^b}|| = -\sum_c \frac{m_c}{|\vec{r}-\vec{r_c}|^3} \Big[ \delta_{ab} - \frac{3.(r^a-r_c^a)(r^b-r_c^b)}{|\vec{r}-\vec{r_c}|^2} \Big] 
 \end{equation}
 
-With $\delta_{ab}$ the kronecker delta:
+With $\delta_{ab}$ the Kronecker delta:
 \begin{equation}
 \delta_{ab} = 
 \begin{cases}
@@ -474,11 +473,11 @@ We consider Centers Of Mass, COM, to be the centroid of particles based on their
 In several steps the information is first transmitted to the COMs, computing their position and mass. 
 
 
-\subsection{Problems} 
+\section{Applications of SPH} 
 The previous equations are generic and describe the behavior of SPH method. 
 In order to check our 
 
-\subsubsection{Sod shock tube}
+\subsection{Sod shock tube}
 The Sod shock tube is the test consisting of a one-dimensional Riemann problem with the following initial parameters~\cite{sod1978}.
 \begin{equation}
 (\rho, v, p)_{t=0} = \begin{cases}
@@ -502,21 +501,21 @@ where $\Gamma$ is the adiabatic index of the gas, we set $\Gamma = 5/3$.
 This test is used to check the physical accuracy of the code and thus the tree search itself.
 A simulation of our Sod shock experimentation is presented on Fig.~\ref{fig:sodtube} and shows physically correct results. 
 
-\subsubsection{Sedov blast wave}
+\subsection{Sedov blast wave}
 A blast wave is the pressure and flow resulting from the deposition of a large amount of energy in a small very localized volume. 
 There are different versions of blast wave test and we consider comparing it with the analytic solution for a point explosion as given by Sedov~\cite{sedov1946}, making the assumption that the atmospheric pressure relative to the pressure insider the explosion negligible. 
 Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gamma = 5/3$ and we are assuming that the undistributed area is at rest with a pressure $P_0 = 1.0 \time 10^{-5}$. The density is constant $\rho_0$, also in the pressurized region. 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=.8\columnwidth]{\locpath/figures/sph/{sedov_flecsph_results}}
+\includegraphics[width=\columnwidth]{\locpath/figures/sph/{sedov_flecsph_results}}
 \caption{Sedov Blast Wave with FleCSPH at respectively $t=0.01$, $t=0.03$, $t=0.06$ and $t=0.1$}
 \label{fig:sedov}
 \end{figure}
 
 An example of our Sedov Blast wave experimentation is presented on Fig.~\ref{fig:sedov} and shows physically correct results.
 
-\subsubsection{Fluid flow}
+\subsection{Fluid flow}
 After performing the tests regarding the physics reliability, we worked on fluid flow problem in 2D and 3D to reach high number of particles. 
 The details can be found in \cite{gomez2012sphysics}.
 This test is based on an ideal EOS given by:
@@ -525,71 +524,77 @@ P = B \Big[ \big( \frac{\rho}{\rho_0} \Big)^\gamma -1 \Big]
 \end{equation}
 with $\gamma = 7$ and $B = c_0\rho_0/\gamma$ being $\rho_0 = 1000 \, kg.m^{-3}$ the reference density.
 
-For this experiment, realistic boundaries conditions were needed. 
-Several methods are possible with SPH we focused on the main ones, the mirror particles \cite{libersky1991smooth} or the dummies particles implementation \cite{adami2012generalized}. 
-
 \begin{figure}[t!]
 \centering
 \begin{tikzpicture}[thick]
 % Mathematical reflection
-\draw (1,.5) circle (.25cm) node[pos=.5] (m1) {};
-\draw[dashed] (2,.8) circle (.25cm) node[pos=.5] (m2) {};
-\draw[dashed,->] (1,.5) -- (1.45,0) -- (2,.8);
+\draw (0.3,.8) circle (.25cm) node[pos=.5] (p0) {};
+\draw (1,.6) circle (.25cm) node[pos=.5] (p1) {};
+\draw (2.3,1) circle (.25cm) node[pos=.5] (p2) {};
 \draw (0,0) -- (3,0);
 \foreach \i in {1,...,6}{
 	\draw[black!20] (.5*\i-.5,-1) -- (.5*\i,0);
 }
+% Forces
+\foreach \i in {1,...,7}{
+	\draw[->] (.375*\i,0) -- (.375*\i,.3);
+}
+\node at (1.5,-2) {Repulsive force};
 
 % Mirror 
-\draw (4.3,.6) circle (.25cm) node[pos=.5] (mi1) {};
-\draw (5,.4) circle (.25cm) node[pos=.5] (mi2) {};
-\draw (6.3,.8) circle (.25cm) node[pos=.5] (mi3) {};
-\draw[black!50] (4.3,-.6) circle (.25cm) node[pos=.5] (mii1) {};
-\draw[black!50] (5,-.4) circle (.25cm) node[pos=.5] (mii2) {};
-\draw[black!50] (6.3,-.8) circle (.25cm) node[pos=.5] (mii3) {};
-\draw[-] (mi1) -- (mii1);
-\draw (4,0) -- (7,0);
+\draw (4.3,.8) circle (.25cm) node[pos=.5] (p0) {};
+\draw (5,.6) circle (.25cm) node[pos=.5] (p1) {};
+\draw (6.3,1) circle (.25cm) node[pos=.5] (p2) {};
+\draw[black!50] (4.3,-.8) circle (.25cm) node[pos=.5] (mii1) {};
+\draw[black!50] (5,-.6) circle (.25cm) node[pos=.5] (mii2) {};
+\draw[black!50] (6.3,-1) circle (.25cm) node[pos=.5] (mii3) {};
+\draw[black!20,dotted] (4,0) -- (7,0);
 \foreach \i in {1,...,6}{
 	\draw[black!20] (.5*\i-.5+4,-1) -- (.5*\i+4,0);
 }
+\node at (5.5,-2) {Mirror particles};
 
 % Dummies
-\draw[black!50] (8.25,0) circle (.25cm) node[pos=.5] (d0) {};
-\draw[black!50] (9.08,0) circle (.25cm) node[pos=.5] (d1) {};
-\draw[black!50] (9.91,0) circle (.25cm) node[pos=.5] (d2) {};
-\draw[black!50] (10.75,0) circle (.25cm) node[pos=.5] (d3) {};
+\draw[black!50,fill=black!10] (8.25,0) circle (.25cm) node[pos=.5] (d0) {};
+\draw[black!50,fill=black!10] (9.08,0) circle (.25cm) node[pos=.5] (d1) {};
+\draw[black!50,fill=black!10] (9.91,0) circle (.25cm) node[pos=.5] (d2) {};
+\draw[black!50,fill=black!10] (10.75,0) circle (.25cm) node[pos=.5] (d3) {};
 % second layer
-\draw[black!50] (8.66,-.5) circle (.25cm) node[pos=.5] (d4) {};
-\draw[black!50] (9.50,-.5) circle (.25cm) node[pos=.5] (d5) {};
-\draw[black!50] (10.33,-.5) circle (.25cm) node[pos=.5] (d6) {};
+\draw[black!50,fill=black!10] (8.66,-.5) circle (.25cm) node[pos=.5] (d4) {};
+\draw[black!50,fill=black!10] (9.50,-.5) circle (.25cm) node[pos=.5] (d5) {};
+\draw[black!50,fill=black!10] (10.33,-.5) circle (.25cm) node[pos=.5] (d6) {};
 %\draw (1,-.25) circle (.25cm) node[pos=.5] (d4) {};
 %normal parts
 \draw (8.3,.8) circle (.25cm) node[pos=.5] (p0) {};
 \draw (9,.6) circle (.25cm) node[pos=.5] (p1) {};
 \draw (10.3,1) circle (.25cm) node[pos=.5] (p2) {};
-\draw (8,0) -- (11,0);
+\draw[dotted,black!20] (8,0) -- (11,0);
 \foreach \i in {1,...,6}{
 	\draw[black!20] (.5*\i-.5+8,-1) -- (.5*\i+8,0);
 }
-
+\node at (9.5,-2) {Dummy particles};
 \end{tikzpicture}
-\caption{Boundaries conditions with respectively: mathematics, mirror and dummies particles}
+\caption{Different boundaries condition methods}
 \label{fig:SPH:boundaries}
 \end{figure}
+
+For this experiment, realistic boundaries conditions were needed. 
+Several methods are possible with SPH we focused on the main ones, the repulsive wall, the mirror particles \cite{libersky1991smooth} and the dummies particles implementation \cite{adami2012generalized}. 
+Those boundaries conditions implementation are presented in figure~\ref{fig:SPH:boundaries}.
 
 For the current implementation, we used the dummies particles method.
 The wall particles are just considered as normal particles, with specific equations, and their quantities are evolved during the run. 
 The main difference is that their position does not evolve at the end of the step.
 They are identified in the code with a specific type, provided during the data generation. 
 
-\subsubsection{Astrophysics: neutron stars coalescence}
+\subsection{Astrophysics: neutron stars coalescence}
 
 The final aim of our tests is to simulate astrophysical events. 
 We are interested in one of the most important event recently discovered. 
 Last year the Laser Interferometer Gravitational Wave, LIGO, detected the first gravitational wave generated by binary neutron stars merging \cite{abbott2017gw170817} and also more complexes event with Binary Black Holes coalescence in \cite{abbott2017gw170814}.
 
 
-\paragraph{Solving Lane-Emden Equation}
+\subsubsection{Solving Lane-Emden Equation}
 
 We need to determine the density function based on the radius. 
 
@@ -635,7 +640,6 @@ K = \frac{R^2  2 \pi G}{\xi_1^2}
 \end{equation}
 
 \begin{center}
-
 \begin{tabular}{c|c|c|c|c|}
  & $NS_1$ & $NS_2$ & $NS_3$ & $NS_4$ \\ 
 \hline 
@@ -644,7 +648,6 @@ Radius (cm) & $R=G=M=1$ & 1500000 & 1400000 & 960000 \\
 K & 0.636619 & 95598.00 & 83576.48 & 39156.94\\ 
 \hline 
 \end{tabular}
-
 \end{center} 
 
 Then we deduce the density function of $r$ as :

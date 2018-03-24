@@ -101,7 +101,7 @@ The last section presents our results.
 
 \subsection{CSP}
 
-Combinatorial problems are NP-complete \cite{GJ79} and can be described as SATISFIABILITY problems (SAT) using a polynomial transformation. 
+Combinatorial problems are NP-complete \cite{GJ79} and can be described as satisfiability problems (SAT) using a polynomial transformation. 
 They can be transformed into CSP formalism.
 A Constraint Satisfaction Problem (CSP), first introduced by Montanari \cite{Mon74}, is defined as a triple $<X,D,C>$ where:
 \begin{equation}
@@ -246,7 +246,7 @@ As explained, CSP formalized problems can be transformed into tree evaluations. 
 In order to solve $L(2,n)$, we consider a tree of height $n$: see example of $L(2,3)$ in figure~\ref{fig:arbre}.
 
 \begin{itemize}   
-\item[-] Every level of the tree corresponds to a color.
+\item[-] Every level of the tree corresponds to a cube color.
 \item[-] Each node of the tree corresponds to the placement of a pair of cubes without worrying about the other colors. Color $p$ is represented at depth $n-p+1$, where the first node corresponds to the first possible placement (positions 1 and $p+2$) and $i^{th}$ node corresponds to the placement of the first cube of color $p$ in position $i, \ i \in [1, \ 2n-1-p]$.
 \item[-] Solutions are leaves generated without any placement conflict.
 \item[-] As we consider the solution up to a symmetry, the left part is represented dashed and is in fact not traversed.
@@ -311,7 +311,7 @@ for pair 1 positions
 \end{figure}
 
 In order to count every Langford problem solution, we first identify all possible combinations for one color without worrying about the other ones. 
-Each possible combination is coded within an integer, one bit to 1 corresponding to a cube presence, a 0 to its absence. This is what we called a \emph{mask}.
+Each possible combination is coded within an integer, a bit to 1 corresponding to a cube presence, a 0 to its absence. This is what we called a \emph{mask}.
 This way figure~\ref{fig:comb1} presents the possible combinations to place the one, two and three weight cubes for the $L(2,3)$ Langford instance.
 
 Furthermore the masks can be used to evaluate the partial placements of a chosen set of colors: all the 1 correspond to occupied positions; the assignment is consistent \emph{iff} there are as many 1 as the number of cubes set for the assignment. 
@@ -480,7 +480,7 @@ These tests were performed on 20 nodes of the ROMEO supercomputer, hence 40 CPU/
 The previous limit with Miller's algorithm was $L(2,19)$, obtained in 1999 after 2.5 years of sequential effort and at the same time after 2 months with a distributed approach\cite{Mil00}. 
 Our computation scheme allowed us to obtain it in less than 4 hours (Table \ref{tab:result_base_regu}), this being not only due to Moore law progress.\\
 Note that the computation is 1.6 faster with CPU+GPU together than using 8 CPU cores. 
-In addition, the GPUs compute $200000\times$ more nodes of the search tree than the CPUs, with a faster time.
+In addition, the GPUs compute $200,000\times$ more nodes of the search tree than the CPUs, with a faster time.
 
 \begin{table}[t!]
 \begin{subfigure}[b]{0.5\linewidth}
@@ -572,7 +572,7 @@ So \hspace*{2cm}
 The computational complexity of $L(2,n)$ is of $O(4^n\times n^2)$ and an efficient big integer arithmetic is necessary. 
 This principle can be optimized by taking into account the symmetries of the problem and using the Gray code: these optimizations are described below.
 
-\subsection{Optimizations}
+\subsection{Method optimizations}
 Some works focused on finding optimizations for this arithmetic method\cite{CReSTIC-1154}. 
 Here we explain the symmetric and computation optimizations used in our algorithm.
 
