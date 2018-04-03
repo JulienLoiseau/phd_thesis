@@ -7,18 +7,25 @@
 \chapter{Computational Wall: Langford Problem}
 
 \section{Introduction}
-Our aim is to determine the behavior of accelerators compared to classical processor in case of irregular-computationally heavy problems.
+Our goal is to determine the behavior of accelerators compared to classical processor in case of irregular-computationally heavy problems.
 For this purpose we choose the Langford problem which is an academic problem of combinatorial counting.
+
+We present the problem and expose the two possible methods to solve it:
+\begin{itemize}[noitemsep,nolistsep]
+\item[-] The tree traversal, call Miller's method, providing us benchmark targeting irregular memory and computation. 
+\item[-]The algebraic version, calls Godfrey's method, showing the performances of many-core vs multi-core architectures in respect to computationally heavy and memory irregular behaviors.  
+\end{itemize}
 We show the optimizations made to the regular processor algorithm to efficiently implement this application on GPU. 
-We compare the two approaches from classical processor to GPU implementation. 
+We compare the two approaches with classical processor and GPU implementation. 
 The results are then presented to show the acceleration using the whole ROMEO supercomputer.
-This study shows two approaches to the Langford problem.
-The Miller's algorithm, irregular tree backtracking and the the Godfrey's method which is use in order to beat a time record on this problem.\\
+%The Miller's method shows very good results for many-core architecture and the Godfrey's one allows us to beat a world record of computation speed for the two last instances. 
+
+\subsection{The Langford problem}
 
 C. Dudley Langford gave his name to a classic permutation problem ~\cite{Gard56, Simp83}.  
 While observing his son manipulating blocks of different colors, he noticed that it was possible to arrange three pairs of different colored blocks (yellow, red and blue) in such a way that only one block separates the red pair - noted as pair 1 - , two blocks separate the blue pair - noted as pair 2 - and finally three blocks separate the yellow one - noted as pair 3 - , see figure~\ref{fig:lang}.\\
 
-\begin{figure}[htbp]    
+\begin{figure}   
 \begin{center}    
 %\includegraphics[scale=0.45]{\locpath/figures/langford/lgf_cubes}   
 \begin{tikzpicture}
@@ -92,18 +99,21 @@ The latest known work on the Langford Problem is a GPU implementation proposed i
 
 \section{Miller algorithm}
 
-In this part we present our multi-GPU cluster implementation of the Miller's algorithm. 
-This algorithm is very irregular and the repartition have to be done at runtime on our accelerators. 
+The Miller's method is based on a tree traversal to be able to check all the cubes positions.
+This method finds its limits because even using branch cutting algorithm to traverse the tree, the number of branches to explore stay very high. 
+We implemented a multi-core and many-core version of it for the purpose of our benchmark. 
+Indeed, this huge tree traversal requires irregular computation and memory accesses: two elements fitting the wall we want to confront to our architectures. 
 
-First, we introduce the backtrack method. 
+In this section we present our multi-GPU cluster implementation of the Miller's algorithm. 
+First, we introduce the backtrack method itself and the elements allowing us to consider it as a good candidate for our metric. 
 Then we present our implementation in order to fit the GPUs architecture. 
 The last section presents our results. 
 
 \subsection{CSP}
 
-Combinatorial problems are NP-complete \cite{GJ79} and can be described as satisfiability problems (SAT) using a polynomial transformation. 
+Combinatorial problems are NP-complete \cite{GJ79} and can be described as satisfiability problems\index{SAT problem} (SAT) using a polynomial transformation. 
 They can be transformed into CSP formalism.
-A Constraint Satisfaction Problem (CSP), first introduced by Montanari \cite{Mon74}, is defined as a triple $<X,D,C>$ where:
+A \textit{Constraint Satisfaction Problem}\index{Constraint Satisfaction Problem} (CSP), first introduced by Montanari \cite{Mon74}, is defined as a triple $<X,D,C>$ where:
 \begin{equation}
 \begin{cases}
 X=\{X_1,...,X_n\}\text{: a finite set of variables} \\ 
@@ -373,7 +383,9 @@ The next section presents the way we hybridize these two schemes in order to get
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Hybrid parallel implementation}
 \label{section:parallel_backtrack}
-This part presents our methodology to implement Miller's method on a multiGPU cluster.
+Section \ref{sec:LGF_resolution} presents the Miller algorithm and the tools needed for the resolution. 
+The irregularity is present in the tree traversal and specific data representation has been chosen for efficient use of the memory. 
+This section presents our methodology to implement Miller's method on a multi-GPU cluster.
 
 \paragraph{Tasks generation: }
 In order to parallelize the resolution we have to generate tasks. 
@@ -526,7 +538,7 @@ The computation time between two different consecutive instances being multiplie
 \paragraph{Backtracking on GPUs}
 
 It appears at first sight that using backtracking on GPUs without any regularization is a bad idea due to threads synchronization issues.
-But in order to compare CPU and GPU computation power in the same conditions we decide to implement the original backtrack method on GPU (see figure~\ref{backtrack}) with only minor modifications.
+But in order to compare CPU and GPU computation power in the same conditions we decided to implement the original backtrack method on GPU (see figure~\ref{backtrack}) with only minor modifications.
 In these conditions we observe very efficient work of the NVIDIA scheduler, which perfectly handles threads de-synchronization.
 Thus we use the same server-client distribution as in \ref{section:parallel_backtrack}, each client generates masks for both CPU and GPU cores. 
 The workload is then statically distributed on GPU and CPU cores.
@@ -534,16 +546,28 @@ Executing the backtrack algorithm on a randomly chosen set of sub-problems allow
 
 The experiments were performed on 129 nodes of the ROMEO supercomputer, hence 258 CPU/GPU machines and one node for the server. 
 Table \ref{tab:result_backtrack} shows the results with this configuration. 
-This method first allowed us to perform the computation of $L(2,19)$ in less than 15 minutes, $15\times$ faster than with the regularized method; then, we pushed the limitations of the Miller algorithm up to $L(2,20)$ in less than 3 hours and even $L(2,21)$ in about $33$ hours\footnote{Even if this instance has no interest since it is known to have no solution}.
+This method first allowed us to perform the computation of $L(2,19)$ in less than 15 minutes, $15\times$ faster than with the regularized method; then, we pushed the limitations of the Miller algorithm up to $L(2,20)$ in less than 3 hours and even $L(2,21)$ in about $33$ hours\footnote{Even if this instance has no interest since it is known to have no solution}.\\
 
-This exhibits the ability of the GPU scheduler to manage highly irregular tasks. 
-It proves that GPUs are adapted even to solve combinatorial problems, which they were not supposed to be.
+This first benchmark application provides a perfect example for the behavior of many-core accelerators confronted to irregular application.
+Even if the application does not seemed to fit with the direct tree traversal, the results prove that if used in the right way performance can be achieve in this case. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                     %
+%                                     %
+% GODFREY                             %
+%                                     %
+%                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Godfrey's algebraic method}
-The previous part presents the Miller algorithm for the Langford problem, this method cannot achieve bigger instances than the $L(2,21)$.\\
+The previous part presents the Miller algorithm for the Langford problem, this method cannot achieve bigger instances than the $L(2,21)$.
+It allows us the target specific walls with memory and computation irregularities.\\
 An algebraic representation of the Langford problem has been proposed by M. Godfrey in 2002.
-In order to break the limitation of $L(2,24)$ we already used this very efficient problem specific method.
+This example is perfect in our study to target computationally heavy context with irregular memory behavior.
+%In order to break the limitation of $L(2,24)$ we already used this very efficient problem specific method.
 In this part we describe this algorithm and optimizations, and then our implementation on multiGPU clusters.
+As a side note, this implementation also allowed us to break a new world record on the computation time needed to solve the last instances, $L(2,27)$ and $L(2,28)$.
 \subsection{Method description}
 Consider $L(2,3)$ and $X=(X_1,X_2,X_3,X_4,X_5,X_6)$. 
 It proposes to modelize $L(2,3)$ by: 
@@ -592,7 +616,7 @@ The result is divided by 2.
 Each evaluation of $ S_i(x) = \sum_{k=1}^{2n-i-1} x_kx_{k+i+1} $, before multiplying might be very important regarding to the computation time for this sum. 
 Changing only one value of $ x_i $ at a time, we can recompute the sum using the previous one without global re-computation. 
 Indeed, we order the evaluations of the outer sum using Gray code sequence. 
-Then the computation time is considerably reduced.  
+Then the computation time is considerably reduced. \\
 
 Based on all these improvements and optimizations we can use the Godfrey method in order to solve huge instances of the Langford problem. 
 The next section develops the main issues of our multiGPU architecture implementation. 
@@ -608,15 +632,19 @@ As we have to sum the $S_i$ product on $2^{2n}$ values, in the worst case we hav
 So we need few big integer arithmetic functions. After testing existing libraries like GMP for CPU or CUMP for GPU, we came to the conclusion that they implement a huge number of functionalities and are not really optimized for our specific problem implementation: product of "small" values and sum of "huge" values. 
 
 Finally, we developed a light CPU and GPU library adapted to our needs.
-In the sum for example, as maintaining carries has an important time penalty, we have chosen to delay the spread of carries by using buffers: carries are accumulated and spread only when useful (for example when the buffer is full).
-Figure~\ref{fig:big-integer} represents this big integer handling.
-\begin{figure}[htbp]
+In the summation, for example, as maintaining carries has an important time penalty, we have chosen to delay the spread of carries by using buffers: carries are accumulated and spread only when useful (for example when the buffer is full).
+\begin{figure}[t!]
 \centering
 \includegraphics[scale=.5]{\locpath/figures/langford/lgf_grands_entiers}
 \caption{Big integer representation, 64 bits words}
 \label{fig:big-integer}
 \end{figure}
+Figure~\ref{fig:big-integer} represents this big integer handling.
 
+This big integer library imposes many constraint on the accelerator memory. 
+We conduct tests using simple and double precision for the basic unit. 
+The carries propagation is also triggered when necessary only. 
+This strategy implies random memory accesses to the words and irregular behavior between the threads. 
 
 \subsubsection{Gray sequence in memory: }
 The Gray sequence cannot be stored in an array because it would be too large (it would contain $2^{2n}$ byte values). This is the reason why only one part of the Gray code sequence is stored in memory and the missing terms are directly computed from the known ones using arithmetic considerations.
@@ -659,7 +687,7 @@ Each machine can get a task,  compute it, and then store its result; then when a
 This part presents the experimental context and methodology, and the way the experiments were carried out.
 This study has similar goals as for the Miller's resolution experiments.
 
-\subsubsection{Experimental methodology: }
+\subsubsection{Methodology: }
 We present here the way the experimental settings were chosen.
 Firstly we define the tasks distribution, secondly we set the number of threads per GPU block; finally, we set the CPU/GPU distribution.
 
@@ -824,36 +852,38 @@ Unfortunately for $L(2,28)$ on such a long period we got a lower part of the sup
 Thus we are confident in good perspectives for the $L(2,31)$ instance if computed on an even larger cluster or several distributed clusters. 
 
 \section{Conclusion}
+%\todo{Refaire la conclusion pour mettre en avant les resultats}
 
-This study presents two methods to solve the Langford pairing problem on multi-GPU clusters. 
-In its first part the Miller's algorithm is presented. 
-Then to break the problem limitations we show optimizations and implementation of Godfrey's algorithm.
+This first benchmark presents two methods to solve the Langford pairing problem on multi-GPU clusters. 
+Those methods are presented as the Miller's and Godfrey's algorithms.
 
-\subsection{CSP resolution method}
-As any combinatorial problem can be represented as a CSP, the Miller algorithm can be seen as general resolution scheme based on the backtrack tree browsing. 
+\subsection{Miller's method: irregular memory + computation}
+In this first implementation we showed that the accelerator can target irregularity in memory and computation. 
+The tree traversal, even with branch cutting, gives us excellent results on many-core architecture.
+They GPUs handle 80\% of the computation effort.
+Also as any combinatorial problem can be represented as a CSP, the Miller algorithm can be seen as general resolution scheme based on the backtrack tree browsing. 
 A three-level tasks generation allows to fit the multiGPU architecture. 
 MPI or Best-Effort are used to spread tasks over the cluster, OpenMP for the CPU cores distribution and then CUDA to take advantage of the GPU computation power.
 We were able to compute $L(2,20)$ with this regularized method and to get an even better time with the basic backtrack. 
 This proves the proposed approach and also exhibits that the GPU scheduler is very efficient at managing highly divergent threads.
 
-\subsection{MultiGPU clusters and best-effort}
-In addition and with the aim to beat the Langford limit we present a new implementation of the Godfrey method using GPUs as accelerators. 
+\subsection{Godfrey's method: irregular memory + heavy computation}
+We also presented the Godfrey's method which target irregular memory accesses but also heavy computational behavior. 
+The results shows that the many-core version completely exceed the classical processor best performances. 
+The GPU handle 65\% of the computation effort. 
+In addition we beat the Langford limits using multi-GPUs. 
 In order to use the supercomputer ROMEO, which is shared by a large scientific community, we have implemented a distribution that does not affect the machine load, using a best-effort queue. The computation is fault-tolerant and totally asynchronous.
+The utilization of this technology also show the reliability of nowadays accelerators technologies. 
+Indeed, they can be use at demand on specific tasks without specific warm-up. 
 
 \paragraph{Langford problem results: }
-This study enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. 
+This work also enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. 
+This is the fastest time on those problems nowadays.
 The total number of solutions is: 
 
 \hspace{3cm} L(2,27) = 111,683,611,098,764,903,232
 
-\hspace{3cm} L(2,28) = 1,607,383,260,609,382,393,152
+\hspace{3cm} L(2,28) = 1,607,383,260,609,382,393,152\\
 
-\paragraph{GPU benefit: }
-This study shows the benefit of using GPUs as accelerators for combinatorial problems. 
-In Miller's algorithm they handle 80\% of the computation effort and 65\% in Godfrey's.\\
-As a near-term prospect, we want to scale and show that it is possible to use the order of 1000 or more GPUs for pure combinatorial problems.\\
-The next step of this work is to generalize the method to optimization problems. 
-This adds an order of complexity since shared information has to be maintained over a multiGPU cluster. 
-
-We can conclude that even on irregular problems accelerators like GPU can be use and show better results than classical processors. 
- 
+This first benchmark implementation is clearly in favor of hybrid architecture. 
+The many-core architecture shows a perfect handling of irregularity and heavy computations. 

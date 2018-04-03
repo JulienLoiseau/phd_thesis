@@ -7,9 +7,21 @@
 
 \section{Introduction}
 
+The previous part describes the method we want to implement and presents the wall in the smoothed particle hydrodynamics method. 
+We showed that this application meet the communication and computation wall in an irregular behavior context. 
+FleCSPH is a complex application that, beside of being interesting for our purpose, need to be accurate on the physics aspect to be use by the domain scientists from LANL. 
+I also note that this is my first work on developing a production code from scratch.
+
+This section gives details about the FleCSPH framework. 
+We first present FleCSI, the base project in the Los Alamos National Laboratory on which FleCSPH is based. 
+For FleCSPH we give details on the domain decomposition strategy used with Morton Ordering. 
+The tree traversal algorithm choices are then explained. 
+We show the first results on the multi-CPU version of FleCSPH. 
+In the last part we present our multi-GPU implementation of FleCSPH and the advantage using accelerators. 
+
 \section{LANL and FleCSI}
-FleCSI%HL : I guess we do not need extra footnote for flecsi so I comment out\footnote{\url{http://github.com/laristra/flecsi}}
-~\cite{bergen2016flexible} is a compile-time configurable framework designed to support multi-physics application development. 
+
+FleCSI\footnote{\url{http://github.com/laristra/flecsi}}~\cite{bergen2016flexible} is a compile-time configurable framework designed to support multi-physics application development. 
 It is developed at the Los Alamos National Laboratory as part of the Los Alamos Ristra project. 
 As such, FleCSI provides a very general set of infrastructure design patterns that can be specialized and extended to suit the needs of a broad variety of solver and data requirements. 
 FleCSI currently supports multi-dimensional mesh topology, geometry, and adjacency information, as well as n-dimensional hashed-tree data structures, graph partitioning interfaces, and dependency closures.
@@ -29,7 +41,6 @@ The data distribution feature is not available for the tree data structure neede
 The next step will be to incorporate it directly from FleCSPH to FleCSI as we reach a decent level of performance.
 As FleCSI is an on-development code the structure may change in the future and we keep track of these updates in FleCSPH.
 
-
 Based on FleCSI the intent is to provide a binary, quad and oct-tree data structure and the methods to create, search and share information for it. 
 In FleCSPH this will be dedicated, apply and tested on the SPH method. 
 In this part we first present the domain decomposition, based on space filling curves, and the tree data structure.
@@ -37,6 +48,254 @@ We describe the HDF5 files structure used for the I/O.
 Then we describe the distributed algorithm for the data structure over the MPI processes. 
 
 \section{FleCSPH implementation}
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}
+	\def\dist{.8}
+	\def\y{10}
+
+	\node[draw,anchor=west,minimum height=.7cm] at (0,\y) (flecsph) {FleCSPH};
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (cinch) {@cinch\footnote{https://www.github.com/laristra/cinch}};
+	\draw (flecsph.south) |- (cinch.west) -| (cinch.west); 
+	\node[anchor=west] at (6,\y) (text) {Utilities and configuration tools for cmake buils};
+	\draw ([xshift=4pt]cinch.east) -- ([xshift=-5pt]text);
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (include) {include};
+	\draw (flecsph.south) |- (include.west) -| (include.west); 
+	\node[anchor=west] at (6,\y) (text) {Tree/Branches/Particles policies and physics};
+	\draw ([xshift=4pt]include.east) -- ([xshift=-5pt]text);
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (app) {app};
+	\draw (flecsph.south) |- (app.west) -| (app.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (sedov) {sedov};
+	\draw (app.south) |- (sedov.west) -| (sedov.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (sodtube) {sodtube};
+	\draw (app.south) |- (sodtube.west) -| (sodtube.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (fluid3D) {fluid\_3D};
+	\draw (app.south) |- (fluid3D.west) -| (fluid3D.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (bns) {BNS};
+	\draw (app.south) |- (bns.west) -| (bns.west); 
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (data) {data};
+	\draw (flecsph.south) |- (data.west) -| (data.west);
+	\node[anchor=west] at (6,\y) (text) {Example data for unit tests};
+	\draw ([xshift=4pt]data.east) -- ([xshift=-5pt]text); 
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (doc) {doc};
+	\draw (flecsph.south) |- (doc.west) -| (doc.west); 
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (docker) {docker};
+	\draw (flecsph.south) |- (docker.west) -| (docker.west); 
+	\node[anchor=west] at (6,\y) (text) {Dockerfiles for Travis+CodeCod+Sonarqube};
+	\draw ([xshift=4pt]docker.east) -- ([xshift=-5pt]text); 
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (mpisph) {mpisph};
+	\draw (flecsph.south) |- (mpisph.west) -| (mpisph.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {body\_system.hpp};
+	\draw (mpisph.south) |- (file.west) -| (file.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {tree\_colorer.hpp};
+	\draw (mpisph.south) |- (file.west) -| (file.west); 
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {tree\_fmm.hpp};
+	\draw (mpisph.south) |- (file.west) -| (file.west); 
+
+
+	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
+	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (third) {third-part-library};
+	\draw (flecsph.south) |- (third.west) -| (third.west); 
+	\node[anchor=west] at (6,\y) (text) {Required libraries like HDF5/H5Hut};
+	\draw ([xshift=4pt]third.east) -- ([xshift=-5pt]text); 
+
+\end{tikzpicture}
+\caption{FleCSPH structures and files}
+\label{fig:files_flecsph}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}
+\draw (0,0) rectangle (6,4);
+\draw (0,3) rectangle (4,4) node[pos=.5] {\Large \textbf{FleCSI}};
+\node [text width=3cm,anchor=north west] at (0.2,2.7) { 
+	\textbf{Runtimes:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Legion}
+        \item[-]{MPI}
+        \item[-]{HPX}
+        \item[-]{\color{black!40}{Charm++}}
+    \end{itemize}
+};
+\node [text width=2.7cm,anchor=north west] at (3.2,2.7) { 
+	\textbf{Topologies:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Set}
+        \item[-]{Mesh}
+        \item[-]{Tree}
+        \item[-]{\color{black!40}{Graph}}
+    \end{itemize}
+};
+\node[draw,minimum width=1.7cm,minimum height=.45cm] at (4.7,.95) (tree) {};% rectangle (5.5,1.2) node (tree) {};
+\draw (tree.north east) -- (8,4);
+\draw (tree.south east) -- (8,0);
+\draw (8,0) rectangle (16,4);
+\draw (8,3) rectangle (12,4) node[pos=.5] {\Large \textbf{FleCSPH}};
+\node [text width=3cm,anchor=north west] at (8.2,2.7) { 
+	\textbf{Runtime:} MPI 
+	\textbf{Tree:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Policy}
+        \item[-]{Partitioning}
+        \item[-]{Colorer}
+    \end{itemize}
+};
+\node [text width=4cm,anchor=north west] at (11.5,2.7) { 
+	\textbf{Physics:} 
+    \begin{itemize}[noitemsep,nolistsep]
+    	\item[-]{SodTube/Sedov}
+    	\item[-]{Fluids}
+        \item[-]{Astrophysics}
+    \end{itemize}
+    \textbf{Plus:} I/O
+};
+\end{tikzpicture}
+\caption{FleCSI and FleCSPH frameworks }
+\label{fig:flecsi_flecsph_framework}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\pgfmathsetseed{1}
+\def\nrand{100}
+
+% braces on top : local; distant
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(0.2,2.2) -- (7.8,2.2) node [midway,above,yshift=8pt] 
+{local particles};
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(8.2,2.2) -- (15.8,2.2) node [midway,above,yshift=8pt] 
+{distant particles};
+
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+ (3.8,-.2) -- (0.2,-.2) node [midway,below,yshift=-8pt] 
+{Exclusive};
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(7.8,-.2) -- (4.2,-.2) node [midway,below,yshift=-8pt] 
+{Shared};
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(10.9,-.2) -- (8.2,-.2) node [midway,below,yshift=-8pt] 
+{Ghost};
+
+% Vertical bars 
+\draw[thick] (4,0) -- (4,2) node (exclusive) {};
+\draw[thick] (8,0) -- (8,2) node (shared) {};
+\draw[thick] (11,0) -- (11,2) node (ghosts) {};
+
+\foreach \i in {1,2,...,\nrand}{
+	\pgfmathsetmacro{\x}{((rand)+1)*8}
+	\pgfmathsetmacro{\y}{((rand)+1)*1}
+	\ifthenelse{ \lengthtest{\x cm < 4 cm}}
+		{\draw[black!70,fill=red!90] (\x,\y) circle (2pt);}
+		{\ifthenelse { \lengthtest{\x cm < 8 cm}}
+			{\draw[black!70,fill=blue!90] (\x,\y) circle (2pt);}
+			{\ifthenelse { \lengthtest{ \x cm < 11 cm }}
+				{\draw[black!70,fill=black!30!green] (\x,\y) circle (2pt);}
+				{\draw[black!50,fill=black!10] (\x,\y) circle (2pt);} 
+			}
+		}
+}
+\end{tikzpicture}
+\caption{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
+\label{fig:coloring_particles}
+\end{figure}
+
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+
+\node at (-6,4.5) (base) {position (X,Y)};
+\draw[->] ([xshift=15pt]base.east) -- ([xshift=2.5cm]base.east) node[yshift=2pt,midway,above] () {Normalization};
+
+\node[anchor=west] at (-1.55,5) {x = 5 };
+\node[anchor=west] at (-1.55,4) {y = 10 };
+\node[anchor=west] at (-2.25,3) {Morton key};
+
+\node[anchor=west] at (0,5) {$\Rightarrow$};
+\node[anchor=west] at (0,4) {$\Rightarrow$};
+\node[anchor=west] at (0,3) {$\Rightarrow$};
+
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,5) (x0) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,5) (x1) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,5) (x2) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,5) (x3) {1};
+
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,4) (y0) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,4) (y1) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,4) (y2) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,4) (y3) {0};
+
+% Result
+\node[draw,minimum width = .5cm, minimum height = .5cm,red] at (1,3) (root) {1};
+%\node[red] at ([yshift=-10pt]root.south) {root};
+
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (1.5,3) (k0) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,3) (k1) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (2.5,3) (k2) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,3) (k3) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (3.5,3) (k4) {0};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,3) (k5) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (4.5,3) (k6) {1};
+\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,3) (k7) {0};
+
+\draw [thick,decorate,decoration={brace,amplitude=4pt}]
+(1.25,2.5) -- (.75,2.5)  node [red,midway,below,yshift=-9pt] 
+{root};
+
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(5,2.5) -- (1.5,2.5)  node [midway,below,yshift=-9pt] 
+{1 + 8 bits wide key};
+
+\draw [thick,decorate,decoration={brace,amplitude=10pt}]
+(2,5.5) -- (5,5.5)  node [midway,above,yshift=9pt] 
+{4 bits wide};
+
+% Arrows
+\draw[thick,->] (y3.south) -- (k7.north);
+\draw[thick,->] (y2.south) -- (k5.north);
+\draw[thick,->] (y1.south) -- (k3.north);
+\draw[thick,->] (y0.south) -- (k1.north);
+
+\draw[thick,->] (x3.west) -- ([xshift=-.25cm]x3.west) -- (k6.north);
+\draw[thick,->] (x2.west) -- ([xshift=-.25cm]x2.west) -- (k4.north);
+\draw[thick,->] (x1.west) -- ([xshift=-.25cm]x1.west) -- (k2.north);
+\draw[thick,->] (x0.west) -- ([xshift=-.25cm]x0.west) -- (k0.north);
+%\draw[thick,->] (y2.west) -- (k5.north);
+%\draw[thick,->] (y1.west) -- (k3.north);
+%\draw[thick,->] (y0.west) -- (k1.north);
+\end{tikzpicture}
+\caption{Morton order key generation}
+\end{figure}
+
+\begin{figure}
+\begin{tikzpicture}
+\end{tikzpicture}
+\end{figure}
 
 \subsection{Domain decomposition}
 \label{sec:domain_decomposition}
@@ -63,143 +322,7 @@ The construction is more complicated than Morton but allows a better distributio
 
 \begin{figure}
 \centering
-\begin{tikzpicture}[thick]
-%\draw[black!50,fill=black!30] (2,2) circle (5pt);
-% Morton
-\draw[-] (.1,5) -- (.9,5);
-\draw[-] (.9,5) -- (.1,4.1);
-\draw[-] (.1,4.1) -- (.9,4.1);
-\draw[-] (.9,4.1) -- (1.1,5);
-\draw[-] (1.1,5) -- (1.9,5);
-\draw[-] (1.9,5) -- (1.1,4.1);
-\draw[-] (1.1,4.1) -- (1.9,4.1);
-\draw[-] (1.9,4.1) -- (0.1,3.9);
-\draw[-] (.1,3.9) -- (.9,3.9);
-\draw[-] (.9,3.9) -- (.1,3);
-\draw[-] (.1,3) -- (.9,3);
-\draw[-] (.9,3) -- (1.1,3.9);
-\draw[-] (1.1,3.9) -- (1.9,3.9);
-\draw[-] (1.9,3.9) -- (1.1,3);
-\draw[-] (1.1,3) -- (2,3);
-
-\draw[-] (2,3) -- (3,5);
-\draw[-] (3,5) -- (5,5);
-\draw[-] (5,5) -- (3,3);
-\draw[-] (3,3) -- (5,3);
-\draw[-] (5,3) -- (0,2);
-\draw[-] (0,2) -- (2,2);
-\draw[-] (2,2) -- (0,0);
-\draw[-] (0,0) -- (2,0);
-\draw[-] (2,0) -- (3,2);
-
-\draw[-] (3,2) -- (3.9,2);
-\draw[-] (3.9,2) -- (3.1,1.1);
-\draw[-] (3.1,1.1) -- (3.9,1.1);
-\draw[-] (3.9,1.1) -- (4.1,2);
-\draw[-] (4.1,2) -- (4.9,2);
-\draw[-] (4.9,2) -- (4.1,1.1);
-\draw[-] (4.1,1.1) -- (4.9,1.1);
-\draw[-] (4.9,1.1) -- (3.1,.9);
-\draw[-] (3.1,.9) -- (3.9,.9);
-\draw[-] (3.9,.9) -- (3.1,0);
-\draw[-] (3.1,0) -- (3.9,0);
-\draw[-] (3.9,0) -- (4.1,0.9);
-\draw[-] (4.1,0.9) -- (4.9,0.9);
-\draw[-] (4.9,0.9) -- (4.1,0);
-\draw[->] (4.1,0) -- (5,0);
-
-% Hilbert
-\draw[-] (7,5) -- (7.9,5);
-\draw[-] (7.9,5) -- (7.9,4);
-\draw[-] (7.9,4) -- (7,4);
-\draw[-] (7,4) -- (7,3);
-\draw[-] (7,3) -- (7.9,3);
-\draw[-] (7.9,3) -- (7.9,3.9);
-\draw[-] (7.9,3.9) -- (8.1,3.9);
-\draw[-] (8.1,3.9) -- (8.1,3);
-\draw[-] (8.1,3) -- (9,3);
-\draw[-] (9,3) -- (9,4);
-\draw[-] (9,4) -- (8.1,4);
-\draw[-] (8.1,4) -- (8.1,5);
-\draw[-] (8.1,5) -- (9,5);
-
-\draw[-] (9,5) -- (10,5);
-\draw[-] (10,5) -- (12,5);
-\draw[-] (12,5) -- (12,3);
-\draw[-] (12,3) -- (10,3);
-\draw[-] (10,3) -- (10,2);
-
-\draw[-] (10,2) -- (10,1.1);
-\draw[-] (10,1.1) -- (11,1.1);
-\draw[-] (11,1.1) -- (11,2);
-\draw[-] (11,2) -- (12,2);
-\draw[-] (12,2) -- (12,1.1);
-\draw[-] (12,1.1) -- (11.1,1.1);
-\draw[-] (11.1,1.1) -- (11.1,.9);
-\draw[-] (11.1,.9) -- (12,.9);
-\draw[-] (12,.9) -- (12,0);
-\draw[-] (12,0) -- (11,0);
-\draw[-] (11,0) -- (11,.9);
-\draw[-] (11,.9) -- (10,.9);
-\draw[-] (10,.9) -- (10,0);
-\draw[-] (10,0) -- (9,0);
-
-\draw[-] (9,0) -- (8.1,0);
-\draw[-] (8.1,0) -- (8.1,.9);
-\draw[-] (8.1,.9) -- (9,.9);
-\draw[-] (9,.9) -- (9,2);
-\draw[-] (9,2) -- (8.1,2);
-\draw[-] (8.1,2) -- (8.1,1);
-\draw[-] (8.1,1) -- (7.9,1);
-\draw[-] (7.9,1) -- (7.9,2);
-\draw[-] (7.9,2) -- (7,2);
-\draw[-] (7,2) -- (7,.9);
-\draw[-] (7,.9) -- (7.9,.9);
-\draw[-] (7.9,.9) -- (7.9,0);
-\draw[-] (7.9,0) -- (7,0);
-
-% Add the particles over it 
-\draw[black!5,opacity=.4,fill=green!50] (.3,-.1) rectangle (4.7,5.1);
-\draw[black!5,opacity=0.5,fill=black!20] (.5,2.9) rectangle (1.7,5.1);
-\draw[black!5,opacity=0.5,fill=black!20] (3.5,-0.1) rectangle (4.6,2.1);
-% P1
-\draw[black!50,fill=black!20] (0.6,5) circle (3pt) node[yshift=1pt,above] {0};
-\draw[black!50,fill=black!20] (1.6,4.1) circle (3pt) node[yshift=1pt,above] {1};
-\draw[black!50,fill=black!20] (.7,3) circle (3pt) node[yshift=1pt,above] {2};
-% rect 1 
-\draw[black!50,fill=black!20] (3.5,5) circle (3pt) node[yshift=1pt,above] {3};
-\draw[black!50,fill=black!20] (4.6,3) circle (3pt) node[yshift=1pt,above] {4};
-\draw[black!50,fill=black!20] (.4,0) circle (3pt) node[yshift=1pt,below] {5};
-% rect 1 
-\draw[black!50,fill=black!20] (3.6,1.1) circle (3pt) node[yshift=1pt,above] {6};
-\draw[black!50,fill=black!20] (4.5,2) circle (3pt) node[yshift=1pt,above] {7};
-\draw[black!50,fill=black!20] (4.3,0) circle (3pt) node[yshift=-1pt,below] {8};
-% rect 1 
-
-
-% hilbert rectangles 
-\draw[black!5,opacity=.4,fill=green!50] (10.4,1) rectangle (11.7,5.1);
-\draw[black!5,opacity=0.5,fill=black!20] (7.5,2.9) rectangle (8.7,5.1);
-\draw[black!5,opacity=0.5,fill=black!20] (7.3,-.1) rectangle (11.6,1);
-
-% Hilbert particles
-\draw[black!50,fill=black!20] (7.6,5) circle (3pt) node[yshift=1pt,above] {0};
-\draw[black!50,fill=black!20] (7.7,3) circle (3pt) node[yshift=1pt,above] {1};
-\draw[black!50,fill=black!20] (8.6,4) circle (3pt) node[yshift=1pt,above] {2};
-
-\draw[black!50,fill=black!20] (10.5,5) circle (3pt) node[yshift=1pt,above] {3};
-\draw[black!50,fill=black!20] (11.6,3) circle (3pt) node[yshift=1pt,above] {4};
-\draw[black!50,fill=black!20] (10.6,1.1) circle (3pt) node[yshift=1pt,above] {5};
-
-\draw[black!50,fill=black!20] (11.5,.9) circle (3pt) node[yshift=1pt,below] {6};
-\draw[black!50,fill=black!20] (11.3,0) circle (3pt) node[yshift=1pt,above] {7};
-\draw[black!50,fill=black!20] (7.4,0) circle (3pt) node[yshift=1pt,above] {8};
-
-
-
-\end{tikzpicture}
-%\includegraphics[scale=.28]{\locpath/figures/flecsph/morton_curve.pdf}
-%\includegraphics[scale=.28]{\locpath/figures/flecsph/hilbert_curve.pdf}
+\input{\locpath/figures/tikz/part3/morton_hilbert}
 \caption{Morton and Hilbert space filling curves}
 \label{fig:space_filling}
 \end{figure}
@@ -270,6 +393,117 @@ Then for those branches we compute an interaction list and continue the recursiv
 When a particle is reached, we compute the physics using the interaction list as the neighbors. 
 The interaction list is computing using an opening-angle criterion comparing the boundary box and an user define angle. 
 In this way we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
+
+\begin{figure}[ht!]
+\centering
+\resizebox {\columnwidth} {!} {
+\begin{tikzpicture}
+
+\def\da{2cm}
+\def\db{20mm}
+\def\dc{6mm}
+
+\node [fill=white] (root) {(1)}
+    child [line width=.5pt] { [sibling distance=\db] node [fill=white] (n10) {(10)}
+      child {node (n100) {(100)} [sibling distance=\dc]
+      	child { node[fill=red,circle,inner sep=1.5pt,draw] (n1000) {} }
+      	child { node[fill=blue,circle,inner sep=1.5pt,draw] (n1001) {} }
+      	child { node[fill=black!20!green,circle,inner sep=1.5pt,draw] (n1002) {} }
+      	child { node[fill=black,circle,inner sep=1.5pt,draw] (n1003) {} }
+      }
+      child {node (n101) {(101)} [sibling distance=\dc]
+      	child { node[fill=black!10,circle,inner sep=1.5pt,draw] (n1010) {} }
+      }
+      child {node (n102) {(102)} [sibling distance=\dc]
+      	child { node[fill=orange,circle,inner sep=1.5pt,draw] (n1020) {} }
+      	child { node[] (n1021) {$\times$} }
+      	child { node[] (n1022) {$\times$} }
+      }
+      child {node {(103)} [sibling distance=\dc]
+      }
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(11)}
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(12)}
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(13)}
+    }
+;
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1001.south west);
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1002.south west);
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1003.south west);
+\draw[red,->,thick] ([yshift=7pt]root.south west) -- ([yshift=5pt]n10.north east);
+\draw[red,->,thick] ([yshift=9pt]n10.south west) -- ([yshift=6pt]n100.north east);
+\draw[red,->,thick] ([xshift=6pt]n100.south west) -- ([yshift=2pt,xshift=-6pt]n1000.north east);
+
+\draw[blue,->,thick] ([yshift=12pt]root.south west) -- ([yshift=10pt]n10.north east);
+\draw[blue,->,thick] ([yshift=14pt]n10.south west) -- ([yshift=11pt]n100.north east);
+\draw[blue,->,thick] ([xshift=12pt]n100.south west) -- ([yshift=2pt,xshift=-5pt]n1001.north east);
+
+\draw[black!20!green,->,thick] ([yshift=17pt]root.south west) -- ([yshift=15pt]n10.north east);
+\draw[black!20!green,->,thick] ([yshift=19pt]n10.south west) -- ([yshift=16pt]n100.north east);
+\draw[black!20!green,->,thick] ([xshift=16pt]n100.south west) -- ([yshift=2pt,xshift=-5pt]n1002.north east);
+
+
+\draw[black,->,thick] ([yshift=22pt]root.south west) -- ([yshift=20pt]n10.north east);
+\draw[black,->,thick] ([yshift=24pt]n10.south west) -- ([yshift=21pt]n100.north east);
+\draw[black,->,thick] ([xshift=26pt]n100.south west) -- ([yshift=2pt,xshift=1pt]n1003.north east);
+
+\draw[red,thick] ([yshift=-3pt]n1000.south) |- ([yshift=-8pt]n1000.south) -- ([yshift=-8pt]n1002.south) -| ([yshift=-3pt]n1002.south);
+\draw[blue,thick] ([yshift=-11pt]n1000.south) |- ([yshift=-16pt]n1000.south) -- ([yshift=-16pt]n1003.south) -| ([yshift=-11pt]n1003.south);
+\draw[black!20!green,thick] ([yshift=-19pt]n1000.south) |- ([yshift=-24pt]n1000.south) -- ([yshift=-24pt]n1010.south) -| ([yshift=-19pt]n1010.south);
+\draw[black,thick] ([yshift=-27pt]n1001.south) |- ([yshift=-32pt]n1001.south) -- ([yshift=-32pt]n1020.south) -| ([yshift=-27pt]n1020.south);
+
+%\end{tikzpicture}
+%}
+%\resizebox {.45\columnwidth} {!} {
+%\begin{tikzpicture}
+
+\def\da{2cm}
+\def\db{20mm}
+\def\dc{6mm}
+
+\node [fill=white] at (9,0) (root) {(1)}
+    child [line width=.5pt] { [sibling distance=\db] node [fill=white] (n10) {(10)}
+      child {node (n100) {(100)} [sibling distance=\dc]
+      	child { node[fill=red,circle,inner sep=1.5pt,draw] (n1000) {} }
+      	child { node[fill=blue,circle,inner sep=1.5pt,draw] (n1001) {} }
+      	child { node[fill=black!20!green,circle,inner sep=1.5pt,draw] (n1002) {} }
+      	child { node[fill=black,circle,inner sep=1.5pt,draw] (n1003) {} }
+      }
+      child {node {(101)} [sibling distance=\dc]
+      	child { node[fill=black!10,circle,inner sep=1.5pt,draw] (n1010) {} }
+      }
+      child {node {(102)} [sibling distance=\dc]
+      	child { node[fill=orange,circle,inner sep=1.5pt,draw] (n1020) {} }
+      	child { node[] (n1021) {$\times$} }
+      	child { node[] (n1022) {$\times$} }
+      }
+      child {node {(103)} [sibling distance=\dc]
+      }
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(11)}
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(12)}
+    }
+    child [line width=.5pt,dashed] { node [fill=white] {(13)}
+    }
+;
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1001.south west);
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1002.south west);
+%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1003.south west);
+\draw[red,->,thick] ([yshift=7pt]root.south west) -- ([yshift=5pt]n10.north east);
+\draw[red,->,thick] ([yshift=9pt]n10.south west) -- ([yshift=6pt]n100.north east);
+\draw[red] ([xshift=-16pt,yshift=-3pt]n100.north west) rectangle ([xshift=4pt,yshift=-4pt]n1003.south east);
+\node[red] at ([yshift=5pt]n100.north west) {$m \leq m_{crit}$};
+
+\draw[red,thick] ([yshift=-8pt]n1000.south) |- ([yshift=-13pt]n1000.south) -- ([yshift=-13pt]n1020.south) -| ([yshift=-8pt]n1020.south);
+
+\end{tikzpicture}
+}
+\caption{Neighbors search using a tree traversal per particle vs a group of particle and computing an interaction list}
+\label{fig:arbre}
+\end{figure}
 
 \begin{algorithm}
 \caption{Tree search algorithm}\label{alg:find_nodes}

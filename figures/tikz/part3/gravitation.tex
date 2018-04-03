@@ -1,0 +1,232 @@
+\resizebox {\columnwidth} {!} {
+\begin{tikzpicture}
+\def\nrand{300}
+\def\seed{12}
+\def\gridSize{5mm}
+\def\gridTotal{4}
+% Particles to Multipole
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=0,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=\gridSize, black] (0,0) grid (\gridTotal,\gridTotal);
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+		% COLOR 
+		\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+			{\node at (\x,\y) [black!50!green,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+			{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+		}
+		{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+	}
+\end{scope}
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=80,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (\gridTotal,\gridTotal);
+	\foreach \x in {0,1,...,7}{\foreach \y in {0,1,...,7}{
+		\ifthenelse{\( \x<3 \OR \x>5 \)}
+		{
+			\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+		}
+		{	\ifthenelse{ \( \y<1 \OR \y>3 \)}
+			{
+			\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[red,circle,fill,inner sep=.7pt,minimum size=3pt]{};	
+			}{}
+		}
+	}}
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm<1.5cm} \OR \lengthtest{\x cm>3cm} \)}
+		{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+		{	\ifthenelse{ \( \lengthtest{\y cm<.5cm} \OR \lengthtest{\y cm>2cm} \)}
+			{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+			{}
+		}
+  	}
+\end{scope}
+\begin{scope}[
+   		yshift=160,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=10mm, black] (0,0) grid (4,4);
+	\foreach \x in {0,1}{\foreach \y in {0,...,7}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {0,...,7}{\foreach \y in {6,7}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {0}{\foreach \y in {0,...,3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+	}}
+	\foreach \x in {0,...,3}{\foreach \y in {3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+	}}
+\end{scope}
+
+%PARTICLES TO PARTICLES
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=0,xshift=9cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm>1.5cm} \AND \lengthtest{\x cm<3cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>.5cm} \AND \lengthtest{\y cm<2cm} \)}
+			{
+				% COLOR 
+				\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+				{	
+					\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+					{\node at (\x,\y) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+					{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+				}
+				{\node at (\x,\y) [blue,circle,fill,inner sep=.7pt]{};}
+			}{}
+		}{}
+    	%\node at (\x,\y) [circle,fill,inner sep=.7pt]{};
+  	}
+\end{scope}
+%MULTIPOLE TO MULTIPOLE
+\begin{scope}[
+   		yshift=160,xshift=9cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+    \draw[step=10mm, black] (0,3) grid (4,4);
+	\draw[step=10mm, black] (0,0) grid (1,3);
+	\draw[step=5mm, black] (1,0) grid (2,3);
+	\draw[step=5mm, black] (2,2) grid (4,3);
+	\draw[step=5mm, black] (2,0) grid (4,.5);
+	\draw[step=5mm, black] (3.5,0) grid (4,2);
+	% add rectangle
+	\draw[black] (2,.5) rectangle (3.5,2);
+	% Big part 
+	\foreach \x in {0}{\foreach \y in {0,...,3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {0,...,3}{\foreach \y in {3}{				  
+		\node at (\x*\gridSize*2+\gridSize,\y*\gridSize*2+\gridSize) [blue,circle,fill,inner sep=.7pt]{};
+	}}
+	% Smaller one 
+	\foreach \x in {2,3}{\foreach \y in {0,...,3}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {2,...,7}{\foreach \y in {4,5}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+
+	\foreach \x in {7}{\foreach \y in {0,...,3}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\foreach \x in {4,5,6}{\foreach \y in {0}{
+		\node at (\x*\gridSize+\gridSize/2,\y*\gridSize+\gridSize/2)[blue,circle,fill,inner sep=.7pt]{};
+	}}
+	\node at (5*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+\end{scope}
+
+% Multipole to Particles 
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=0,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+		% COLOR 
+		\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+			{\node at (\x,\y) [black!50!green,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+			{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+		}
+		{\node at (\x,\y) [circle,fill,inner sep=.7pt]{};}
+	}
+\end{scope}
+\pgfmathsetseed{\seed}
+\begin{scope}[
+   		yshift=80,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+
+	\foreach \i in {1,2,...,\nrand}{
+    	\pgfmathsetmacro{\x}{(rand)*2+2}
+    	\pgfmathsetmacro{\y}{(rand)*2+2}
+    	\ifthenelse{\( \lengthtest{\x cm>1.5cm} \AND \lengthtest{\x cm<3cm} \)}
+		{	
+			\ifthenelse{ \( \lengthtest{\y cm>.5cm} \AND \lengthtest{\y cm<2cm} \)}
+			{
+				% COLOR 
+				\ifthenelse{\( \lengthtest{\x cm>2cm} \AND \lengthtest{\x cm<2.5cm} \)}
+				{	
+					\ifthenelse{ \( \lengthtest{\y cm>1cm} \AND \lengthtest{\y cm<1.5cm} \)}
+					{\node at (\x,\y) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};}
+					{}
+				}{}
+			}{}
+		}{}
+	}
+	\node at (4*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [blue,circle,fill,inner sep=.7pt]{};
+\end{scope}
+%% MULTIPOLE TO LOCAL
+\begin{scope}[
+   		yshift=160,xshift=18cm,every node/.append style={
+    		yslant=0.5,xslant=-1},yslant=0.5,xslant=-1
+    ]
+    \fill[white,fill opacity=.9] (0,0) rectangle (4,4);
+    \draw[black,very thick] (0,0) rectangle (4,4);
+	\draw[step=5mm, black] (0,0) grid (4,4);
+	\node at (4*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [red,circle,fill,inner sep=.7pt,minimum size=3pt]{};
+
+	\node at (5*\gridSize+\gridSize/2,2*\gridSize+\gridSize/2) [blue,circle,fill,inner sep=.7pt]{};
+\end{scope}
+% ARROWS AND TEXT
+\draw[->,very thick] (-3,2.8) -- (-3,4) node[midway,left] {\textbf{P2M}};
+\draw[->,very thick] ([yshift=80]-3,2.8) -- ([yshift=80]-3,4) node[midway,left] {\textbf{M2M}};
+
+\draw[->,very thick] ([yshift=160]3,2.8) -- ([yshift=160]6,2.8) node[midway,above] {\textbf{M2L}};
+\draw[->,very thick] ([yshift=160,xshift=9cm]3,2.8) -- ([yshift=160,xshift=9cm]6,2.8) node[midway,above] {\textbf{L2L}};
+
+\draw[<-,very thick] ([yshift=80]21,2.8) -- ([yshift=80]21,4) node[midway,right] {\textbf{L2P}};
+\draw[<-,very thick] (21,2.8) -- (21,4) node[midway,right] {\textbf{SUM}};
+
+\draw[->,very thick] (3,2.8) -- (6,2.8) node[midway,above] {\textbf{P2P}};
+\draw[->,very thick] ([xshift=9cm]3,2.8) -- ([xshift=9cm]6,2.8) node[midway,above] {\textbf{SUM}};
+
+
+\draw[->,very thick] (-3.5,8.7cm) node[xshift=-5pt,blue,circle,fill,inner sep=.7pt,minimum size=3pt] (a) {} -- 
+ (-3,8.7cm) node[xshift=5pt,red,circle,fill,inner sep=.7pt,minimum size=3pt] (b) {};
+\node[align=left] at (-3,9.5cm) {Data\\direction};
+
+
+\end{tikzpicture}
+}

@@ -8,8 +8,16 @@
 
 \section{Introduction}
 In order to face the communication wall in our metric for accelerators, we choose the Graph500 problem. 
+This benchmark is based on huge tree traversal through a randomly generated graph. 
+We already work on this kind of example with the first implementation of the Langford algorithm.
+The Graph500 push this example to its limits using terabyte to petabytes of data to represent the graph on which the traversal is executed. 
+In this case the computation is absent or just reduce to tests on datum.
+This metric targets directly the memory and communication wall in irregular case. 
+
 In this part we present the benchmark itself, from the graph generation to the traversal. 
 We focus on the BFS part, we do not work on the latest Graph500 using SSSP. 
+We explain why this benchmark is perfect to target communication wall and memory wall. 
+We present our implementation on GPUs and the results compared to the multi-core processor version.
 
 \subsection{Breadth First Search}
 The most commonly used search algorithms for graphs are Breadth First Search (BFS) and Depth First Search (DFS).
@@ -20,7 +28,7 @@ This algorithm can be seen as frontier expansion and exploration.
 At each step the frontier is expanded with the unvisited neighbors.  
 
 \begin{algorithm}
-\caption{Sequential BFS}\label{alg:bfs_squential}
+
 \begin{algorithmic}[1]
 \Function{compute\_BFS}{$G=(V,E)$:~graph representation, $v_s$:~source vertex, $In$:~current level input, $Out$:~current level output, $Vis$: already visited vertices}
 \State $In \gets \{v_s\}$;
@@ -41,11 +49,13 @@ At each step the frontier is expanded with the unvisited neighbors.
 \EndWhile
 \EndFunction
 \end{algorithmic}
+\caption{Sequential Breadth First Search algorithm}
+\label{alg:bfs_squential}
 \end{algorithm}
 
 The sequential and basic algorithm is well known and is presented on Algorithm~\ref{alg:bfs_squential}.
 
-\begin{figure}[t!]
+\begin{figure}
 \begin{tikzpicture}
 	\node [draw,circle,red] (node A) at (1,3.5) {A};
 	\node [draw,circle] (node B) at (0,2.5) {B};
@@ -199,7 +209,7 @@ The sequential and basic algorithm is well known and is presented on Algorithm~\
 This algorithm is presented on figure~\ref{fig:part2_chap3:BFS}.
 At each step from the current queue we search through the neighbors of nodes. 
 All the new nodes, not yet traversed, are added in the queue for the next step.
-We keep the information of neighors exploration in order to recreate the precessor array. 
+We keep the information of neighbors exploration in order to recreate the predecessor array. 
 
 This algorithm is very famous thanks to its use in many applications but also thanks to the world supercomputer ranking called Graph500\footnote{\url{http://www.graph500.org}}.
 This benchmark is designed to measure the performance on very irregular problems like BFS on a large scale randomized generated graph. 
@@ -212,25 +222,23 @@ This benchmark is more representative of communication and memory accesses than 
 Other benchmarks can be used to rank computational power such as LINPACK for the TOP500 list.
 Indeed the best supercomputers (K-Computer, Sequoia, Mira, ...) on the ladder have a very specific communication topology and sufficient memory, and are large enough to quickly visit all the nodes of the graph. 
 
-In this study we focus on GPU optimization. 
+This benchmark is conduct using GPUs as accelerators.
 There are many CPU algorithms available, which are listed on the Graph500 website. 
 In order to rank the ROMEO supercomputer we had to create a dedicated version of the Graph500 benchmark in order to fit the supercomputer architecture. 
 As this supercomputer is accelerated by GPUs, three successive approaches had to be applied:  first create an optimized CPU algorithm; second provide a GPU specific version and third take advantage of both CPU and GPU computation power. 
 
-This paper is organized as follows.
 The first section performs a survey of graph representation and analysis; it also describes some specific implementations.
 The second section  describes the Graph500 protocol and focuses on the Kronecker graph generation method and the BFS validation.
 The third section presents the chosen methods to implement graph representation and work distribution over the supercomputer nodes. It particularly focuses on the interest of a hybrid CSR and CSC representation.
-We concude by examining the results for different graph scales and load distributions.
+We compare the results for different graph scales and load distributions.
 
-\section{Related work}
+\section{Existing methods}
 The most efficient algorithm to compute BFS traversal is used and detailed in \cite{6468459}. 
 It uses a 2D partition of the graph which will be detailed later. 
 This algorithm is used on the BlueGene/P and BlueGene/Q architectures but can be easily adapted to any parallel cluster.
 
-
 We use another key study in order to build our Graph500 CPU/GPU implementation. 
-This paper \cite{merrill2015high} proposes various effective methods on GPU for BFS. 
+\cite{merrill2015high} proposes various effective methods on GPU for BFS. 
 Merrill \& al. explaine and teste a few efficient methods to optimize memory access and work sharing between threads on a large set of graphs. 
 It focuses on Kronecker graphs in particular. 
 First they propose several methods for neighbor-gathering with a serial code versus a warp-based and a CTA-based approach. 
@@ -433,9 +441,11 @@ Algorithm~\ref{alg:bfs_bluegene} presents the BlueGene/Q and BlueGene/P parallel
 	\State $In_{i,j} \gets Out_{j,i}$
 \EndWhile
 \end{algorithmic}
+\caption{Algorithm for tree traversal presented for BlueGene}
+\label{alg:bluegene}
 \end{algorithm}
 
-This algorithm is based on the exploration phase, denoted by \textit{ExploreFrontier()}. It performs the exploration phase independently on all the machines.
+This algorithm is presented in algorithm~\ref{alg:bluegene} and is based on the exploration phase, denoted by \textit{ExploreFrontier()}. It performs the exploration phase independently on all the machines.
 Then several communication phases follow. 
 The first two phases are performed on the same processes line. The last one is performed on a processes column. 
 \begin{itemize}
@@ -658,12 +668,14 @@ As the major limitation is the communications stage, using only GPU 0 allowed us
 \end{figure}
 
 \section{Conclusions}
+%\todo{Repenser la conclusion}
 
-In this study we presented an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster. 
+The Graph500 is already a benchmark and focus on memory and communication wall in an irregular behavior.
+We presented an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster for the purpose of our metric to emphasis behavior of hybrid architectures.
 It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
 This work highlights different key points.
 First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. % data representation. 
-Although this representation requires more memoriy, it significantly reduces  the computation workload and allows us to achieve outstanding performance.
+Although this representation requires more memory, it significantly reduces  the computation workload and allows us to achieve outstanding performance.
 Second, the inter-node and intra-node communication is a critical bottleneck. 
 Each compute node has two GPUs, however only one shares the same PCIe bridge with the Infiniband HCA that allows to take advantage of the GPUDirect technology.
 Third, due to the low compute power needed for BFS traversal, we get better performance by fully loading GPUs.
@@ -675,11 +687,8 @@ In this configuration CPUs are only used to synchronize GPUs kernels.
 All the communications are directly GPU to GPU using a CUDA-aware MPI library and GPUDirect.
 
 These results have been published in the Graph500 list of November 2016 list. 
-The ROMEO supercomputer was ranked 105th. 
+The ROMEO supercomputer was ranked 105th.\\ 
 
-Today we can identify some interesting perspectives to carry on the study. 
-Communication cost is the major limitation and a better control of load distribution is needed between communication and computation in order to obtain even better performance.
-Part of the solution might come from new technologies developed by Nvidia, such as the new PASCAL architecture or NVlink buses.
-
-With this work we showed that the GPU is able to handle irregular memory and communication behavior and still deliver better performances than classical processors. 
+In addition to the previous benchmarks proposed in our thesis, the Graph500 complete the communication and memory irregular behavior. 
+It shows the benefit of using many-core architectures in this context allowing twice better results using accelerators than CPUs.
  

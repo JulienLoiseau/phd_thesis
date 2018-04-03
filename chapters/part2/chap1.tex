@@ -19,7 +19,7 @@ We think that this behavior does not fit realistic (production) applications.
 In many domains like meteorology, oceanography, astrophysics, big data, \dots the underlying issue are the irregular input and behavior.
 The irregularity in an application can have several definitions. 
 This is defined by \cite{javairregular} as a problem which: can not be characterize a priori, is input data dependent and evolves with the computation itself. 
-In \cite{suss2006implementing} the author specifies that the work involve subcomputations which cannot be determined before and thus work distribution during runtime.
+In \cite{suss2006implementing} the author specifies that the work involve subcomputations which cannot be determined before and implies work distribution during runtime.
 The irregularity can then spread on all the layers of the resolution:
 the communications, the computation and the memory searches. 
 
@@ -33,14 +33,14 @@ The author explains that:
 \end{quotation}
 In the case of accelerator another layer of memory is added. 
 The memory of the host processors and devices accelerators cannot be accessed directly and copies from one to the other are requested.
-The problems of coalescent access are also addressed in this study.
-Some companies try to find way using shared memory between host and device but this technology is always under developments and tests for HPC purpose. \\
+The problems of coalescent accesses are also addressed in this study.
+Some companies try to find ways using shared memory between host and device but this technology is always under developments and tests for HPC purpose. \\
 %The memory banks have to be accessed in a coalescent way to reach performance. 
 
 The two problems we propose for our metric implement heavy memory utilization. 
 The first one dynamically use the memory in an irregular way. 
 The tree traversal of the first method generates temporary data and binary tests. 
-The algebraic method use a dedicated big integers library and carries propagation are applied just when necessary. 
+The algebraic method uses a dedicated big integers library and carries propagation are applied just when necessary. 
 In the second benchmark the memory is saturated and prepared at the startup.
 It is then accessed in an irregular way during all the computation. 
 
@@ -54,7 +54,7 @@ We decided to target this problem in two main ways.
 In the first benchmark the model corresponds to FIIT: Finite number of Independent and Irregular Tasks, introduced in \cite{flauzac2003confiit}.
 The tasks can be solved independently and then merged at the end. 
 We show that the accelerators can also take advantage of specific distribution methods like Best-Effort. 
-In the second problem communications are central because the data are too big to be represented on a single machine. 
+In the second problem communications are central because the data are too big to be represented on a single machine and cannot be computed independently. 
 The irregularity in communication is very high.
 In this benchmark the number of data shared is never know before reaching the end of a superstep.
 
@@ -65,7 +65,7 @@ In this objective low energy consumption and innovative architectures need to be
 The energy considered is required to power the machine itself but also handle the heat generated.\\
 
 This wall is the underlying goal of this study. 
-The hybrid architectures seems to deliver better performances for less watts of consumption.
+The hybrid architectures seems to deliver better performances for less watts.
 This thesis shows through different benchmarks what is the real benefit of accelerators on realistic problems and that the performances can be even better for less watts of consumption.
 
 \paragraph{Computational wall: }
@@ -77,12 +77,12 @@ The frequency itself seems to reach its highest values due to the energy require
 
 This is targeted in the first benchmark we propose. 
 The algebraic method is heavy in computation with irregular memory accesses. 
-The second one does focus on irregular communication and memory usage with just simple operations.\\
+The second one does focus on irregular communication and memory usage with test base operations.\\
 
-This is why we present in this part a new metric the main HPC walls to confront many-core architectures to multi-core architectures. 
+This is why we present in this part a new metric for the main HPC walls to confront many-core architectures to multi-core architectures. 
 % This part 
 The first academic problem we choose for our benchmark characterizes the behavior of accelerators and more specifically GPUs focusing on irregular computations and memory accesses. 
-It is the problem of Langford and show how we can take advantage of accelerators for this kind of problem. 
+It is the problem of Langford and it shows how we can take advantage of accelerators for this kind of problem. 
 
 The second problem we choose is focused on irregular memory accesses and communications. 
 It is based on a benchmark we presented in the previous part, the Graph500 benchmark.
