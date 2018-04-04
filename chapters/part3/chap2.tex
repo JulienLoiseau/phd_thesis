@@ -19,7 +19,7 @@ The tree traversal algorithm choices are then explained.
 We show the first results on the multi-CPU version of FleCSPH. 
 In the last part we present our multi-GPU implementation of FleCSPH and the advantage using accelerators. 
 
-\section{LANL and FleCSI}
+\section{FleCSI}
 
 FleCSI\footnote{\url{http://github.com/laristra/flecsi}}~\cite{bergen2016flexible} is a compile-time configurable framework designed to support multi-physics application development. 
 It is developed at the Los Alamos National Laboratory as part of the Los Alamos Ristra project. 
@@ -49,252 +49,33 @@ Then we describe the distributed algorithm for the data structure over the MPI p
 
 \section{FleCSPH implementation}
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 \centering
-\begin{tikzpicture}
-	\def\dist{.8}
-	\def\y{10}
-
-	\node[draw,anchor=west,minimum height=.7cm] at (0,\y) (flecsph) {FleCSPH};
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (cinch) {@cinch\footnote{https://www.github.com/laristra/cinch}};
-	\draw (flecsph.south) |- (cinch.west) -| (cinch.west); 
-	\node[anchor=west] at (6,\y) (text) {Utilities and configuration tools for cmake buils};
-	\draw ([xshift=4pt]cinch.east) -- ([xshift=-5pt]text);
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (include) {include};
-	\draw (flecsph.south) |- (include.west) -| (include.west); 
-	\node[anchor=west] at (6,\y) (text) {Tree/Branches/Particles policies and physics};
-	\draw ([xshift=4pt]include.east) -- ([xshift=-5pt]text);
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (app) {app};
-	\draw (flecsph.south) |- (app.west) -| (app.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (sedov) {sedov};
-	\draw (app.south) |- (sedov.west) -| (sedov.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (sodtube) {sodtube};
-	\draw (app.south) |- (sodtube.west) -| (sodtube.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (fluid3D) {fluid\_3D};
-	\draw (app.south) |- (fluid3D.west) -| (fluid3D.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (3,\y) (bns) {BNS};
-	\draw (app.south) |- (bns.west) -| (bns.west); 
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (data) {data};
-	\draw (flecsph.south) |- (data.west) -| (data.west);
-	\node[anchor=west] at (6,\y) (text) {Example data for unit tests};
-	\draw ([xshift=4pt]data.east) -- ([xshift=-5pt]text); 
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (doc) {doc};
-	\draw (flecsph.south) |- (doc.west) -| (doc.west); 
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (docker) {docker};
-	\draw (flecsph.south) |- (docker.west) -| (docker.west); 
-	\node[anchor=west] at (6,\y) (text) {Dockerfiles for Travis+CodeCod+Sonarqube};
-	\draw ([xshift=4pt]docker.east) -- ([xshift=-5pt]text); 
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (mpisph) {mpisph};
-	\draw (flecsph.south) |- (mpisph.west) -| (mpisph.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {body\_system.hpp};
-	\draw (mpisph.south) |- (file.west) -| (file.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {tree\_colorer.hpp};
-	\draw (mpisph.south) |- (file.west) -| (file.west); 
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[anchor=west,minimum height=.7cm] at (3,\y) (file) {tree\_fmm.hpp};
-	\draw (mpisph.south) |- (file.west) -| (file.west); 
-
-
-	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
-	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (third) {third-part-library};
-	\draw (flecsph.south) |- (third.west) -| (third.west); 
-	\node[anchor=west] at (6,\y) (text) {Required libraries like HDF5/H5Hut};
-	\draw ([xshift=4pt]third.east) -- ([xshift=-5pt]text); 
-
-\end{tikzpicture}
-\caption{FleCSPH structures and files}
-\label{fig:files_flecsph}
-\end{figure}
-
-\begin{figure}[ht!]
-\centering
-\begin{tikzpicture}
-\draw (0,0) rectangle (6,4);
-\draw (0,3) rectangle (4,4) node[pos=.5] {\Large \textbf{FleCSI}};
-\node [text width=3cm,anchor=north west] at (0.2,2.7) { 
-	\textbf{Runtimes:} 
-    \begin{itemize}[noitemsep,nolistsep]
-        \item[-]{Legion}
-        \item[-]{MPI}
-        \item[-]{HPX}
-        \item[-]{\color{black!40}{Charm++}}
-    \end{itemize}
-};
-\node [text width=2.7cm,anchor=north west] at (3.2,2.7) { 
-	\textbf{Topologies:} 
-    \begin{itemize}[noitemsep,nolistsep]
-        \item[-]{Set}
-        \item[-]{Mesh}
-        \item[-]{Tree}
-        \item[-]{\color{black!40}{Graph}}
-    \end{itemize}
-};
-\node[draw,minimum width=1.7cm,minimum height=.45cm] at (4.7,.95) (tree) {};% rectangle (5.5,1.2) node (tree) {};
-\draw (tree.north east) -- (8,4);
-\draw (tree.south east) -- (8,0);
-\draw (8,0) rectangle (16,4);
-\draw (8,3) rectangle (12,4) node[pos=.5] {\Large \textbf{FleCSPH}};
-\node [text width=3cm,anchor=north west] at (8.2,2.7) { 
-	\textbf{Runtime:} MPI 
-	\textbf{Tree:} 
-    \begin{itemize}[noitemsep,nolistsep]
-        \item[-]{Policy}
-        \item[-]{Partitioning}
-        \item[-]{Colorer}
-    \end{itemize}
-};
-\node [text width=4cm,anchor=north west] at (11.5,2.7) { 
-	\textbf{Physics:} 
-    \begin{itemize}[noitemsep,nolistsep]
-    	\item[-]{SodTube/Sedov}
-    	\item[-]{Fluids}
-        \item[-]{Astrophysics}
-    \end{itemize}
-    \textbf{Plus:} I/O
-};
-\end{tikzpicture}
+\input{\locpath/figures/tikz/part3/flecsi_flecsph}
 \caption{FleCSI and FleCSPH frameworks }
 \label{fig:flecsi_flecsph_framework}
 \end{figure}
 
-\begin{figure}
+\footnote{\url{http://github.com/laristra/flecsi}} is a framework initially created as a part of FleCSI. 
+FleCSPH intents to propose an SPH implementation and extends the topology provides in FleCSI, the tree topology. 
+We propose the MPI implementation to generate group of particles and the data distribution on the processes. 
+
+\begin{figure}[t!]
 \centering
-\begin{tikzpicture}
-\pgfmathsetseed{1}
-\def\nrand{100}
-
-% braces on top : local; distant
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(0.2,2.2) -- (7.8,2.2) node [midway,above,yshift=8pt] 
-{local particles};
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(8.2,2.2) -- (15.8,2.2) node [midway,above,yshift=8pt] 
-{distant particles};
-
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
- (3.8,-.2) -- (0.2,-.2) node [midway,below,yshift=-8pt] 
-{Exclusive};
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(7.8,-.2) -- (4.2,-.2) node [midway,below,yshift=-8pt] 
-{Shared};
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(10.9,-.2) -- (8.2,-.2) node [midway,below,yshift=-8pt] 
-{Ghost};
-
-% Vertical bars 
-\draw[thick] (4,0) -- (4,2) node (exclusive) {};
-\draw[thick] (8,0) -- (8,2) node (shared) {};
-\draw[thick] (11,0) -- (11,2) node (ghosts) {};
-
-\foreach \i in {1,2,...,\nrand}{
-	\pgfmathsetmacro{\x}{((rand)+1)*8}
-	\pgfmathsetmacro{\y}{((rand)+1)*1}
-	\ifthenelse{ \lengthtest{\x cm < 4 cm}}
-		{\draw[black!70,fill=red!90] (\x,\y) circle (2pt);}
-		{\ifthenelse { \lengthtest{\x cm < 8 cm}}
-			{\draw[black!70,fill=blue!90] (\x,\y) circle (2pt);}
-			{\ifthenelse { \lengthtest{ \x cm < 11 cm }}
-				{\draw[black!70,fill=black!30!green] (\x,\y) circle (2pt);}
-				{\draw[black!50,fill=black!10] (\x,\y) circle (2pt);} 
-			}
-		}
-}
-\end{tikzpicture}
-\caption{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
-\label{fig:coloring_particles}
+\input{\locpath/figures/tikz/part3/flecsph_file_system}
+\caption{FleCSPH structures and files}
+\label{fig:files_flecsph}
 \end{figure}
 
+Figure~\ref{fig:files_flecsph} present the file systems of the github repository. 
+We use the tools from Cinch\footnote{http://github.com/laristra/cinch} for the CMake and the makefile generation. 
+It also provide the GoogleTests API for our unit tests. 
 
-\begin{figure}
+
+\begin{figure}[t!]
 \centering
-\begin{tikzpicture}
-
-\node at (-6,4.5) (base) {position (X,Y)};
-\draw[->] ([xshift=15pt]base.east) -- ([xshift=2.5cm]base.east) node[yshift=2pt,midway,above] () {Normalization};
-
-\node[anchor=west] at (-1.55,5) {x = 5 };
-\node[anchor=west] at (-1.55,4) {y = 10 };
-\node[anchor=west] at (-2.25,3) {Morton key};
-
-\node[anchor=west] at (0,5) {$\Rightarrow$};
-\node[anchor=west] at (0,4) {$\Rightarrow$};
-\node[anchor=west] at (0,3) {$\Rightarrow$};
-
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,5) (x0) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,5) (x1) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,5) (x2) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,5) (x3) {1};
-
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,4) (y0) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,4) (y1) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,4) (y2) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,4) (y3) {0};
-
-% Result
-\node[draw,minimum width = .5cm, minimum height = .5cm,red] at (1,3) (root) {1};
-%\node[red] at ([yshift=-10pt]root.south) {root};
-
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (1.5,3) (k0) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (2,3) (k1) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (2.5,3) (k2) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (3,3) (k3) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (3.5,3) (k4) {0};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (4,3) (k5) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (4.5,3) (k6) {1};
-\node[draw,minimum width = .5cm, minimum height = .5cm] at (5,3) (k7) {0};
-
-\draw [thick,decorate,decoration={brace,amplitude=4pt}]
-(1.25,2.5) -- (.75,2.5)  node [red,midway,below,yshift=-9pt] 
-{root};
-
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(5,2.5) -- (1.5,2.5)  node [midway,below,yshift=-9pt] 
-{1 + 8 bits wide key};
-
-\draw [thick,decorate,decoration={brace,amplitude=10pt}]
-(2,5.5) -- (5,5.5)  node [midway,above,yshift=9pt] 
-{4 bits wide};
-
-% Arrows
-\draw[thick,->] (y3.south) -- (k7.north);
-\draw[thick,->] (y2.south) -- (k5.north);
-\draw[thick,->] (y1.south) -- (k3.north);
-\draw[thick,->] (y0.south) -- (k1.north);
-
-\draw[thick,->] (x3.west) -- ([xshift=-.25cm]x3.west) -- (k6.north);
-\draw[thick,->] (x2.west) -- ([xshift=-.25cm]x2.west) -- (k4.north);
-\draw[thick,->] (x1.west) -- ([xshift=-.25cm]x1.west) -- (k2.north);
-\draw[thick,->] (x0.west) -- ([xshift=-.25cm]x0.west) -- (k0.north);
-%\draw[thick,->] (y2.west) -- (k5.north);
-%\draw[thick,->] (y1.west) -- (k3.north);
-%\draw[thick,->] (y0.west) -- (k1.north);
-\end{tikzpicture}
+\input{\locpath/figures/tikz/part3/morton_hilbert_generation}
 \caption{Morton order key generation}
-\end{figure}
-
-\begin{figure}
-\begin{tikzpicture}
-\end{tikzpicture}
 \end{figure}
 
 \subsection{Domain decomposition}
@@ -320,7 +101,7 @@ The main advantage is to be fast to compute, the key is made by interlacing dire
 This work is based on the Peano curves and also called Hilber-Peano. 
 The construction is more complicated than Morton but allows a better distribution. 
 
-\begin{figure}
+\begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/morton_hilbert}
 \caption{Morton and Hilbert space filling curves}
@@ -360,7 +141,7 @@ It also allows the use of the tree data structure to compute gravitation using m
 We consider binary trees, for 1 dimension, quad-trees, for 2 dimensions, and oct-trees, for 3 dimensions. 
 The construction of those trees is directly based on the domain decomposition using keys and space-filling curve presented in section \ref{sec:domain_decomposition}. 
 
-\begin{figure}
+\begin{figure}[t!]
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/flecsph/quadtree}
 \caption{Quadtree, space and data representation}
@@ -396,111 +177,7 @@ In this way we will not need a full tree traversal for each particle but a full 
 
 \begin{figure}[ht!]
 \centering
-\resizebox {\columnwidth} {!} {
-\begin{tikzpicture}
-
-\def\da{2cm}
-\def\db{20mm}
-\def\dc{6mm}
-
-\node [fill=white] (root) {(1)}
-    child [line width=.5pt] { [sibling distance=\db] node [fill=white] (n10) {(10)}
-      child {node (n100) {(100)} [sibling distance=\dc]
-      	child { node[fill=red,circle,inner sep=1.5pt,draw] (n1000) {} }
-      	child { node[fill=blue,circle,inner sep=1.5pt,draw] (n1001) {} }
-      	child { node[fill=black!20!green,circle,inner sep=1.5pt,draw] (n1002) {} }
-      	child { node[fill=black,circle,inner sep=1.5pt,draw] (n1003) {} }
-      }
-      child {node (n101) {(101)} [sibling distance=\dc]
-      	child { node[fill=black!10,circle,inner sep=1.5pt,draw] (n1010) {} }
-      }
-      child {node (n102) {(102)} [sibling distance=\dc]
-      	child { node[fill=orange,circle,inner sep=1.5pt,draw] (n1020) {} }
-      	child { node[] (n1021) {$\times$} }
-      	child { node[] (n1022) {$\times$} }
-      }
-      child {node {(103)} [sibling distance=\dc]
-      }
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(11)}
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(12)}
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(13)}
-    }
-;
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1001.south west);
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1002.south west);
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1003.south west);
-\draw[red,->,thick] ([yshift=7pt]root.south west) -- ([yshift=5pt]n10.north east);
-\draw[red,->,thick] ([yshift=9pt]n10.south west) -- ([yshift=6pt]n100.north east);
-\draw[red,->,thick] ([xshift=6pt]n100.south west) -- ([yshift=2pt,xshift=-6pt]n1000.north east);
-
-\draw[blue,->,thick] ([yshift=12pt]root.south west) -- ([yshift=10pt]n10.north east);
-\draw[blue,->,thick] ([yshift=14pt]n10.south west) -- ([yshift=11pt]n100.north east);
-\draw[blue,->,thick] ([xshift=12pt]n100.south west) -- ([yshift=2pt,xshift=-5pt]n1001.north east);
-
-\draw[black!20!green,->,thick] ([yshift=17pt]root.south west) -- ([yshift=15pt]n10.north east);
-\draw[black!20!green,->,thick] ([yshift=19pt]n10.south west) -- ([yshift=16pt]n100.north east);
-\draw[black!20!green,->,thick] ([xshift=16pt]n100.south west) -- ([yshift=2pt,xshift=-5pt]n1002.north east);
-
-
-\draw[black,->,thick] ([yshift=22pt]root.south west) -- ([yshift=20pt]n10.north east);
-\draw[black,->,thick] ([yshift=24pt]n10.south west) -- ([yshift=21pt]n100.north east);
-\draw[black,->,thick] ([xshift=26pt]n100.south west) -- ([yshift=2pt,xshift=1pt]n1003.north east);
-
-\draw[red,thick] ([yshift=-3pt]n1000.south) |- ([yshift=-8pt]n1000.south) -- ([yshift=-8pt]n1002.south) -| ([yshift=-3pt]n1002.south);
-\draw[blue,thick] ([yshift=-11pt]n1000.south) |- ([yshift=-16pt]n1000.south) -- ([yshift=-16pt]n1003.south) -| ([yshift=-11pt]n1003.south);
-\draw[black!20!green,thick] ([yshift=-19pt]n1000.south) |- ([yshift=-24pt]n1000.south) -- ([yshift=-24pt]n1010.south) -| ([yshift=-19pt]n1010.south);
-\draw[black,thick] ([yshift=-27pt]n1001.south) |- ([yshift=-32pt]n1001.south) -- ([yshift=-32pt]n1020.south) -| ([yshift=-27pt]n1020.south);
-
-%\end{tikzpicture}
-%}
-%\resizebox {.45\columnwidth} {!} {
-%\begin{tikzpicture}
-
-\def\da{2cm}
-\def\db{20mm}
-\def\dc{6mm}
-
-\node [fill=white] at (9,0) (root) {(1)}
-    child [line width=.5pt] { [sibling distance=\db] node [fill=white] (n10) {(10)}
-      child {node (n100) {(100)} [sibling distance=\dc]
-      	child { node[fill=red,circle,inner sep=1.5pt,draw] (n1000) {} }
-      	child { node[fill=blue,circle,inner sep=1.5pt,draw] (n1001) {} }
-      	child { node[fill=black!20!green,circle,inner sep=1.5pt,draw] (n1002) {} }
-      	child { node[fill=black,circle,inner sep=1.5pt,draw] (n1003) {} }
-      }
-      child {node {(101)} [sibling distance=\dc]
-      	child { node[fill=black!10,circle,inner sep=1.5pt,draw] (n1010) {} }
-      }
-      child {node {(102)} [sibling distance=\dc]
-      	child { node[fill=orange,circle,inner sep=1.5pt,draw] (n1020) {} }
-      	child { node[] (n1021) {$\times$} }
-      	child { node[] (n1022) {$\times$} }
-      }
-      child {node {(103)} [sibling distance=\dc]
-      }
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(11)}
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(12)}
-    }
-    child [line width=.5pt,dashed] { node [fill=white] {(13)}
-    }
-;
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1001.south west);
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1002.south west);
-%\draw[dashed,<->,red] ([yshift=-4pt]n1000.south east) to [out=-30,in=210] ([yshift=-4pt]n1003.south west);
-\draw[red,->,thick] ([yshift=7pt]root.south west) -- ([yshift=5pt]n10.north east);
-\draw[red,->,thick] ([yshift=9pt]n10.south west) -- ([yshift=6pt]n100.north east);
-\draw[red] ([xshift=-16pt,yshift=-3pt]n100.north west) rectangle ([xshift=4pt,yshift=-4pt]n1003.south east);
-\node[red] at ([yshift=5pt]n100.north west) {$m \leq m_{crit}$};
-
-\draw[red,thick] ([yshift=-8pt]n1000.south) |- ([yshift=-13pt]n1000.south) -- ([yshift=-13pt]n1020.south) -| ([yshift=-8pt]n1020.south);
-
-\end{tikzpicture}
-}
+\input{\locpath/figures/tikz/part3/tree_traversal}
 \caption{Neighbors search using a tree traversal per particle vs a group of particle and computing an interaction list}
 \label{fig:arbre}
 \end{figure}
@@ -622,12 +299,19 @@ But some downside can be identified:
 This is why we also provide another load balancing based on the particles neighbors. 
 Depending on the user problem, the choice can be to distribute the particles on each processes regarding the number of neighbors, having the same amount of physical computation to perform on each processes. 
 
+\begin{figure}[ht!]
+\centering
+\input{\locpath/figures/tikz/part3/particles_repartition}
+\caption{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
+\label{fig:coloring_particles}
+\end{figure}
+
 After this first step, the branches are shared between the different processes, line \ref{alg_main:share_branches}. 
 Every of them send to its neighbors several boundaries boxes, defined by the user. 
 Then particles from the neighbors are computed, exchanged and added in the local tree. 
 Those particles are labeled as NON\_LOCAL particles. 
 At this point a particle can be referenced as: EXCLUSIVE: will never be exchanged and will only be used on this process; SHARED: may be needed by another process during the computation; GHOSTS: particles information that the process need to retrieve from another process. 
-An example is given for 2 processes on Fig.~\ref{fig:big_tree}.
+An example is given for 2 processes on figure~\ref{fig:coloring_particles} and on a tree data structure on figure~\ref{fig:big_tree}.
 
 \subsubsection{Exchange Shared and Ghosts particles}
 
@@ -646,6 +330,10 @@ HDF5 support MPI runtime with distributed read and write in a single or multiple
 We added the library H5hut to add normalization in the code to represent global data, steps, steps data and the particles data for each steps.
 The I/O code was developed internally at LANL and provides a simple way to write and read the data in H5Part format. 
 The usage of H5Hut to generate H5part data files allows us to directly read the output in Paraview without using a XDMF descriptor like requested in HDF5 format.
+
+\section{FleCSPH GPU implementation}
+For the purpose of this thesis we needed to compare the approaches of CPU and GPU on the FleCSPH application.
+This application have to be considered. 
 
 
 \section{Conclusion}

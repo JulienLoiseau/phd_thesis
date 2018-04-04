@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+	
+	% Others and their ellipse
+	\draw [black!90,fill=black!40] (.5,1.5) circle (.3em);
+	\draw [black!90,fill=black!40] (0,0) circle (.3em);
+	\draw [black!90,fill=black!40] (0,3.2) circle (.3em);
+	\draw[black!70] (0,3.2) ellipse (2 and .5);
+	\draw [black!90,fill=black!40] (3,.2) circle (.3em);
+	\draw[black!70] (3,.2) ellipse (2.5 and .7);
+	\draw [black!90,fill=black!40] (4,4) circle (.3em);
+	% Ellipses 
+	\draw[line width=.8pt,black!70] (2,2) ellipse (4 and 1);
+	% Axes
+	\draw[->,line width=1pt] (2,2) -- (7,2) node[anchor=north west] {$r$};
+	\draw[->,line width=1pt] (2,2) -- (2,6);
+	% bezier for kernel 
+	\draw[red,line width=1pt]  (6,2) .. controls (4,2.5) and (3.5,5) .. (2,5) node[red,anchor=east] {$W$};
+	% main particle, at the end to cover
+	\draw [black!90,fill=black!20!blue!60] (2,2) circle (.4em);
+	% Arrows 
+	\draw[->,line width=.8pt] (2,2) -- (.6,1.5) node[midway, above,xshift=-.5em] {$r\leq2h$};
+\end{tikzpicture}

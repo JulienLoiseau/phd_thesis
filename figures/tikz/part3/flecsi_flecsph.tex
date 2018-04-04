@@ -1,0 +1,45 @@
+\begin{tikzpicture}
+\draw (0,0) rectangle (6,4);
+\draw (0,3) rectangle (4,4) node[pos=.5] {\Large \textbf{FleCSI}};
+\node [text width=3cm,anchor=north west] at (0.2,2.7) { 
+	\textbf{Runtimes:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Legion}
+        \item[-]{MPI}
+        \item[-]{HPX}
+        \item[-]{\color{black!40}{Charm++}}
+    \end{itemize}
+};
+\node [text width=2.7cm,anchor=north west] at (3.2,2.7) { 
+	\textbf{Topologies:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Set}
+        \item[-]{Mesh}
+        \item[-]{Tree}
+        \item[-]{\color{black!40}{Graph}}
+    \end{itemize}
+};
+\node[draw,minimum width=1.7cm,minimum height=.45cm] at (4.7,.95) (tree) {};% rectangle (5.5,1.2) node (tree) {};
+\draw (tree.north east) -- (8,4);
+\draw (tree.south east) -- (8,0);
+\draw (8,0) rectangle (16,4);
+\draw (8,3) rectangle (12,4) node[pos=.5] {\Large \textbf{FleCSPH}};
+\node [text width=3cm,anchor=north west] at (8.2,2.7) { 
+	\textbf{Runtime:} MPI 
+	\textbf{Tree:} 
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[-]{Policy}
+        \item[-]{Partitioning}
+        \item[-]{Colorer}
+    \end{itemize}
+};
+\node [text width=4cm,anchor=north west] at (11.5,2.7) { 
+	\textbf{Physics:} 
+    \begin{itemize}[noitemsep,nolistsep]
+    	\item[-]{SodTube/Sedov}
+    	\item[-]{Fluids}
+        \item[-]{Astrophysics}
+    \end{itemize}
+    \textbf{Plus:} I/O
+};
+\end{tikzpicture}

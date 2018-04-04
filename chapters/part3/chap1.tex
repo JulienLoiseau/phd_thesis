@@ -24,30 +24,9 @@ The development of new reliable, parallel and distributed tools for this method 
 
 \subsection{General description}
 %
-\begin{figure}[h!]
+\begin{figure}
 \centering
-\begin{tikzpicture}
-	
-	% Others and their ellipse
-	\draw [black!90,fill=black!40] (.5,1.5) circle (.3em);
-	\draw [black!90,fill=black!40] (0,0) circle (.3em);
-	\draw [black!90,fill=black!40] (0,3.2) circle (.3em);
-	\draw[black!70] (0,3.2) ellipse (2 and .5);
-	\draw [black!90,fill=black!40] (3,.2) circle (.3em);
-	\draw[black!70] (3,.2) ellipse (2.5 and .7);
-	\draw [black!90,fill=black!40] (4,4) circle (.3em);
-	% Ellipses 
-	\draw[line width=.8pt,black!70] (2,2) ellipse (4 and 1);
-	% Axes
-	\draw[->,line width=1pt] (2,2) -- (7,2) node[anchor=north west] {$r$};
-	\draw[->,line width=1pt] (2,2) -- (2,6);
-	% bezier for kernel 
-	\draw[red,line width=1pt]  (6,2) .. controls (4,2.5) and (3.5,5) .. (2,5) node[red,anchor=east] {$W$};
-	% main particle, at the end to cover
-	\draw [black!90,fill=black!20!blue!60] (2,2) circle (.4em);
-	% Arrows 
-	\draw[->,line width=.8pt] (2,2) -- (.6,1.5) node[midway, above,xshift=-.5em] {$r\leq2h$};
-\end{tikzpicture}
+\input{\locpath/figures/tikz/part3/general_sph}
 %\includegraphics[scale=.4]{\locpath/figures/flecsph/sph.pdf}
 \caption{SPH kernel $W$ and smoothing length $h$ representation}
 \label{fig:sph_base}
@@ -221,17 +200,52 @@ This computation involve an $O(N^2)$ complexity and thus is not applicable direc
 We applied the method called Fast Multipole Method, FMM and discussed in \cite{beatson1997short}.
 This method is perfectly adapted to our tree representation of the domain and particles. 
 
-This method aim to compute the gravitation up to an approximation determined by the user. 
-
-
-\begin{figure}
+\begin{figure}[ht!]
 \input{\locpath/figures/tikz/part3/gravitation}
 \caption{Fast Multipole Method schematics. Particles to Multipole (P2M), Multipole to Multipole (M2M), Multipole to Particles (M2P), Multipole to Local (M2L), Local to Local (L2L) and Particles to Particles (P2P). Schematic inspired from \cite{yokota2011treecode}}
+\label{fig:gravitation_fmm}
 \end{figure}
 
-This method is based on Taylor series.
+This method aim to compute the gravitation up to an approximation determined by the user. 
+Details are given in figure~\ref{fig:gravitation_fmm}, from left bottom to right bottom for a group of particles.
+We identify three main actors in this method: \\
+
+\begin{description}[noitemsep,nolistsep]
+\item[Particles: ] the bodies on which we need to compute the gravitation regarding the other particles. 
+In figure~\ref{fig:gravitation_fmm} we separate the green particles, on which we are computing the gravitation, from the other, blue, particles. 
+\item[Multipoles: ] the center of mass for a group of particles.
+In our example they regroup the mass and barycenter of the sub-particles. 
+There are several level of multipoles, particles' multipole and multipoles' multipole.
+\item[Locals: ] the center of mass for the reduction on the particles concerned in this walk. 
+They have the same behavior as the multipoles but the information goes down to particles instead of up.\\ 
+\end{description}
+
+In order to compute the gravitation for a group of particles in the domain we steps are: \\
+
+\begin{description}[noitemsep,nolistsep]
+	\item[Particles to Particles (P2P): ] For the particles that are close, use the direct $O(N^2)$ algorithm.  
+	This is the part that grow if the user desires more accurate results. 
+	\item[Particles to Multipoles (P2M): ] Gather the data of all the sub-particles to the centers of mass, the multipoles.
+	This is the first layer of the tree, the leaves. 
+	\item[Multipoles to Multipole (M2M): ] Gather the data of multipoles on higher level of the tree from the leaves to the root. 
+	\item[Multipoles to Local (M2L): ] Compute the gravitation part of all the distant multipole to the local. 
+	\item[Local to Local (L2L): ] Go down in the tree and spread the component to sub-locals.
+	\item[Local to Particles (L2P): ] When a leaf of the tree is reached, compute the application of the local for all sub-particles. 
+	\item[Summation: ] At the end of the computation for both P2P and L2P the two interactions can be summed up to compute the gravitation applied to the particles. \\
+\end{description}
+
+This scheme have to be repeat for every group of particles. 
+The P2M-M2M steps are done just once before the FMM method for all the groups of particles.
+For the choice between either P2P or M2L we use a criterion call MAC, Multipole Acceptance Criterion. 	
+In this study we used an angle between the local center of mass and the edge of distant multipole. 
+If the angle fits the criterion we use the current multipole, otherwise we go lower in the tree to consider smaller multipole.
+If the criterion never match, we are too close and consider P2P.\\
+
+For the P2P step, the classical gravitation computation is used, like presented in equation~\ref{eq:gravitation}.
+But for the interaction with distant multipoles, we use a Taylor series.\\
 The gravitation function of equation~\ref{eq:gravitation} can be approximate on a particle at position $\vec{r}$ by the gravitation computed at the centroid at position $\vec{r_c}$: 
 \begin{equation}
+\label{eq:taylor_series}
  \vec{f}(\vec{r}) = \vec{f}(\vec{r_c}) + ||\frac{\partial\vec{f}}{\partial\vec{r}}||\cdot (\vec{r} - \vec{r_c}) + \frac{1}{2} (\vec{r}-\vec{r_c})^\intercal \cdot   ||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}|| \cdot (\vec{r} - \vec{r_c})
  \end{equation}
 
@@ -244,12 +258,13 @@ The gravitation function of equation~\ref{eq:gravitation} can be approximate on 
 -\frac{3(x_c-x_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2}  & 1 - \frac{3(y_c-y_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2} &  -\frac{3(z_c-z_p)(y_c-y_p)}{|\vec{r_c}-\vec{r_p}|^2}\\
 - \frac{3(x_c-x_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2}   &  -\frac{3(y_c-y_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2} &  1- \frac{3(z_c-z_p)(z_c-z_p)}{|\vec{r_c}-\vec{r_p}|^2} \\
 \end{bmatrix}
- \end{equation}
+\end{equation}
 
 And we propose a compact version of the matrix with: 
  
 \begin{equation}
  ||\frac{\partial f^a}{\partial r^b}|| = -\sum_c \frac{m_c}{|\vec{r}-\vec{r_c}|^3} \Big[ \delta_{ab} - \frac{3.(r^a-r_c^a)(r^b-r_c^b)}{|\vec{r}-\vec{r_c}|^2} \Big] 
+ \label{eq:jacobi}
 \end{equation}
 
 With $\delta_{ab}$ the Kronecker delta:
@@ -269,20 +284,23 @@ For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we gi
 ||\frac{\partial^2 f^a}{\partial r^b \partial r^c}|| = - \sum_c \frac{3 m_c}{|\vec{r}-\vec{r_c}|^5} \Big[ & \frac{5(r^a-r_c^a)(r^b-r_c^b)(r^c-r_c^c)}{|\vec{r}-\vec{r_c}|^2} - \\ 
 		 & \left( \delta_{ab} (r^c-r_c^c)+\delta_{bc} (r^a-r_c^a)+\delta_{ac} (r^b-r_c^b) \right) \Big] 
 \end{aligned}
+\label{eq:hessian}
 \end{equation} 
 
- \begin{figure}
- \end{figure}
+The equations~\ref{eq:jacobi} and \ref{eq:hessian} are use during the M2L step. 
+Then to go down in the tree and apply the gravitation to locals and then particles in L2L and L2P, the values are use with equation~\ref{eq:taylor_series}.\\
 
-The method is summed up in figure with the different equations.
-We consider Centers Of Mass, COM, to be the centroid of particles based on their position. 
-In several steps the information is first transmitted to the COMs, computing their position and mass. 
-
+This methods impose a lot of communications and exchanges between the processes. 
+In our distributed version the particles are separate for each processes. 
+Indeed, as each of them will hold part of the particles, the multipole in M2L computation imposes to share data. 
+The P2P computation will face issues on the edge of each sub-domain. 
+The irregular behavior is also present for the choice of the multipole to consider during the M2L step.
 
 \section{Applications of SPH} 
 \label{sec:applications}
-The previous equations are generic and describe the behavior of SPH method. 
-In order to check our 
+The generic SPH method and the gravitation computation, either simple or with FMM, allow us to run standard example to check the physical accuracy of our code. 
+We choose a 4 mains examples in this purpose, the Sod shock tube, the Sedov blast wave, fluid flow simulation and astrophysical examples like binary neutron stars coalescence.
+We present those problems in this section and their characteristics regarding the computer science difficulties involved. 
 
 \subsection{Sod shock tube}
 The Sod shock tube is the test consisting of a one-dimensional Riemann problem with the following initial parameters~\cite{sod1978}.
@@ -306,7 +324,8 @@ where $\Gamma$ is the adiabatic index of the gas, we set $\Gamma = 5/3$.
 \end{figure}
 
 This test is used to check the physical accuracy of the code and thus the tree search itself.
-A simulation of our Sod shock experimentation is presented on Fig.~\ref{fig:sodtube} and shows physically correct results. 
+A simulation of our Sod shock experimentation is presented on figure~\ref{fig:sodtube} and shows physically correct results.
+The first difficulty of this problem is the tree repartition, the physics behind is not complicated and does not involve specific optimizations. 
 
 \subsection{Sedov blast wave}
 A blast wave is the pressure and flow resulting from the deposition of a large amount of energy in a small very localized volume. 
@@ -320,7 +339,8 @@ Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gam
 \label{fig:sedov}
 \end{figure}
 
-An example of our Sedov Blast wave experimentation is presented on Fig.~\ref{fig:sedov} and shows physically correct results.
+An example of our Sedov Blast wave experimentation is presented on figure~\ref{fig:sedov} and shows physically correct results.
+This problem have the same conclusion as the Sod shock tube, his purpose is the test the tree behavior with 2 dimensions. 
 
 \subsection{Fluid flow}
 After performing the tests regarding the physics reliability, we worked on fluid flow problem in 2D and 3D to reach high number of particles. 
@@ -333,78 +353,46 @@ with $\gamma = 7$ and $B = c_0\rho_0/\gamma$ being $\rho_0 = 1000 \, kg.m^{-3}$ 
 
 \begin{figure}[t!]
 \centering
-\begin{tikzpicture}[thick]
-% Mathematical reflection
-\draw (0.3,.8) circle (.25cm) node[pos=.5] (p0) {};
-\draw (1,.6) circle (.25cm) node[pos=.5] (p1) {};
-\draw (2.3,1) circle (.25cm) node[pos=.5] (p2) {};
-\draw (0,0) -- (3,0);
-\foreach \i in {1,...,6}{
-	\draw[black!20] (.5*\i-.5,-1) -- (.5*\i,0);
-}
-% Forces
-\foreach \i in {1,...,7}{
-	\draw[->] (.375*\i,0) -- (.375*\i,.3);
-}
-\node at (1.5,-2) {Repulsive force};
-
-% Mirror 
-\draw (4.3,.8) circle (.25cm) node[pos=.5] (p0) {};
-\draw (5,.6) circle (.25cm) node[pos=.5] (p1) {};
-\draw (6.3,1) circle (.25cm) node[pos=.5] (p2) {};
-\draw[black!50] (4.3,-.8) circle (.25cm) node[pos=.5] (mii1) {};
-\draw[black!50] (5,-.6) circle (.25cm) node[pos=.5] (mii2) {};
-\draw[black!50] (6.3,-1) circle (.25cm) node[pos=.5] (mii3) {};
-\draw[black!20,dotted] (4,0) -- (7,0);
-\foreach \i in {1,...,6}{
-	\draw[black!20] (.5*\i-.5+4,-1) -- (.5*\i+4,0);
-}
-\node at (5.5,-2) {Mirror particles};
-
-% Dummies
-\draw[black!50,fill=black!10] (8.25,0) circle (.25cm) node[pos=.5] (d0) {};
-\draw[black!50,fill=black!10] (9.08,0) circle (.25cm) node[pos=.5] (d1) {};
-\draw[black!50,fill=black!10] (9.91,0) circle (.25cm) node[pos=.5] (d2) {};
-\draw[black!50,fill=black!10] (10.75,0) circle (.25cm) node[pos=.5] (d3) {};
-% second layer
-\draw[black!50,fill=black!10] (8.66,-.5) circle (.25cm) node[pos=.5] (d4) {};
-\draw[black!50,fill=black!10] (9.50,-.5) circle (.25cm) node[pos=.5] (d5) {};
-\draw[black!50,fill=black!10] (10.33,-.5) circle (.25cm) node[pos=.5] (d6) {};
-%\draw (1,-.25) circle (.25cm) node[pos=.5] (d4) {};
-%normal parts
-\draw (8.3,.8) circle (.25cm) node[pos=.5] (p0) {};
-\draw (9,.6) circle (.25cm) node[pos=.5] (p1) {};
-\draw (10.3,1) circle (.25cm) node[pos=.5] (p2) {};
-\draw[dotted,black!20] (8,0) -- (11,0);
-\foreach \i in {1,...,6}{
-	\draw[black!20] (.5*\i-.5+8,-1) -- (.5*\i+8,0);
-}
-\node at (9.5,-2) {Dummy particles};
-\end{tikzpicture}
+\input{\locpath/figures/tikz/part3/boundaries}
 \caption{Different boundaries condition methods}
 \label{fig:SPH:boundaries}
 \end{figure}
 
+\subsubsection{Boundary conditions}
 For this experiment, realistic boundaries conditions were needed. 
-Several methods are possible with SPH we focused on the main ones, the repulsive wall, the mirror particles \cite{libersky1991smooth} and the dummies particles implementation \cite{adami2012generalized}. 
+Several methods are possible with SPH and we focused on the main ones: the repulsive wall, the mirror particles \cite{libersky1991smooth} and the dummies particles implementation \cite{adami2012generalized}. 
 Those boundaries conditions implementation are presented in figure~\ref{fig:SPH:boundaries}.
 
-For the current implementation, we used the dummies particles method.
+On our first implementation we used repulsive forces, but they imposed a lot of computation during the integration step and does not handle all the shape of boundaries easily. 
+
+For the current implementation we used the dummies particles method.
+This method is accurate and allows us to consider all the shape of boundaries.
 The wall particles are just considered as normal particles, with specific equations, and their quantities are evolved during the run. 
 The main difference is that their position does not evolve at the end of the step.
-They are identified in the code with a specific type, provided during the data generation. 
+They are identified in the code with a specific type, provided during the data generation.\\ 
+
+In this fluid flow example we were able to go up to a high number of particles with 2 or 3 dimensions. 
+The handling of boundaries conditions added a pressure on the irregularity behavior. 
 
 \subsection{Astrophysics: neutron stars coalescence}
 
 The final aim of our tests is to simulate astrophysical events. 
 We are interested in one of the most important event recently discovered. 
 Last year the Laser Interferometer Gravitational Wave, LIGO, detected the first gravitational wave generated by binary neutron stars merging \cite{abbott2017gw170817} and also more complexes event with Binary Black Holes coalescence in \cite{abbott2017gw170814}.
-
+We decided to conduct tests on Binary Neutron Star, BNS, coalescence. 
+This problem represent all the aspect needed in our benchmark with the SPH method but also the self-gravitation and gravitation computation. 
+In order to perform realistic simulations we consider two stars that are stable. 
+We give details on the way to generate those data and the physics of the fusion itself. 
+A lot of work have been involve in this understanding since it is quite out of the field of the primary researches. 
 
 \subsubsection{Solving Lane-Emden Equation}
 
-We need to determine the density function based on the radius. 
+In order to consider BNS we first consider two individual stars. 
+The star is characterized by its radius and mass but also the density repartition inside.
+Indeed, we have to determine the density function based on the radius. 
+For this purpose we used the so called Land-Emden equation.\\
 
+\todo{REFERENCE}
 As we consider the star as a polytropic fluid, we use the equation of Lane-Emden which is a form of the Poisson equation: 
 
 \begin{equation}\label{eq_LaneEmden}
@@ -421,41 +409,47 @@ For $n=1$ the solution of equation \ref{eq_LaneEmden} is:
 \theta(\xi)=\frac{sin(\xi)}{\xi}
 \end{equation}
 
-We note $\xi_1 = \pi$, the first value of $\xi$ as $\theta(\xi) = 0$.
+We note $\xi_1 = \pi$, the first value of $\xi$ with $\theta(\xi) = 0$.
 $\theta(\xi)$ is also defined as: 
 \begin{equation}
  \theta(\xi) = \Big(\frac{\rho(\xi)}{\rho_c}\Big)^{\frac{1}{n}}  = \frac{\rho(\xi)}{\rho_c}
 \end{equation}
 
 With $\rho_c$ the internal density of the star and $\rho$ the density at a determined radius. $\xi$ is defined as:  
-$$ \xi = Ar = \sqrt{\frac{4\pi G}{K(n+1)}\rho_c^{(n-1)/n}} \times r = \sqrt{\frac{2\pi G}{K}}\times r \mbox{ (for } n=1 \mbox{)}$$
+$$ \xi = \sqrt{\frac{4\pi G}{K(n+1)}\rho_c^{(n-1)/n}} \times r = \sqrt{\frac{2\pi G}{K}}\times r = Ar\mbox{ (for } n=1 \mbox{ and } A=\sqrt{\frac{2\pi G}{K}} \mbox{)}$$
 
-With $K$ a proportionality constant.
+With $K$ a proportionality constant, $r$ the radius and $G$ the gravitational constant.
 
-From the previous equations we can write the stellar radius $R$ as:
+From the previous equations we can write the stellar radius $R$, the total radius of the star, as:
 \begin{equation}
-R = \sqrt{\frac{K(n+1)}{4\pi G}}\rho_c^{(1-n)/2}\xi_1 = \sqrt{ \frac{K}{2\pi G} } \times \xi_1
+R = \sqrt{\frac{K(n+1)}{4\pi G}}\rho_c^{(1-n)/2}\xi_1 = \sqrt{ \frac{K}{2\pi G} } \times \xi_1 \mbox{ (for } n=1 \mbox{)}
 \end{equation} 
 
-(We note that for $n=1$ the radius does not depend of the central density.)
+We note that for $n=1$ the radius does not depend of the central density.
 
-If, for example, we use dimensionless units as $G=R=M=1$ (for the other results we use CGS with $G = 6.674 \times 10^{-8} cm^3g^{-1}s^{-2}$) 
+Here as an example we use dimensionless units as $G=R=M=1$ (for the other results we use CGS with $G = 6.674 \times 10^{-8} cm^3g^{-1}s^{-2}$) 
 We can compute K as: 
 \begin{equation}
 \label{eq:constant}
 K = \frac{R^2  2 \pi G}{\xi_1^2}
 \end{equation}
-
-\begin{center}
-\begin{tabular}{c|c|c|c|c|}
- & $NS_1$ & $NS_2$ & $NS_3$ & $NS_4$ \\ 
+%
+\begin{table}[t!]
+\centering
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+ & $\mbox{NS}_1$ & $\mbox{NS}_2$ & $\mbox{NS}_3$ & $\mbox{NS}_4$ \\ 
 \hline 
 Radius (cm) & $R=G=M=1$ & 1500000 & 1400000 & 960000 \\ 
 \hline 
 K & 0.636619 & 95598.00 & 83576.48 & 39156.94\\ 
 \hline 
 \end{tabular}
-\end{center} 
+\caption{Examples of the proportionality constant $K$ regarding the star stellar radius $R$}
+\label{tab:example_radius_k}
+\end{table} 
+Figure~\ref{tab:example_radius_k} give example of radius and the proportionality constant $K$.
+
 
 Then we deduce the density function of $r$ as :
 
@@ -468,10 +462,68 @@ $$ \rho_c = \frac{M A^3}{4 \pi (sin(AR)-ARcos(AR)) } $$
 
 Then we normalize the results to fit $R = M = G = 1$: $K' = K/(R^2G) $, $m_i' = m_i/M $, $h_i' = h_i / R$, $\vec{x_i}' = \vec{x_i}/R$ 
 
+\subsubsection{Generating BNS data}
+\label{sec:equi}
+
+The initial data are based on a cubic lattice within a sphere of radius $R$.
+The density function, based on radius, $\rho(\vec{r})$ is known using the result of the Lane-Emden equation ( we use polytropic index $n = 1$ here). 
+The mass associate to each particle $i$ of the total $N$ particles: 
+
+$$ m_i = \frac{\rho(\vec{r_i})}{n_r} \mbox{ with } n_r = \frac{3N}{4 \pi R^3}$$ 
+
+The smoothing length is define constant and the same for all particles for all the simulation:
+
+$$ h = \frac{1}{2}\sqrt{\frac{3N_N}{4\pi n}} $$ 
+
+Here we choose $N_N$, the average number of neighbors, to be 100.
+
+\paragraph{Roche lobe problem: }
+To create Hydrostatic Equilibrium Models we use a different equation of motion. This version use Roche Lobe:
+
+\begin{equation}
+\frac{d\vec{v_i}}{dt} = \frac{\vec{F}_i^{Grav}}{m_i} + \frac{\vec{F}_i^{Hydro}}{m_i} + \vec{F}_i^{Roche} - \frac{\vec{v_i}}{t_{relax}}
+\end{equation}
+
+ 
+With $t_{relax} \leq t_{osc} \sim (G\rho)^{-1/2}$ and 
+where $\vec{F}_i^{Roche}$ is:
+
+$$\vec{F}_i^{Roche} = \mu (3+q) x_i \hat{\vec{x}} + \mu q y_i \hat{\vec{y}}-\mu z_i \hat{\vec{z}}$$ 
+
+With $\mu$ to be determined (for us $\mu = 0.069$) and $q = \frac{M'}{M}=1$ as the two polytropes have the same total mass.
+This is apply to each star to get the equilibrium and the simulate the tidal effect. 
+
+\paragraph{Darwin problem: }
+This is the way we use to generate the final simulation. 
+The equation of motion for the relaxation is now: 
+\begin{equation}
+\label{eq:darwin}
+\frac{d\vec{v_i}}{dt} = \frac{\vec{F}_i^{Grav}}{m_i} +\frac{\vec{F}_i^{Hydro}}{m_i} + \vec{F}_i^{Rot} - \frac{\vec{v_i}}{t_{relax}}
+\end{equation}
+
+With $t_{relax}$ same as before and $\vec{F}_{Rot}$ defined by:
+
+\begin{equation}
+\vec{F}_{Rot} = \Omega^2(x_i \vec{\hat{x}}+y_i\vec{\hat{y}})
+\end{equation}
+
+With $\Omega = \sqrt{\frac{G(M+M')}{a^3}}$, $L_z = Q_{zz}\Omega$ and $Q_{zz} = \sum_i(x_i^2+y_i^2)$. At $t=0$ we compute the total angular moment $L_z$ which stay constant.
+Using it during the relaxation we can compute $\Omega$ as: $\Omega = \frac{L_z}{Q_{zz}}$ just by recomputing $Q_{zz}$.
+Here the scheme is in $N^2$ but just for the relaxation step. 
+
+For this relaxation we use two stars generated as before, applying equation of motion \ref{eq:darwin}.
+Using $a$ as the distance between the two polytropes  (Here $a=2.9$ for $R=1$) and $\vec{\hat{x}}$ going for the center of the first to the second star, and $\vec{\hat{z}}$ is like the rotation vector.\\
+
+After the generation we are able to perform BNS coalescence. 
+This provides us a code using SPH, self-gravity and gravitation. 
+
 \section{Conclusion}
 As the SPH method is used in a large panel of fields from astrophysics to fluid mechanic, there are numerous related works. 
 We can cite a code developed in the LANL, 2HOT \cite{warren20132hot} that introduced the Hashed Oct Tree structure used in our implementation. 
 There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014gizmo} and the most recent publication is GASOLINE \cite{wadsley2017gasoline2} based on PKDGRAV, a specific tree+gravity implementation. 
 Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems  \cite{harada2007smoothed,crespo2011gpus}.
 We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
+
+We chose application to test the tree architecture itself up to a high number of particles using the fluid flow. 
+\todo{Plus sur les problemes informatiques}
 
