@@ -45,7 +45,7 @@
 	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}
 	\node[draw,anchor=west,minimum height=.7cm] at (2,\y) (docker) {docker};
 	\draw (flecsph.south) |- (docker.west) -| (docker.west); 
-	\node[anchor=west] at (6,\y) (text) {Dockerfiles for Travis+CodeCod+Sonarqube};
+	\node[anchor=west] at (6,\y) (text) {Dockerfiles for Travis+CodeCov+Sonarqube};
 	\draw ([xshift=4pt]docker.east) -- ([xshift=-5pt]text); 
 
 	\pgfmathparse{\y-\dist}\edef\y{\pgfmathresult}

@@ -1,0 +1,39 @@
+\begin{tikzpicture}
+
+\node (rect) at (0,0) [draw,minimum width=2cm,minimum height=1cm] (input) {Input Device};
+
+\node[right = 1.5cm of input] (rect) [draw,minimum width=9cm,minimum height=5.1cm] (machine) {};
+
+\node[fill=black!30] (rect) at ([yshift=-3.6cm]machine.north) [draw,minimum width=8.3cm,minimum height=.5cm] (l3) {Shared L3 Cache};
+
+\foreach \x in {0,...,3}{
+	\node[anchor=north west,fill=black!5] (rect) at ([yshift=-.2cm,xshift=\x*2.2cm+.2cm]machine.north west) [draw,minimum width=2cm,minimum height=1.9cm] (cpu\x) {};
+
+	\node[anchor=north west,fill=white] (rect) at ([yshift=-.1cm,xshift=.1cm]cpu\x.north west) [draw,minimum width=1.8cm,minimum height=.5cm] {ALU};
+	\node[anchor=north west,fill=white] (rect) at ([yshift=-.7cm,xshift=.1cm]cpu\x.north west) [draw,minimum width=1.8cm,minimum height=.5cm] {CU};
+	\node[anchor=north west,fill=white] (rect) at ([yshift=-1.3cm,xshift=.1cm]cpu\x.north west) [draw,minimum width=1.8cm,minimum height=.5cm] {REG};
+	% Cache memory
+	\node[anchor=north west,fill=black!20] (rect) at ([yshift=-.3cm,xshift=.1cm]cpu\x.south west) [draw,minimum width=1.8cm,minimum height=.5cm] (l1\x) {L1/L2};
+	% Arriw 
+	\draw[->] ([xshift=-10pt]l1\x.north) -- ([xshift=-10pt]cpu\x.south);
+	\draw[<-] ([xshift=10pt]l1\x.north) -- ([xshift=10pt]cpu\x.south);
+	% Arrow to L3
+	\draw[->] ([xshift=-10pt]l1\x.south) -- ([xshift=-10pt,yshift=-8pt]l1\x.south);
+	\draw[<-] ([xshift=10pt]l1\x.south) -- ([xshift=10pt,yshift=-8pt]l1\x.south);
+
+	%\draw[<-] ([xshift=10pt]l1\x.south) |- (l3.north);
+	
+}
+
+
+\node[below = .3cm of l3] (rect) [draw,minimum width=8.3cm,minimum height=.7cm] (mem) {Main Memory};
+
+\node[right = 1.5cm of machine] (rect) [draw,minimum width=2cm,minimum height=1cm] (output) {Output Device};
+
+\draw[->] ([xshift=-10pt]mem.north) -- ([xshift=-10pt]l3.south);
+\draw[<-] ([xshift=10pt]mem.north) -- ([xshift=10pt]l3.south);
+
+\draw[->] (input.east) -- (machine.west);
+\draw[->] (machine.east) -- (output.west);
+
+\end{tikzpicture}

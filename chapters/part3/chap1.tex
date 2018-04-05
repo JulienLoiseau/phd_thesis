@@ -7,7 +7,7 @@
 
 \section{Introduction}
 In this section we give details on our choices for the generic application confronted to both computation and communication walls in irregular context. 
-This problem, the Smoothed Particle Hydrodynamics method implementation, is described on a physics aspect.
+The problem we choose, the Smoothed Particle Hydrodynamics method implementation, is described on a physical aspect.
 We point out the difficulties involved in the resolution on supercomputers and more especially accelerators.  
 A lot of work have been done on the comprehension of the physical aspect to produce a code that meet the behavior of real physics problems.
 
@@ -23,6 +23,7 @@ The method was extended for general fluid simulation and many more fields from b
 The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming Exascale systems.
 
 \subsection{General description}
+\label{sec:intro_sph}
 %
 \begin{figure}
 \centering
@@ -31,8 +32,9 @@ The development of new reliable, parallel and distributed tools for this method 
 \caption{SPH kernel $W$ and smoothing length $h$ representation}
 \label{fig:sph_base}
 \end{figure}
-
-The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of physical quantities for every particle regarding its neighbors in the radius of its smoothing length $h$. 
+%
+The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of a group of particles representing physical quantities.
+Those physical quantities are either fixed or computed for every particle regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel\index{Smoothing Kernel}. 
 The fundamental SPH formulation for any physical quantity $A$ is then to compute with all the neighbors of $b$ of a $a$ particle by:
 \begin{equation}
@@ -132,7 +134,7 @@ This is, in our example, for the cubic spline kernel:
  \vec{\nabla}_iW(\vec{r_{ij}},h) = \frac{\sigma}{h^{D+1}} \times \begin{cases} ( -\frac{3}{h} + \frac{9}{4h}q) \vec{r_{ij}}, & \mbox{si } 0 \leq \frac{r}{h} < 1 \\ (\frac{-3}{r} + \frac{3}{h} - \frac{3}{4h}q ) \vec{r_{ij}}, & \mbox{si } 1 \leq \frac{r}{h} < 2\\ 0, & \mbox{si } \frac{r}{h} \geq 2 \end{cases}
 \end{equation}
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 \centering
 \begin{tikzpicture}
 	\draw[->] (-7,0) -- (7,0) node[right] {$r$};
@@ -158,7 +160,7 @@ This is, in our example, for the cubic spline kernel:
 \end{figure}
 
 Figure~\ref{fig:cubic_spline_function} is a representation of the cubic spline kernel with $\sigma = 1$ and $h = 1$. 
-The abscissa axis represent $r$, distance between the particles and ordinate the value of the smoothing kernel.
+The abscissa axis represent $r$, distance between the particles and the ordinate the value of the smoothing kernel.
 When the support of the function, $2$ is reached the particles are ignored $W=0$, represented in red on the figure. 
 
 To sum up, the SPH resolution scheme and its routines are presented on algorithm \ref{alg:sph}.
@@ -189,7 +191,7 @@ For classical problems like fluid flow the gravitation can directly be applied o
 \end{equation}
 
 In order to consider astrophysics problems we need to introduce self-gravitation and gravitation. 
-Each particle imply an action on the others base on its distance and mass. 
+Each particle imply an action on the others based on its distance and mass. 
 The equation of gravitation for a particle $i$ with $j$ other particles is: 
 \begin{equation}
 	\vec{f_a}_i = \sum_j -G \frac{m_i m_j}{|\vec{r_i}-\vec{r_j}|^3} \vec{r_{ij}}
@@ -215,12 +217,12 @@ We identify three main actors in this method: \\
 In figure~\ref{fig:gravitation_fmm} we separate the green particles, on which we are computing the gravitation, from the other, blue, particles. 
 \item[Multipoles: ] the center of mass for a group of particles.
 In our example they regroup the mass and barycenter of the sub-particles. 
-There are several level of multipoles, particles' multipole and multipoles' multipole.
+There are several level of multipoles: particles' multipole and multipoles' multipole.
 \item[Locals: ] the center of mass for the reduction on the particles concerned in this walk. 
 They have the same behavior as the multipoles but the information goes down to particles instead of up.\\ 
 \end{description}
 
-In order to compute the gravitation for a group of particles in the domain we steps are: \\
+In order to compute the gravitation for a group of particles in the domain the steps are: \\
 
 \begin{description}[noitemsep,nolistsep]
 	\item[Particles to Particles (P2P): ] For the particles that are close, use the direct $O(N^2)$ algorithm.  
@@ -249,7 +251,7 @@ The gravitation function of equation~\ref{eq:gravitation} can be approximate on 
  \vec{f}(\vec{r}) = \vec{f}(\vec{r_c}) + ||\frac{\partial\vec{f}}{\partial\vec{r}}||\cdot (\vec{r} - \vec{r_c}) + \frac{1}{2} (\vec{r}-\vec{r_c})^\intercal \cdot   ||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}|| \cdot (\vec{r} - \vec{r_c})
  \end{equation}
 
- From equation~\ref{eq:gravitation} we compute the term $||\frac{\partial\vec{f}}{\partial\vec{r}}||$:s
+ From equation~\ref{eq:gravitation} we compute the term $||\frac{\partial\vec{f}}{\partial\vec{r}}||$:
  \begin{equation}
 \frac{\partial\vec{f}}{\partial\vec{r}} =
 - \sum_p \frac{m_p}{|\vec{r_c}-\vec{r_p}|^3}
@@ -288,18 +290,18 @@ For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we gi
 \end{equation} 
 
 The equations~\ref{eq:jacobi} and \ref{eq:hessian} are use during the M2L step. 
-Then to go down in the tree and apply the gravitation to locals and then particles in L2L and L2P, the values are use with equation~\ref{eq:taylor_series}.\\
+Then to go down in the tree and apply the gravitation to locals and then particles in L2L and L2P we use equation~\ref{eq:taylor_series}.\\
 
 This methods impose a lot of communications and exchanges between the processes. 
 In our distributed version the particles are separate for each processes. 
 Indeed, as each of them will hold part of the particles, the multipole in M2L computation imposes to share data. 
 The P2P computation will face issues on the edge of each sub-domain. 
-The irregular behavior is also present for the choice of the multipole to consider during the M2L step.
+The irregular behavior is also present for the choice of the multipole to consider during the M2L step based on the MAC criterion.
 
 \section{Applications of SPH} 
 \label{sec:applications}
 The generic SPH method and the gravitation computation, either simple or with FMM, allow us to run standard example to check the physical accuracy of our code. 
-We choose a 4 mains examples in this purpose, the Sod shock tube, the Sedov blast wave, fluid flow simulation and astrophysical examples like binary neutron stars coalescence.
+We choose four mains examples in this purpose: the Sod shock tube, the Sedov blast wave, fluid flow simulation and astrophysical examples like binary neutron stars coalescence.
 We present those problems in this section and their characteristics regarding the computer science difficulties involved. 
 
 \subsection{Sod shock tube}

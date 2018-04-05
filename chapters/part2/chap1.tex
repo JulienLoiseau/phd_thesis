@@ -7,15 +7,18 @@
 \chapter*{Introduction}
 
 % Link and walls
-The tools for comprehension of High Performance Computing from theory, hardware and software give us the basis elements to go toward optimizations and benchmarking. 
+The tools describes in the previous part for comprehension of High Performance Computing from theory, hardware and software give us the basis elements to go toward optimizations and benchmarking. 
 We showed through examples that hybrid architectures seems to be the way to reach exascale in few years.
-In the same time many optimizations need to be done to fit the energy envelope and the ability to target all kind of applications. 
+In the same time many optimizations need to be done.
+On one hand, the exascale supercomputer will need to fit the energy envelope imposed, to be able to sustain the computational power and the price of the hardware itself for economical reasons.  
+This is made by vendors and is a specific area of optimization.
+On the other hand, we focus on the performances we have using a specific architecture/accelerator to fit the targeted application with the best resources usage. 
 The need of regular memory accesses, synchronization and the host-device memory separation put some constraint on their usage.
 As many-cores architectures presented nowadays come with several downsides we need to confront them to classical processor in a specific set of problems, a metric, a dedicated benchmark suite. 
 
 
 In benchmarks like the TOP500 the target is to solve a problem with regular computation and communication behavior. 
-We think that this behavior does not fit realistic (production) applications.
+We think that this behavior does not fit realistic and production applications.
 In many domains like meteorology, oceanography, astrophysics, big data, \dots the underlying issue are the irregular input and behavior.
 The irregularity in an application can have several definitions. 
 This is defined by \cite{javairregular} as a problem which: can not be characterize a priori, is input data dependent and evolves with the computation itself. 
@@ -23,7 +26,7 @@ In \cite{suss2006implementing} the author specifies that the work involve subcom
 The irregularity can then spread on all the layers of the resolution:
 the communications, the computation and the memory searches. 
 
-In order to target interesting applications, we identify several bottlenecks and limitations in HPC. 
+In order to target more representative applications of nowadays realistic problems, we identify several bottlenecks and limitations in HPC. 
 Those limitations are called \textit{walls} against which nowadays architectures are confronted to reach exascale. 
 
 \paragraph{Memory Wall: }
@@ -79,10 +82,15 @@ This is targeted in the first benchmark we propose.
 The algebraic method is heavy in computation with irregular memory accesses. 
 The second one does focus on irregular communication and memory usage with test base operations.\\
 
-This is why we present in this part a new metric for the main HPC walls to confront many-core architectures to multi-core architectures. 
+This is why we propose in this part a new metric for the main HPC walls to confront many-core architectures to multi-core architectures. 
+The two application we targeted cover all the wall we specify. 
+
 % This part 
-The first academic problem we choose for our benchmark characterizes the behavior of accelerators and more specifically GPUs focusing on irregular computations and memory accesses. 
+The first academic problem is a perfect candidate for our benchmark since it characterizes the behavior of accelerators and more specifically GPUs focusing on irregular computations and memory accesses. 
 It is the problem of Langford and it shows how we can take advantage of accelerators for this kind of problem. 
 
-The second problem we choose is focused on irregular memory accesses and communications. 
+The second problem is focused on irregular memory accesses and communications. 
 It is based on a benchmark we presented in the previous part, the Graph500 benchmark.
+
+The combination of those two problems creates a metric covering all the walls and limitations we are facing in HPC. 
+This allows us to emphasis on the behavior of hybrid architecture on several type of problems.

@@ -8,7 +8,7 @@
 \section{Introduction}
 
 The previous part describes the method we want to implement and presents the wall in the smoothed particle hydrodynamics method. 
-We showed that this application meet the communication and computation wall in an irregular behavior context. 
+We showed that this application meets the communication and computation wall in an irregular behavior context. 
 FleCSPH is a complex application that, beside of being interesting for our purpose, need to be accurate on the physics aspect to be use by the domain scientists from LANL. 
 I also note that this is my first work on developing a production code from scratch.
 
@@ -49,16 +49,22 @@ Then we describe the distributed algorithm for the data structure over the MPI p
 
 \section{FleCSPH implementation}
 
+FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initially created as a part of FleCSI. 
+The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
+The final purpose of FleCSPH is to complement the tree topology and provide the colorer to FleCSI. 
+The SPH seems to be a very good candidate to benchmark the binary, quad and oct tree topology. 
+The demand is high for astrophysics simulation regarding the recent discoveries of the LIGO and the SPH method allows us to generate those simulations. 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/flecsi_flecsph}
 \caption{FleCSI and FleCSPH frameworks }
 \label{fig:flecsi_flecsph_framework}
 \end{figure}
-
-\footnote{\url{http://github.com/laristra/flecsi}} is a framework initially created as a part of FleCSI. 
-FleCSPH intents to propose an SPH implementation and extends the topology provides in FleCSI, the tree topology. 
-We propose the MPI implementation to generate group of particles and the data distribution on the processes. 
+Figure~\ref{fig:flecsi_flecsph_framework} present how FleCSI and FleCSPH are integrated. 
+FleCSPH is base on the tree topology of FleCSI and will follow the same structure define in FleCI. 
+The ideal runtime in FleCSI is Legion but this in-development code does not allows us to do more than static data distribution. 
+This is why we decided to work with the MPI runtime in FleCSPH. 
+Those MPI functions can then be integrated to FleCSI to generate group of particles and labeled them, the coloring. 
 
 \begin{figure}[t!]
 \centering
@@ -68,15 +74,24 @@ We propose the MPI implementation to generate group of particles and the data di
 \end{figure}
 
 Figure~\ref{fig:files_flecsph} present the file systems of the github repository. 
-We use the tools from Cinch\footnote{http://github.com/laristra/cinch} for the CMake and the makefile generation. 
+We use the tools from Cinch\footnote{\url{http://github.com/laristra/cinch}} developed at LANL for the CMake and the makefile generation. 
 It also provide the GoogleTests API for our unit tests. 
-
+The FleCSPH code is currently public and available on github under the \textit{laristra} (Los Alamos Ristra) project.
+The continuous integration is ensured by using Travis based on Docker provided in the Docker folder. 
+In addition to Travis for the unit tests we use use tools like CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
+In the current version we use external libraries: HDF5, H5hut and a specific library for I/O based on H5hut. 
+Those elements are present and installed using scripts in \textit{third-part-library} folder. 
 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/morton_hilbert_generation}
 \caption{Morton order key generation}
 \end{figure}
+
+For the first implementation we present the code without considering accelerators. 
+We intent to provide an efficient multi-CPU distributed code. 
+The description starts with the domain decomposition strategy which is a basic element for the tree implementation.
+We explain the tree data structure for the construction and the search of particles along with the distribution strategy.
 
 \subsection{Domain decomposition}
 \label{sec:domain_decomposition}
@@ -95,7 +110,7 @@ On the other hand, it is also used locally to store efficiently the particles an
 
 Several space filling curves can fit our purposes:
 \subsubsection*{The Morton curves} \cite{morton1966computer}, or Z-Order, is the most spread method. 
-This method can produce irregular shape domain decomposition like shown in green on Fig.~\ref{fig:space_filling}. 
+This method can produce irregular shape domain decomposition like shown in green on figure~\ref{fig:space_filling}. 
 The main advantage is to be fast to compute, the key is made by interlacing directly the X, Y and Z bits without rotations. 
 \subsubsection*{The Hilbert curves} \cite{sagan2012space} are constructed by interlacing bits but also adding rotation based on the Gray code.
 This work is based on the Peano curves and also called Hilber-Peano. 
@@ -108,7 +123,7 @@ The construction is more complicated than Morton but allows a better distributio
 \label{fig:space_filling}
 \end{figure}
 
-On Fig.~\ref{fig:space_filling}, the Morton (left) and Hilbert (right) space-filling curves are represented in this example.
+On figure~\ref{fig:space_filling}, the Morton (left) and Hilbert (right) space-filling curves are represented in this example.
 The particles are distributed over 3 processes. 
 The set of particles of the second process appears in green. 
 As we can see there are discontinuities on the Morton case due to the Z-order "jump" over the space. 
@@ -150,7 +165,7 @@ The construction of those trees is directly based on the domain decomposition us
 
 As explain in the previous section, we use 64 bits keys.
 That give us up to $63$, $31$ and $21$ levels in the tree for respectively 1, 2 and 3 dimensions. 
-As presented on Fig.~\ref{fig:quadtree} the first bit is use to represent the root of the tree, $1$.
+As presented on figure~\ref{fig:quadtree} the first bit is use to represent the root of the tree, $1$.
 This allows us to have up to $2^{63}$ different keys and unique particles.  
 
 \subsubsection{Tree generation}
@@ -158,7 +173,7 @@ This allows us to have up to $2^{63}$ different keys and unique particles.
 After each particle get distributed on its final process using its space-filling curve key, we can recursively construct the tree.
 Each particle is added and the branches are created recursively if there is an intersection between keys. 
 Starting from the root of key "1" the branches are added at each levels until the particles are reached.
-An example of a final tree is shown on Fig.~\ref{fig:quadtree}.
+An example of a final tree is shown on figure~\ref{fig:quadtree}.
 
 \subsubsection{Tree search}
 
@@ -168,19 +183,23 @@ Summing up the mass, position called Center of Mass (COM), and the boundary box 
 For the search algorithm the basic idea would be to do a tree traversal for all the particles and once we reach a particle or a node that interact with the particle smoothing length, add it for computation or in a neighbor list. 
 Beside of being easy to implement and to use in parallel this algorithm requires a full tree traversal for every particle and will not take advantage of the particles' locality.
 
-Our search algorithm, presented on Algorithm~\ref{alg:find_nodes}, is a two step algorithm like in Barnes trees: First create the interaction lists and then using them on the sub-tree particles. 
-In the first step we look down for nodes with a target sub-mass of particles $tmass$. 
-Then for those branches we compute an interaction list and continue the recursive tree search. 
-When a particle is reached, we compute the physics using the interaction list as the neighbors. 
-The interaction list is computing using an opening-angle criterion comparing the boundary box and an user define angle. 
-In this way we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
-
 \begin{figure}[ht!]
 \centering
 \input{\locpath/figures/tikz/part3/tree_traversal}
 \caption{Neighbors search using a tree traversal per particle vs a group of particle and computing an interaction list}
 \label{fig:arbre}
 \end{figure}
+
+Our search algorithm, presented on Algorithm~\ref{alg:find_nodes}, is a two step algorithm like in Barnes trees: First create the interaction lists and then using them on the sub-tree particles. 
+In the first step we look down for nodes with a target sub-mass of particles $tmass$. 
+Then for those branches we compute an interaction list and continue the recursive tree search. 
+When a particle is reached, we compute the physics using the interaction list as the neighbors. 
+The interaction list is computing using an opening-angle criterion comparing the boundary box and an user define angle. 
+This way we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
+On figure~\ref{fig:arbre} we present the classical and the two steps algorithm. 
+We see that the first method, on left, force to do one walk per particle, compute the interaction list and then apply to particles. 
+On the left, the two step method, only perform one tree traversal for the whole block of particles, compute the interaction list and then processed to the local computation. 
+Indeed, this implies a check of particle distance during the computation since all the particles from the interaction list are not useful for every particle. 
 
 \begin{algorithm}
 \caption{Tree search algorithm}\label{alg:find_nodes}
@@ -299,7 +318,7 @@ But some downside can be identified:
 This is why we also provide another load balancing based on the particles neighbors. 
 Depending on the user problem, the choice can be to distribute the particles on each processes regarding the number of neighbors, having the same amount of physical computation to perform on each processes. 
 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/particles_repartition}
 \caption{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
@@ -331,9 +350,44 @@ We added the library H5hut to add normalization in the code to represent global 
 The I/O code was developed internally at LANL and provides a simple way to write and read the data in H5Part format. 
 The usage of H5Hut to generate H5part data files allows us to directly read the output in Paraview without using a XDMF descriptor like requested in HDF5 format.
 
-\section{FleCSPH GPU implementation}
-For the purpose of this thesis we needed to compare the approaches of CPU and GPU on the FleCSPH application.
-This application have to be considered. 
+\subsection{Further-works}
+The FleCSPH code for this version is based on synchronous communication. 
+This reduces the scalability performances. 
 
+
+\section{FleCSPH GPU implementation}
+We constructed an efficient and reliable SPH code working on multi-CPU clusters. 
+In this section we present our multi-GPU implementation and compare it with our multi-CPU code. 
+We kept the same data structure, distribution strategy and code architecture in the accelerator code. 
+Several options are possible for the accelerator implementation but we wanted to keep the code usable and working for the domain scientists to work on. 
+As the current version of FleCSI does not allow utilization of accelerator like GPU for the data structure, we decided to embedded the GPU code directly on FleCSPH. 
+We provided the same approach we studies in the Langford problem offloading part of the tree computation on the accelerators. 
+
+\subsection{Distribution strategies} 
+During our study we 
+The first one is to implement the whole tree traversal and data representation on GPU. 
+This strategy imposes several downside especially for asynchronous communication.
+
+\begin{figure}[t!]
+\input{\locpath/figures/tikz/part3/tree_topology_gpu}
+\caption{Task resolution using GPUs}
+\label{fig:multi_gpu_implementation}
+\end{figure}
+Figure~\ref{fig:multi_gpu_implementation} present the choose distribution of tasks with the accelerator. 
+The tree traversal itself stay on the host processor and lower part of the tree are offloaded to the accelerators. 
+
+\subsection{Physics on accelerators}
+
+\subsection{Results}
+In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
+We decided to conduct the tests on the 2D and 3D fluids.
 
 \section{Conclusion}
+In this part we presented the FleCSPH framework base on FleCSI. 
+We gave details on the code structure and the strategies taken for the multi-CPU version. 
+We presented the tree traversal, divided in two steps in order to generated better interaction lists for particles. 
+
+The results of the multi-CPU code are presented and shows good results in both side, physics and computer science. 
+
+In the last section we presented the multi-GPU code.
+We showed that 
