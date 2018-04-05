@@ -7,7 +7,7 @@
 
 ### How do I get set up? ###
 
-* A Makefile is provided for linux usage otherwise it will be build using TexMaker available at: 
+* A Makefile is provided for linux usage otherwise it can be build using TexMaker available at: 
 http://www.xm1math.net/texmaker/index_fr.html
 
 On the source Makefile: 
