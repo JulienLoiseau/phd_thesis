@@ -11,6 +11,7 @@
 http://www.xm1math.net/texmaker/index_fr.html
 
 On the source Makefile: 
+
 * make: Build the thesis main file in jloiseau_these.pdf
 * make make_all: Call all the sub Makefile and build the chapters and parts independently. 
 * make clean_all: Call the sub Makefile to clean all the sub directories. 
