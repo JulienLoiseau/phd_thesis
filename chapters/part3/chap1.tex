@@ -3,7 +3,7 @@
 %	CHAPTER ONE, CHOICES AND SPH                                    %
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{General problem}
+\chapter{Complex system modelization}
 
 \section{Introduction}
 In this section we give details on our choices for the generic application confronted to both computation and communication walls in irregular context. 
@@ -14,7 +14,12 @@ A lot of work have been done on the comprehension of the physical aspect to prod
 The first section is a presentation of the SPH method itself and the overall limitation we have to face. 
 Then we describe different kind of problems we use as a benchmark of the application itself. 
 
-\section{Smoothed Particle Hydrodynamics}
+\section{Physical modelization and downsides}
+In order to target a complex problem targeting all the walls and confront classical architectures to hybrid ones the problem had to be very specific. 
+
+
+\subsection{Smoothed Particles Hydrodynamics}
+\label{sec:intro_sph}
 Smoothed Particle Hydrodynamics (SPH) is an explicit numerical mesh-free Lagrangian method.
 It is used to solve hydrodynamical partial differential equations (PDEs)\index{Partial Differential Equations} by discretized them into a set of fluid elements called particles. 
 This computational method was invented for the purpose of astrophysics simulations by Monaghan, Gingold and Lucy in 1977 \cite{lucy1977numerical,gingold1977smoothed}. 
@@ -22,8 +27,6 @@ This first SPH work conserved mass and they later proposed a method which also c
 The method was extended for general fluid simulation and many more fields from ballistics to oceanography.
 The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming Exascale systems.
 
-\subsection{General description}
-\label{sec:intro_sph}
 %
 \begin{figure}
 \centering
@@ -298,13 +301,15 @@ Indeed, as each of them will hold part of the particles, the multipole in M2L co
 The P2P computation will face issues on the edge of each sub-domain. 
 The irregular behavior is also present for the choice of the multipole to consider during the M2L step based on the MAC criterion.
 
-\section{Applications of SPH} 
+\section{Test cases with SPH} 
 \label{sec:applications}
 The generic SPH method and the gravitation computation, either simple or with FMM, allow us to run standard example to check the physical accuracy of our code. 
 We choose four mains examples in this purpose: the Sod shock tube, the Sedov blast wave, fluid flow simulation and astrophysical examples like binary neutron stars coalescence.
 We present those problems in this section and their characteristics regarding the computer science difficulties involved. 
 
-\subsection{Sod shock tube}
+\subsection{Simple tests: tree and communications}
+
+\subsubsection{Sod shock tube}
 The Sod shock tube is the test consisting of a one-dimensional Riemann problem with the following initial parameters~\cite{sod1978}.
 \begin{equation}
 (\rho, v, p)_{t=0} = \begin{cases}
@@ -329,7 +334,7 @@ This test is used to check the physical accuracy of the code and thus the tree s
 A simulation of our Sod shock experimentation is presented on figure~\ref{fig:sodtube} and shows physically correct results.
 The first difficulty of this problem is the tree repartition, the physics behind is not complicated and does not involve specific optimizations. 
 
-\subsection{Sedov blast wave}
+\subsubsection{Sedov blast wave}
 A blast wave is the pressure and flow resulting from the deposition of a large amount of energy in a small very localized volume. 
 There are different versions of blast wave test and we consider comparing it with the analytic solution for a point explosion as given by Sedov~\cite{sedov1946}, making the assumption that the atmospheric pressure relative to the pressure insider the explosion negligible. 
 Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gamma = 5/3$ and we are assuming that the undistributed area is at rest with a pressure $P_0 = 1.0 \time 10^{-5}$. The density is constant $\rho_0$, also in the pressurized region. 
@@ -344,7 +349,9 @@ Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gam
 An example of our Sedov Blast wave experimentation is presented on figure~\ref{fig:sedov} and shows physically correct results.
 This problem have the same conclusion as the Sod shock tube, his purpose is the test the tree behavior with 2 dimensions. 
 
-\subsection{Fluid flow}
+\subsection{High number of data and specific formulations}
+
+%\subsection{Fluid flow}
 After performing the tests regarding the physics reliability, we worked on fluid flow problem in 2D and 3D to reach high number of particles. 
 The details can be found in \cite{gomez2012sphysics}.
 This test is based on an ideal EOS given by:
@@ -376,7 +383,8 @@ They are identified in the code with a specific type, provided during the data g
 In this fluid flow example we were able to go up to a high number of particles with 2 or 3 dimensions. 
 The handling of boundaries conditions added a pressure on the irregularity behavior. 
 
-\subsection{Astrophysics: neutron stars coalescence}
+\subsection{SPH and gravitation}
+%\subsection{Astrophysics: neutron stars coalescence}
 
 The final aim of our tests is to simulate astrophysical events. 
 We are interested in one of the most important event recently discovered. 

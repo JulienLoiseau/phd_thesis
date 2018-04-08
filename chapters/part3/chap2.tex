@@ -47,7 +47,7 @@ In this part we first present the domain decomposition, based on space filling c
 We describe the HDF5 files structure used for the I/O.
 Then we describe the distributed algorithm for the data structure over the MPI processes. 
 
-\section{FleCSPH implementation}
+\section{Distributed SPH on multi-core architecture}
 
 FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initially created as a part of FleCSI. 
 The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
@@ -355,7 +355,7 @@ The FleCSPH code for this version is based on synchronous communication.
 This reduces the scalability performances. 
 
 
-\section{FleCSPH GPU implementation}
+\section{Distributed SPH on hybrid architectures}
 We constructed an efficient and reliable SPH code working on multi-CPU clusters. 
 In this section we present our multi-GPU implementation and compare it with our multi-CPU code. 
 We kept the same data structure, distribution strategy and code architecture in the accelerator code. 
@@ -378,7 +378,7 @@ The tree traversal itself stay on the host processor and lower part of the tree 
 
 \subsection{Physics on accelerators}
 
-\subsection{Results}
+\section{Results and comparison}
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
 We decided to conduct the tests on the 2D and 3D fluids.
 
