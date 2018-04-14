@@ -1,19 +1,32 @@
 \part{Application}
 
 \chapter*{Introduction}
-The first part of this thesis presented the tools needed to understand and target performance in HPC. 
-The second part exposed our metric showing the benefit of accelerators, in this case GPUs, over classical GPU in two contexts: irregular computation and irregular communication/memory behaviors.
-We showed that the accelerators gave a real advantage on those two problems and allows us to push the limits.
+The first part of the thesis presented the tools needed to understand and target performances in HPC. 
+The second part exposed our metric showing the benefit of accelerators, in this case GPUs, over classical processors in two contexts: irregular computation and irregular communication/memory behaviors.
+We showed that the accelerators gave a real advantage on those two problems and even allows us to push the limits of performances.
+We are confident that hybrid architectures will be the way to reach exascale in 2020 horizon.
 
-In order to extend this study and our metric we decided to target another irregular behavior problem embedding both computation/communication/memory wall behavior. 
+In order to validate our previous results and our metric we decided to target another irregular behavior problem embedding both computation and communication/memory wall behavior. 
+This problem can also be considered as a \textit{realistic}, \textit{production} code as it targets nowadays problems of domain scientists. 
 In order to show how accelerators handle real world problems, we searched for an application fulfilling our needs. 
-Our choose fell on the Smoothed Particle Hydrodynamics problem applied to fluid and astrophysics. 
-The first version of this application was developed during a 2 months internship at the Los Alamos National Laboratory from the FleCSI framework.
+Our choose fell on the Smoothed Particle Hydrodynamics problem applied to fluid and astrophysics simulation. 
 
-In this part we first present the Smoothed Particle Hydrodynamics method from a physical point of view and making a parallel with the computer science problems involved. 
+We targeted this problem for several reasons. 
+We shows in the first chapter the computer science reasons regarding our metric. 
+This project is also part of an exchange with the Los Alamos National Laboratory in New Mexico, USA. 
+This laboratory is part of the US Department of Energy, DoE, and groups thousands of researchers working on the most advanced nowadays problems.
+The Los Alamos National Laboratory, LANL, is also one of the three nuclear research laboratory of the US National Nuclear Security Administration (NNSA). 
+In summer 2016, I made a first internship of 3 months for a summer school called: \textit{Co-Design Summer School}.
+This allowed us to discover a particular class of problems, Smoothed Particle Hydrodynamics and discuss with domain scientists.
+We extrapolate after the internship and saw what this program really contains and its utility for our study. 
+It makes a perfect example of realistic problem confronting computation and communication wall with irregular behavior. 
+In order to characterize what physicists requested for this problem we also had another internship with the LANL in summer 2017 during three months. 
+
+In this part we first present the Smoothed Particle Hydrodynamics method from a physical point of view and drawing a parallel with the computer science problems involved. 
 Indeed, a huge amount of time have been spend on the understanding of the physics side to be able to do realistic simulation and thus realistic behavior. 
-The second chapter present our application, FleCSPH. 
-Starting from the current FleCSI version, we introduce the algorithm and methods to solve efficiently this problem on classical processor and the acceleration generated adding GPUs. 
+The second chapter presents a distributed SPH code working for multi-CPU and multi-GPU. 
+This program is called FleCSPH. 
+Starting from the framework which is the base of FleCSPH, FleCSI, we introduce the algorithm and methods to solve efficiently this problem on classical processor and the acceleration generated adding GPUs. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                   %
@@ -32,5 +45,11 @@ Starting from the current FleCSI version, we introduce the algorithm and methods
 
 
 \chapter*{Conclusion}
-This last application complete our metrics to target hybrid supercomputers. 
-The SPH method
+This part highlight the advantages of hybrid architecture compared to classical CPU centric architectures. 
+We showed that the GPU can handle part of the computation even in the case of computation and communication program in irregular behavior. 
+
+We developed from the FleCSI framework a fully functional code handling the SPH method. 
+This framework, FleCSPH, provide the distribution functions and load balancing tools to perform distributed SPH over OpenMP and CUDA.
+We used a specific domain decomposition and built the tree using keys for better particle's data locality. 
+
+Our last tests allows us the show the performances using GPUs compared to classical multi-CPU architectures. 

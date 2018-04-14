@@ -7,16 +7,21 @@
 
 \section{Introduction}
 In this section we give details on our choices for the generic application confronted to both computation and communication walls in irregular context. 
-The problem we choose, the Smoothed Particle Hydrodynamics method implementation, is described on a physical aspect.
-We point out the difficulties involved in the resolution on supercomputers and more especially accelerators.  
+The problem we choose, the Smoothed Particle Hydrodynamics simulation method, is described on a physical aspect.
+We point out the difficulties involved in the resolution on supercomputers and especially hybrid architectures.  
 A lot of work have been done on the comprehension of the physical aspect to produce a code that meet the behavior of real physics problems.
 
-The first section is a presentation of the SPH method itself and the overall limitation we have to face. 
+The first section is a presentation of the SPH method itself and the overall limitation we had to face. 
 Then we describe different kind of problems we use as a benchmark of the application itself. 
 
 \section{Physical modelization and downsides}
-In order to target a complex problem targeting all the walls and confront classical architectures to hybrid ones the problem had to be very specific. 
-
+We identified two main walls in our metrics:
+The computational wall and the communication/memory one.
+We conducted tests on both keeping as a background the irregularity behavior.
+We show how this is perfectly meet in the same problem with SPH.
+In order to add another complexity layer in term of irregularity for both computation and communication we targeted astrophysical simulations. 
+This requires the computation of gravitation on a very high number of particles. 
+This part describes the SPH method itself and the gravitation computation we used based on fast multipole methods. 
 
 \subsection{Smoothed Particles Hydrodynamics}
 \label{sec:intro_sph}
@@ -25,7 +30,7 @@ It is used to solve hydrodynamical partial differential equations (PDEs)\index{P
 This computational method was invented for the purpose of astrophysics simulations by Monaghan, Gingold and Lucy in 1977 \cite{lucy1977numerical,gingold1977smoothed}. 
 This first SPH work conserved mass and they later proposed a method which also conserves linear and angular moment \cite{gingold1982kernel}. 
 The method was extended for general fluid simulation and many more fields from ballistics to oceanography.
-The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming Exascale systems.
+The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming exascale systems.
 
 %
 \begin{figure}
@@ -37,7 +42,7 @@ The development of new reliable, parallel and distributed tools for this method 
 \end{figure}
 %
 The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of a group of particles representing physical quantities.
-Those physical quantities are either fixed or computed for every particle regarding its neighbors in the radius of its smoothing length $h$. 
+Those physical quantities are either invariant or computed for every particle regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel\index{Smoothing Kernel}. 
 The fundamental SPH formulation for any physical quantity $A$ is then to compute with all the neighbors of $b$ of a $a$ particle by:
 \begin{equation}
@@ -63,7 +68,7 @@ In this work, we are solving Lagrangian conservation equations (Euler equations)
 \frac{d u}{d t} = - \frac{P}{\rho} ( \nabla \cdot \vec{v} ), \quad
 \frac{d \vec{v}}{d t} = - \frac{1}{\rho} (\nabla P)
 \end{equation}
-with $\rho$ the density, $P$ the pressure, $u$ the internal energy and $v$ the velocity, where $d/dt = \partial/\partial_t + \vec{v} \cdot \nabla$ which is convective derivative.
+with $\rho$ the density, $P$ the pressure, $u$ the internal energy and $v$ the velocity, $\nabla$ the nabla operator and where $d/dt = \partial/\partial_t + \vec{v} \cdot \nabla$ which is convective derivative.
 
 By using the volume element $V_b = m_b / \rho_b$, we can formulate the Newtonian SPH scheme~\cite{rosswog2009} such that
 \begin{equation}
@@ -188,6 +193,12 @@ A communication step is needed before and after (\ref{eq:rho}) to get the local 
 The tree data structure allows us to perform $O(Nlog(N))$ neighbor search but also add a domain decomposition and distribution layer.
 
 \subsection{Gravitation}
+In order to target hard irregular simulation facing both the communication and computation wall in irregular behavior we decided to simulate astrophysical events. 
+This choice is also accurate since our code, FleCSPH, will be use by the LANL astrophysicists in the near future. 
+In order to perform those simulation the computation of gravitation/self-gravitation is required. 
+This part present our implementation choice and expose the main problems for HPC implementation. 
+
+
 For classical problems like fluid flow the gravitation can directly be applied on the particles with the force:
 \begin{equation}
 	\vec{a_g} = m\vec{g}
@@ -203,7 +214,7 @@ The equation of gravitation for a particle $i$ with $j$ other particles is:
 
 This computation involve an $O(N^2)$ complexity and thus is not applicable directly. 
 We applied the method called Fast Multipole Method, FMM and discussed in \cite{beatson1997short}.
-This method is perfectly adapted to our tree representation of the domain and particles. 
+This method is perfectly adapted to a tree representation of the domain and particles. 
 
 \begin{figure}[ht!]
 \input{\locpath/figures/tikz/part3/gravitation}
@@ -349,7 +360,7 @@ Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gam
 An example of our Sedov Blast wave experimentation is presented on figure~\ref{fig:sedov} and shows physically correct results.
 This problem have the same conclusion as the Sod shock tube, his purpose is the test the tree behavior with 2 dimensions. 
 
-\subsection{High number of data and specific formulations}
+\subsection{High number of particles and specific formulation}
 
 %\subsection{Fluid flow}
 After performing the tests regarding the physics reliability, we worked on fluid flow problem in 2D and 3D to reach high number of particles. 
@@ -472,7 +483,7 @@ $$ \rho_c = \frac{M A^3}{4 \pi (sin(AR)-ARcos(AR)) } $$
 
 Then we normalize the results to fit $R = M = G = 1$: $K' = K/(R^2G) $, $m_i' = m_i/M $, $h_i' = h_i / R$, $\vec{x_i}' = \vec{x_i}/R$ 
 
-\subsubsection{Generating BNS data}
+\subsubsection{Generating Binary Neutron Stars initial data}
 \label{sec:equi}
 
 The initial data are based on a cubic lattice within a sphere of radius $R$.
@@ -528,12 +539,20 @@ After the generation we are able to perform BNS coalescence.
 This provides us a code using SPH, self-gravity and gravitation. 
 
 \section{Conclusion}
+The problem we presented in this part fulfill all the objectives for our metric. 
+The computation wall is targeted via the physics and gravitation computation. 
+The communication wall on the other hand is central regarding the exchanges needed for SPH and the fast multipole method. 
+This problem is also very irregular for both cases. 
+Indeed, the particles moves at every iteration without any prediction on their new position and data. 
+In the same time the locality impose a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
+This implies the usage of a tree data structure, the work of our two metrics can be apply in this context. 
+
 As the SPH method is used in a large panel of fields from astrophysics to fluid mechanic, there are numerous related works. 
 We can cite a code developed in the LANL, 2HOT \cite{warren20132hot} that introduced the Hashed Oct Tree structure used in our implementation. 
 There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014gizmo} and the most recent publication is GASOLINE \cite{wadsley2017gasoline2} based on PKDGRAV, a specific tree+gravity implementation. 
 Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems  \cite{harada2007smoothed,crespo2011gpus}.
 We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
 
-We chose application to test the tree architecture itself up to a high number of particles using the fluid flow. 
-\todo{Plus sur les problemes informatiques}
-
+Our implementation have not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
+This study provide a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.
+This tool will allows us to push forward and provide different type of accelerator in the future keeping a full transparency for the user. 

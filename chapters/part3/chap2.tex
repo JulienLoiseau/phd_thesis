@@ -3,21 +3,24 @@
 %	CHAPTER TWO, FLECSPH.                                           %
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{FleCSPH}
+\chapter{Complex simulations on hybrid architectures}
 
 \section{Introduction}
 
-The previous part describes the method we want to implement and presents the wall in the smoothed particle hydrodynamics method. 
+The previous part describes the method we want to implement and presents the wall in the smoothed particle hydrodynamics and gravitation computation. 
 We showed that this application meets the communication and computation wall in an irregular behavior context. 
+We intent to target astrophysical simulation using hybrid architectures. 
+This distributed SPH and gravitation implementation is called FleCSPH. 
 FleCSPH is a complex application that, beside of being interesting for our purpose, need to be accurate on the physics aspect to be use by the domain scientists from LANL. 
-I also note that this is my first work on developing a production code from scratch.
 
 This section gives details about the FleCSPH framework. 
 We first present FleCSI, the base project in the Los Alamos National Laboratory on which FleCSPH is based. 
-For FleCSPH we give details on the domain decomposition strategy used with Morton Ordering. 
+We then give details on the implementation itself and the tools we implemented to reach a working and efficient code. 
+We give details on the domain decomposition strategy used with Morton Ordering. 
 The tree traversal algorithm choices are then explained. 
-We show the first results on the multi-CPU version of FleCSPH. 
-In the last part we present our multi-GPU implementation of FleCSPH and the advantage using accelerators. 
+
+After this presentation of the native code using multi-CPU clusters we present our strategies for a multi-GPU implementation. 
+The last section exposes the results for both implementation and the simulations. 
 
 \section{FleCSI}
 
@@ -48,6 +51,31 @@ We describe the HDF5 files structure used for the I/O.
 Then we describe the distributed algorithm for the data structure over the MPI processes. 
 
 \section{Distributed SPH on multi-core architecture}
+Before going further in the SPH implementation and our development, we need to give details on the algorithm and the work involved. 
+%
+\begin{algorithm}
+\caption{SPH implementation}\label{alg:sph}
+\begin{algorithmic}[1]
+\State Read particles from file 
+\While{not last step}
+\State Generate keys for particles 
+\State Load balance particles 
+\State Generate local tree data structure
+\While{Physics not done}
+\State Physics: search and distributed search
+\State Update data 
+\EndWhile
+\State Gravitation = FMM
+\If{Output step}
+\State Output data in H5part format
+\EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
+%
+The general algorithm is presented on algorithm~\ref{alg:general_behavior} and present the features of SPH presented in the previous section. 
+In this section we present the main features of our code and the problems involved: the domain decomposition, the tree data structure and traversal and our distribution strategy. 
+This project, in collaboration with the LANL, is named FleCSPH. 
 
 FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initially created as a part of FleCSI. 
 The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
@@ -350,9 +378,9 @@ We added the library H5hut to add normalization in the code to represent global 
 The I/O code was developed internally at LANL and provides a simple way to write and read the data in H5Part format. 
 The usage of H5Hut to generate H5part data files allows us to directly read the output in Paraview without using a XDMF descriptor like requested in HDF5 format.
 
-\subsection{Further-works}
-The FleCSPH code for this version is based on synchronous communication. 
-This reduces the scalability performances. 
+%\subsection{Further-works}
+%The FleCSPH code for this version is based on synchronous communication. 
+%This reduces the scalability performances. 
 
 
 \section{Distributed SPH on hybrid architectures}
@@ -367,7 +395,7 @@ We provided the same approach we studies in the Langford problem offloading part
 During our study we 
 The first one is to implement the whole tree traversal and data representation on GPU. 
 This strategy imposes several downside especially for asynchronous communication.
-
+\todo{add elements later}
 \begin{figure}[t!]
 \input{\locpath/figures/tikz/part3/tree_topology_gpu}
 \caption{Task resolution using GPUs}
@@ -376,11 +404,26 @@ This strategy imposes several downside especially for asynchronous communication
 Figure~\ref{fig:multi_gpu_implementation} present the choose distribution of tasks with the accelerator. 
 The tree traversal itself stay on the host processor and lower part of the tree are offloaded to the accelerators. 
 
+
 \subsection{Physics on accelerators}
+\todo{add elements later}
 
 \section{Results and comparison}
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
 We decided to conduct the tests on the 2D and 3D fluids.
+\subsection{Performances}
+
+\subsection{Simulations}
+As explained in the previous part we simulated several physical and astrophysical event in order to check the code behavior and reliability. 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
+\caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
+\end{figure}
+The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous part, showed perfect results. 
+The fluid simulations are presented on figure~\ref{}.
+
+The final test of our study is a binary neutron stars merging simulation. 
 
 \section{Conclusion}
 In this part we presented the FleCSPH framework base on FleCSI. 
@@ -390,4 +433,3 @@ We presented the tree traversal, divided in two steps in order to generated bett
 The results of the multi-CPU code are presented and shows good results in both side, physics and computer science. 
 
 In the last section we presented the multi-GPU code.
-We showed that 
