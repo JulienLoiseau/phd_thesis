@@ -9,12 +9,12 @@
 \section{Introduction}
 
 The knowledge of hardware architecture is essential to reach performances through optimizations.
-Even if the nowadays software, API, framework or runtime already handle most of optimizations, the last percents of gain are architecture's dependent. 
+Even if the nowadays software, API, framework or runtime already handle most of the optimizations, the last percents of gain are architecture's dependent. 
 In this chapter we describe the most important devices architectures from classical processors, General Purpose Graphics Processing Units (GPGPUs), Field Programmable Gate Arrays (FPGAs) and Application-Specific Integrated Circuits (ASICs).
 This study keeps a focus on multi-core processors and GPUs as we based our tests on those devices. 
 
 This chapter also details the architecture of some remarkable supercomputers. 
-This has to go with the description of interconnection network with the most famous interconnection topologies. 
+This has to go with the description of interconnection network with the most used interconnection topologies. 
 
 We choose to present the architectures in a chronological order following the models presented in the previous chapter with: SISD, MIMD and SIMD/SIMT and presenting the last released technologies.
 We also present the optimizations of technologies with the arising of parallelism and new types of memories.
@@ -30,12 +30,13 @@ Many evolutions were made on those single cores processors from the memory, the 
 
 \subsubsection{Transistor shrink and frequency}
 \index{Frequency}
-A lot of new ways to produce smaller transistors had been discovered from the 10$\mu m$ of 1971 to nowadays 10$nm$.
+A lot of new ways to produce smaller transistors had been discovered.
+Their size was about 10$\mu m$ in 1971 and reach 10$nm$ in nowadays machines.
 This allows the vendor to add more transistors on the same die, allowing more complex ISA and features for the CPU. 
 %This will also be useful for the multi-core machine presented in the next part. 
 
 In parallel of the shrink of transistors, the main feature for better performances with the single core architecture came from the frequency augmentation, the clock rate. 
-Indeed, as fast as the clock rate get, more operations can be computed in a second on the core. 
+Indeed, as fast as the clock rate get, more operations can be performed in a second on the core. 
 In 1970s the frequency was about 4 MHz allowing a maximum of 4 millions of cycles per seconds. 
 Nowadays core can work at a frequency of 4GHz and even 5GHz performing billions of operations per cycles. 
 
@@ -46,7 +47,7 @@ The control unit fetches instruction in memory and the operands. The ALU compute
 
 In this model the time to perform an instruction is the cumulation of: instruction fetching + operand(s) fetching + \textit{computation} + store the result.
 This time can be high regarding the time when the ALU itself is busy for \textit{computation}, technically just one clock cycle. 
-The idea of Out-of-order is to compute the instructions without following the Program Counter order. 
+The idea of \textit{out-of-order} is to compute the instructions without following the Program Counter order. 
 Indeed, for independent tasks (pointed out with dependency graphs) while the process fetches the next instructions data, the ALU can perform another operation with already available operands.
 This leads to better usage of computational resources in the CPU and thus better overall performances. 
 
@@ -139,7 +140,7 @@ It was the fastest supercomputer of 1978 and due to its shape and price he was h
 The behavior of vector machine is presented with a 16 bytes vector machine (4 integer of 4 bytes = 128 bits bus) on figure~\ref{fig:2_HARD:vector}. We see on left that performing the 4 operations requests 4 cycle and, at opposite, 1 cycle on the right with the vectorized machine.\\
 
 Linked with the CPU optimizations, the memory optimizations also have to be considered. 
-Indeed, even if the ALU can perform billions of operations per second it needs to be fed by fast transfers.
+Indeed, even if the ALU can perform billions of operations per second it needs to be fed with data by fast transfers.
 
 \subsubsection{Memory technology evolution}
 
