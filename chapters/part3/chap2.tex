@@ -7,11 +7,12 @@
 
 \section{Introduction}
 
-The previous part describes the method we want to implement and presents the wall in the smoothed particle hydrodynamics and gravitation computation. 
+The previous part describes the method we want to implement.
+It also presents the wall faced with smoothed particle hydrodynamics and gravitation. 
 We showed that this application meets the communication and computation wall in an irregular behavior context. 
 We intent to target astrophysical simulation using hybrid architectures. 
 This distributed SPH and gravitation implementation is called FleCSPH. 
-FleCSPH is a complex application that, beside of being interesting for our purpose, need to be accurate on the physics aspect to be use by the domain scientists from LANL. 
+This is a complex application that, beside of being interesting for our purpose, need to be accurate on the physics aspect to be use by the domain scientists from LANL. 
 
 This section gives details about the FleCSPH framework. 
 We first present FleCSI, the base project in the Los Alamos National Laboratory on which FleCSPH is based. 
@@ -21,6 +22,12 @@ The tree traversal algorithm choices are then explained.
 
 After this presentation of the native code using multi-CPU clusters we present our strategies for a multi-GPU implementation. 
 The last section exposes the results for both implementation and the simulations. 
+
+A lot of code already exists for SPH simulation and some are already made using hybrid architectures.
+The contribution of FleCSPH is, like FleCSI, to provide a transparent tool for domain scientists. 
+Those frameworks provides a bunch of topologies and functions and will handle the load balancing and distribution for the domain scientists. 
+This allows the computer scientists to keep track of last hardware evolution and provide efficient algorithms for them while the physicists/astrophysicists/chemists can focus on the simulation itself. 
+In this context FleCSPH is focused on tree topologies and will be integrated in FleCSI later on. 
 
 \section{FleCSI}
 
@@ -54,7 +61,7 @@ Then we describe the distributed algorithm for the data structure over the MPI p
 Before going further in the SPH implementation and our development, we need to give details on the algorithm and the work involved. 
 %
 \begin{algorithm}
-\caption{SPH implementation}\label{alg:sph}
+\caption{SPH implementation}\label{alg:general_behavior}
 \begin{algorithmic}[1]
 \State Read particles from file 
 \While{not last step}
@@ -80,7 +87,7 @@ This project, in collaboration with the LANL, is named FleCSPH.
 FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initially created as a part of FleCSI. 
 The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
 The final purpose of FleCSPH is to complement the tree topology and provide the colorer to FleCSI. 
-The SPH seems to be a very good candidate to benchmark the binary, quad and oct tree topology. 
+As presented in the previous sections, SPH is a very good candidate to benchmark the binary, quad and oct tree topology. 
 The demand is high for astrophysics simulation regarding the recent discoveries of the LIGO and the SPH method allows us to generate those simulations. 
 \begin{figure}[t!]
 \centering
@@ -89,7 +96,7 @@ The demand is high for astrophysics simulation regarding the recent discoveries 
 \label{fig:flecsi_flecsph_framework}
 \end{figure}
 Figure~\ref{fig:flecsi_flecsph_framework} present how FleCSI and FleCSPH are integrated. 
-FleCSPH is base on the tree topology of FleCSI and will follow the same structure define in FleCI. 
+FleCSPH is based on the tree topology of FleCSI and follows the same structure define in FleCI. 
 The ideal runtime in FleCSI is Legion but this in-development code does not allows us to do more than static data distribution. 
 This is why we decided to work with the MPI runtime in FleCSPH. 
 Those MPI functions can then be integrated to FleCSI to generate group of particles and labeled them, the coloring. 
@@ -105,8 +112,8 @@ Figure~\ref{fig:files_flecsph} present the file systems of the github repository
 We use the tools from Cinch\footnote{\url{http://github.com/laristra/cinch}} developed at LANL for the CMake and the makefile generation. 
 It also provide the GoogleTests API for our unit tests. 
 The FleCSPH code is currently public and available on github under the \textit{laristra} (Los Alamos Ristra) project.
-The continuous integration is ensured by using Travis based on Docker provided in the Docker folder. 
-In addition to Travis for the unit tests we use use tools like CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
+The continuous integration is ensured by using Travis based on Docker and \textit{Dockerfiles} provided in the Docker folder. 
+In addition to Travis for the unit tests we use use tools as CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
 In the current version we use external libraries: HDF5, H5hut and a specific library for I/O based on H5hut. 
 Those elements are present and installed using scripts in \textit{third-part-library} folder. 
 
@@ -384,6 +391,7 @@ The usage of H5Hut to generate H5part data files allows us to directly read the 
 
 
 \section{Distributed SPH on hybrid architectures}
+\todo{WORKING ON}
 We constructed an efficient and reliable SPH code working on multi-CPU clusters. 
 In this section we present our multi-GPU implementation and compare it with our multi-CPU code. 
 We kept the same data structure, distribution strategy and code architecture in the accelerator code. 
@@ -392,6 +400,7 @@ As the current version of FleCSI does not allow utilization of accelerator like 
 We provided the same approach we studies in the Langford problem offloading part of the tree computation on the accelerators. 
 
 \subsection{Distribution strategies} 
+\todo{WORKING ON}
 During our study we 
 The first one is to implement the whole tree traversal and data representation on GPU. 
 This strategy imposes several downside especially for asynchronous communication.
@@ -406,9 +415,10 @@ The tree traversal itself stay on the host processor and lower part of the tree 
 
 
 \subsection{Physics on accelerators}
-\todo{add elements later}
+\todo{WORKING ON}
 
-\section{Results and comparison}
+\section{Results }
+\todo{WORKING ON}
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
 We decided to conduct the tests on the 2D and 3D fluids.
 \subsection{Performances}
@@ -419,17 +429,20 @@ As explained in the previous part we simulated several physical and astrophysica
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
 \caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
+\label{fig:fluid_simulation}
 \end{figure}
 The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous part, showed perfect results. 
-The fluid simulations are presented on figure~\ref{}.
+The fluid simulations are presented on figure~\ref{fig:fluid_simulation}.
 
 The final test of our study is a binary neutron stars merging simulation. 
 
 \section{Conclusion}
-In this part we presented the FleCSPH framework base on FleCSI. 
-We gave details on the code structure and the strategies taken for the multi-CPU version. 
-We presented the tree traversal, divided in two steps in order to generated better interaction lists for particles. 
+In this section we presented a tool completing our metric. 
+This production application dedicated to smoothed particles hydrodynamics and gravitation simulation is called FleCSPH. 
+It allows us to target both computation and communication walls in a highly irregular context.
 
-The results of the multi-CPU code are presented and shows good results in both side, physics and computer science. 
+We showed the advantage of using hybrid architecture on this kind of application and this behavior can be find in many others. 
 
-In the last section we presented the multi-GPU code.
+
+This application is based on the FleCSI framework also developed at the Los Alamos National Laboratory.
+The experience and exchanges with this important laboratory of DoE and NNSA was a real opened my eyes on simulation and the complexity of such codes

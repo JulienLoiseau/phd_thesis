@@ -46,11 +46,26 @@ Starting from the framework which is the base of FleCSPH, FleCSI, we introduce t
 
 
 \chapter*{Conclusion}
-This part highlight the advantages of hybrid architecture compared to classical CPU centric architectures. 
-We showed that the GPU can handle part of the computation even in the case of computation and communication program in irregular behavior. 
+This part highlights our study and shows the advantages of hybrid architectures compared to classical CPU centric architectures. 
+We showed that the GPU can handle part of the computation even in the case of computation and communication walls with irregular behavior application. 
+We took for this last metric a simulation problem. 
+As simulation is intrinsically linked with HPC for a lot of field this application find perfectly its place in our metric.
 
-We developed from the FleCSI framework a fully functional code handling the SPH method. 
-This framework, FleCSPH, provide the distribution functions and load balancing tools to perform distributed SPH over OpenMP and CUDA.
-We used a specific domain decomposition and built the tree using keys for better particle's data locality. 
+A huge amount of time had been spend on the comprehension and implementation of the physics itself. 
+This was required to provide realistic test cases and show the benefit of hybrid architecture even in the most complex case. 
+We propose simulation for classical physics problems but also complex astrophysical phenomenons like binary neutron star merging. 
+Based on this physics knowledge and the target of completing our metric we create a dedicated distributed application.
 
-Our last tests allows us the show the performances using GPUs compared to classical multi-CPU architectures. 
+This application is called FleCSPH and is based on the FleCSI framework developed at LANL. 
+The intent of this project is to provide a distributed and reliable framework for multi physics purpose to domain scientists.
+Indeed, with the fast evolution of technologies and the complexity of new supercomputers, new tools needed to be developed. 
+FleCSPH is a first step to reach this goal and target tree topologies. 
+It provides a domain decomposition, a tree data structure, I/O and efficient gravitation computation.
+
+Our hybrid version of the code is based on GPU utilization. 
+It follows the principles we described in the second part for Langford tree structure with GPUs. 
+A subpart of the tree traversal is dedicated to the GPUs which handle all the physics computation.  
+
+This implementation is not the best and better results can be done using exclusively GPUs for the resolution. 
+In this case we limited the code transformation to stay in a realistic usable code for the domain scientists. 
+The overall transformation would have create a SPH dedicated program and this is not the aim of this work, targeting realistic production applications. 

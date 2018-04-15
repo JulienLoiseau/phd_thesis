@@ -180,6 +180,8 @@
 \addcontentsline{toc}{chapter}{Contents}
 \tableofcontents
 
+\mainmatter
+
 % Table of figures
 \addcontentsline{toc}{chapter}{List of Figures}
 \listoffigures
@@ -188,9 +190,9 @@
 \addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
 
-\mainmatter
 % Introduction
 \addcontentsline{toc}{chapter}{Introduction}
+\markboth{INTRODUCTION}{}
 \input{chapters/introduction}
 % Chapter One
 \input{chapters/part1/part1}
@@ -200,6 +202,7 @@
 \input{chapters/part3/part3}
 % Conclusion
 \addcontentsline{toc}{chapter}{Conclusion}
+\markboth{CONCLUSION}{}
 \input{chapters/conclusion}
 
 % Annexes

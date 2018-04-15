@@ -1,7 +1,7 @@
 \chapter*{Conclusion}
 This study starts by introducing the tools and theory needed to understand and reach performances in HPC. 
-We presented several architectures and their advantages and showed that the next objective for the worlds powerful country is to reach the computational power of one exaflop near 2020. 
-Our believe is that those architectures will be hybrid powering accelerators like GPUs, specific many-cores or FPGAs. 
+We presented several architectures and their advantages and showed that the next objective for the world most powerful countries is to reach the computational power of one exaflop near 2020. 
+Our believe is that those architectures will be hybrid powering accelerators like GPUs, specific many-cores or FPGAs. \\
 
 From this observation regarding the power consumption and computation performances we defined a metric targeting the most important walls of HPC. 
 The intent of this metric is to confront classical and hybrid architecture to show the real benefit that can be obtained using accelerators. 
@@ -9,7 +9,7 @@ This metric is decomposed in two parts.
 
 In the fist part we target classical, academical and even benchmark problems as a metric. 
 We confront the classical architecture to hybrid one on a problem featuring heavy computation and another one heavy communications. 
-In the two cases we wanted to fit production code and their worst behavior: irregularity. 
+In two cases we wanted to fit production code and their worst behavior: irregularity. 
 
 The first problem is the Langford pairing counting problem. 
 This problem is study with two different approaches based on respectively a tree traversal and a mathematic resolution. 
@@ -23,15 +23,20 @@ This is a perfect candidate in order to consider communication problem without h
 Indeed, the only operations are memory checking for values and copy in queues. 
 This problem stay very irregular in both memory and communication usage. 
 We proposed an algorithm based on both NVIDIA and IBM BlueGene/Q state of the art algorithm. 
-This allows us to rank the ROMEO supercomputer 105th in the Graph500 list of November 2016.
+This allows us to rank the ROMEO supercomputer 105th in the Graph500 list of November 2016.\\
 
 Those two first approaches give a lot of credit for the hybrid architecture on both walls separately. 
 In order to complete our metric we needed to confront the classical and hybrid architecture to a production application issuing both walls. 
-\todo{Parler de FleCSPH}
+We targeted a complex simulation application. 
+The problem fitting our needs in computational and communication over irregular context is the smoothed particle hydrodynamics and gravitation simulation of hard astrophysics events. 
+We developed, in collaboration with the LANL, a framework named FleCSPH dedicated for tree topology and physics/astrophysics simulations. 
+We showed with this metric the performances using hybrid architectures. 
+Even keeping an approach of production code, not fully GPU, the performances on hybrid architectures can be way superior to classical CPU ones. 
 
+This study shows based three cases that the hybrid architecture can be the solution for exascale supercomputer.
+The main walls are solved using specific implementation and other ways of thinking the algorithm them-self. 
+The problem of nowadays architectures resides in the framework and tools developed. 
+On one hand the old softwares on which rely most of nowadays libraries need to be re-think and ported for massively parallel architectures. 
+On the other hand, frameworks like FleCSI can be developed to hide the complexity of clusters, nodes, accelerators offloading to domain scientists.\\
 
-This study shows by three cases that the hybrid architecture can be the solution for exascale supercomputer.
-The problem resides in the framework and tools developed. 
-On one hand the old softwares on which rely most of nowadays libraries need to be rethink and portable on massively parallel architectures. 
-On the other hand 
-\todo{Trouver une belle ouverture}
+Parallelism is the way of the future, and always will be. 

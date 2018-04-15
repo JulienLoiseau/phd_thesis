@@ -6,30 +6,30 @@
 \chapter{Complex system modelization}
 
 \section{Introduction}
-In this section we give details on our choices for the generic application confronted to both computation and communication walls in irregular context. 
+In this chapter we give details on our choice for the generic application which is confronted to both computation and communication walls in irregular context. 
 The problem we choose, the Smoothed Particle Hydrodynamics simulation method, is described on a physical aspect.
-We point out the difficulties involved in the resolution on supercomputers and especially hybrid architectures.  
-A lot of work have been done on the comprehension of the physical aspect to produce a code that meet the behavior of real physics problems.
+We point out the difficulties involved in the implementation on supercomputers and especially hybrid architectures.  
+A lot of work have been spent on the comprehension of the physical aspects to produce a code that meet the behavior of real astrophysics simulations.
 
-The first section is a presentation of the SPH method itself and the overall limitation we had to face. 
-Then we describe different kind of problems we use as a benchmark of the application itself. 
+The first section is a presentation of the SPH method itself and the overall limitation we face. 
+Then we describe different kind of specific simulations we use as a benchmark of the application itself. 
 
 \section{Physical modelization and downsides}
 We identified two main walls in our metrics:
 The computational wall and the communication/memory one.
-We conducted tests on both keeping as a background the irregularity behavior.
-We show how this is perfectly meet in the same problem with SPH.
+We conducted tests on both aspects keeping the irregularity behavior as a good representative of production codes.
+We show how these requirements are meet in the same problem with SPH and gravitation.
 In order to add another complexity layer in term of irregularity for both computation and communication we targeted astrophysical simulations. 
-This requires the computation of gravitation on a very high number of particles. 
-This part describes the SPH method itself and the gravitation computation we used based on fast multipole methods. 
+They require the computation of gravitation in addition to SPH on a very high number of particles. 
+This part describes the SPH method itself and the gravitation computation based on fast multipole methods. 
 
 \subsection{Smoothed Particles Hydrodynamics}
 \label{sec:intro_sph}
 Smoothed Particle Hydrodynamics (SPH) is an explicit numerical mesh-free Lagrangian method.
 It is used to solve hydrodynamical partial differential equations (PDEs)\index{Partial Differential Equations} by discretized them into a set of fluid elements called particles. 
 This computational method was invented for the purpose of astrophysics simulations by Monaghan, Gingold and Lucy in 1977 \cite{lucy1977numerical,gingold1977smoothed}. 
-This first SPH work conserved mass and they later proposed a method which also conserves linear and angular moment \cite{gingold1982kernel}. 
-The method was extended for general fluid simulation and many more fields from ballistics to oceanography.
+This first SPH work conserved mass and they later proposed a method which also conserves linear and angular momenta \cite{gingold1982kernel}. 
+The method was extended for general fluid simulations and many more fields from ballistics to oceanography.
 The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming exascale systems.
 
 %
@@ -42,9 +42,9 @@ The development of new reliable, parallel and distributed tools for this method 
 \end{figure}
 %
 The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of a group of particles representing physical quantities.
-Those physical quantities are either invariant or computed for every particle regarding its neighbors in the radius of its smoothing length $h$. 
+Those physical quantities are either invariant or computed for every particle at each step regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel\index{Smoothing Kernel}. 
-The fundamental SPH formulation for any physical quantity $A$ is then to compute with all the neighbors of $b$ of a $a$ particle by:
+The fundamental SPH formulation for any physical quantity $A$ is then, with all the neighbors $b$ of a particle $a$:
 \begin{equation}
 A(\vec{r})_a \simeq \sum_b \frac{m_b}{\rho_b} A(\vec{r}_b) W ( |\vec{r}-\vec{r}_b|,h)
 \end{equation}
@@ -406,6 +406,13 @@ In order to perform realistic simulations we consider two stars that are stable.
 We give details on the way to generate those data and the physics of the fusion itself. 
 A lot of work have been involve in this understanding since it is quite out of the field of the primary researches. 
 
+The generation of initial data for binary neutron star merging is quite complicated. 
+THe first step is to generate the profile of mass regarding the radius of the star. 
+This is made using the Lane-Emden equation. 
+As those data are generated based on a grid with a fixed smoothing length in our case we need to add an extra step for relaxation. 
+We used two relaxation methods with the Roche Lobe and Darwin problems. 
+The last step before the merging is to positioned the stars and add the rotation velocity. 
+
 \subsubsection{Solving Lane-Emden Equation}
 
 In order to consider BNS we first consider two individual stars. 
@@ -498,8 +505,14 @@ $$ h = \frac{1}{2}\sqrt{\frac{3N_N}{4\pi n}} $$
 
 Here we choose $N_N$, the average number of neighbors, to be 100.
 
+\subsubsection{Relaxation}
+The last step is to perform a relaxation on the raw data. 
+There is two methods we used: the Roche lobe and Darwin problems. 
+In each of them we apply specific forces during a determined time for the particles to be stabilized. 
+
 \paragraph{Roche lobe problem: }
-To create Hydrostatic Equilibrium Models we use a different equation of motion. This version use Roche Lobe:
+The Roche Lobe version is used to simulate the halo around the stars which is shaped like a tear-drop. 
+For this Hydrostatic Equilibrium Models we use a different equation of motion:
 
 \begin{equation}
 \frac{d\vec{v_i}}{dt} = \frac{\vec{F}_i^{Grav}}{m_i} + \frac{\vec{F}_i^{Hydro}}{m_i} + \vec{F}_i^{Roche} - \frac{\vec{v_i}}{t_{relax}}
