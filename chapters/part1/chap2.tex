@@ -500,7 +500,9 @@ These networks takes in account the number of nodes to interconnect and the targ
 Several declination of each network are not detailed here. 
 The Mesh and the Torus are use as a basis in lower layers of others more complex interconnection networks. 
 A perfect example is the supercomputer called K-Computer describe in the next section.
-The Fat Tree presented here is a k-ary Fat Tree, higher the position in the tree more connection are found and the bandwidth is important. The nodes are available as the leafs, on the middle level we find the switches and on top the routers. 
+The Fat Tree presented here is a k-ary Fat Tree, higher the position in the tree more connection are found and the bandwidth is important. 
+The nodes are available as the leafs, on the middle level we find the switches and on top the routers. 
+This is the topology of the ROMEO supercomputer we used for our tests. 
 Another topology, HyperX\cite{ahn2009hyperx}, is base on Hyper-Cube.
 The DragonFly\cite{kim2008technology} interconnect is recent, 2008, and use in nowadays supercomputers.
 
@@ -535,16 +537,17 @@ Another idea came in 19th century with the first multi-core processors.
 
 
 \subsection{Remarkable supercomputers}
-The TOP500 is the reference benchmarks for the world size supercomputers. 
+The TOP500\footnote{\url{https://www.top500.org}} is the reference benchmarks for the world size supercomputers. 
+This benchmark is based the LINPACK and aim to solve a dense system of linear equations.
 Most of the TOP10 machines have specific architectures and, of course, the most efficient ones. 
 In this section we give details on several supercomputers about their interconnect, processors and specific accelerators. 
 
 \subsubsection{Sunway Taihulight}
 \index{Sunway Taihulight}
-Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list. 
+Sunway Taihulight is the third Chinese supercomputer to be ranked in the first position of the TOP500 list, November 2017. 
 A recent report from Jack J. Dongarra, a figure in HPC, decrypt the architecture of this supercomputer\cite{dongarra2016report}. 
 The most interesting point is the conception of this machine, completely done in China. 
-The Sunway CPUs were invented and built in China. The Vendor is the Shanghai High Performance IC Design Center. 
+The Sunway CPUs were designed and built in China. The Vendor is the Shanghai High Performance IC Design Center. 
 
 \begin{figure}[t!]
 \centering
@@ -558,7 +561,7 @@ The processor is composed of the master core, a Memory Controller (MC), a Manage
 
 The interconnect network is called Sunway Network and connected using Mellanox Host Channel Adapter (HCA) and switches. 
 This is a five level interconnect going through computing nodes, computing board, super-nodes and cabinets to the complete system.
-The total memory is 1.31 PB and the number of cores available is 10,649,600.
+For the latest TOP500 list, November 2017: the total memory is 1.31 PB and the number of cores available is 10,649,600.
 The peak performance is 125.4 PFLOPS and the Linpack is 93 PFLOPS which induce 74.16\% of efficiency. 
 
 \subsubsection{Piz Daint}
@@ -571,7 +574,7 @@ He is composed of 4761 hybrids and 1210 multi-core nodes.
 The hybrids nodes embedded an Intel Xeon E5-2690v3 and an NVIDIA Tesla Pascal P100 GPGPU. 
 The interconnect is based on a Dragonfly network topology and Cray Aries routing and communications ASICs. 
 The peak performance is 25.326 TFLOPS using only the hybrid nodes and the Linpack gives 19.590 TFLOPS.
-The low power consumption rank Piz Daint as 10th in the GREEN500 list. 
+The low power consumption rank Piz Daint as 10th in the GREEN500 list of November 2017. 
 
 \subsubsection{K-Computer}
 \index{K-Computer}
@@ -603,11 +606,12 @@ The algorithm used on these supercomputers will be our basis in the part II rega
 \section{ROMEO Supercomputer}
 \index{ROMEO Supercomputer}
 The ROMEO supercomputer center is the computation center of the Champagne-Ardenne region in France. 
-Hosted since 2002 by the University of Reims Champagne-Ardenne, this so called meso-center (French name for software and hardware architectures) is used for HPC for theoretic research and domain science like applied mathematics, physics, biophysics and chemistry. 
+Hosted since 2002 by the University of Reims Champagne-Ardenne, this so called meso-center (Medium size HPC center) is used for HPC for theoretic research and domain science like applied mathematics, physics, biophysics and chemistry. 
 
-This project is support by the Champagne-Ardenne region and the CEA (French Alternative Energies and Atomic Energy Commission), aim to host research and production codes of the region for industrial, research and academics purposes. 
+This project is supported by Europe, National fundings, Grand-Est region and Reims Metropole. 
+It aims to host research and production codes of the region for industrial, research and academics purposes. 
 
-We are currently working on the third version of ROMEO, installed in 2013. 
+We are currently working on the fourth version of ROMEO, installed in 2013. 
 As many of our tests in this study have been done on this machine, we will carefully describe its architecture. 
 
 This supercomputer was ranked 151st in the TOP500 and 5th in the GREEN500 list. 
@@ -630,6 +634,10 @@ In addition to the 130 computations nodes, the cluster provides a visualization 
 The old machine, renamed Clovis, is always available but does not features GPUs. 
 
 The supercomputer supports MPI with GPU Aware and GPUDirect. 
+
+ROMEO is based on the Slurm\footnote{\url{https://slurm.schedmd.com/}} workload manager for node distribution among the users. 
+This manager allows different usage of the cluster with classical reservation-submission or more asynchronous computation with best-effort. 
+We developed advantages of both submissions systems in part II. 
 
 \subsection{New ROMEO supercomputer, June 2018}
 \todo{Avoir les info et decrire le nouveau ROMEO}

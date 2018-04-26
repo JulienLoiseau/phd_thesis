@@ -35,6 +35,135 @@ The problem in this model will be the concurrency in reading (R) and writing (W)
 Indeed, mutual exclusion have to be set with exclusive (E) or concurrent (C) behaviors and we find 4 combinations: EREW, ERCW, CREW and CRCW.
 As the reading is not critical for data concurrency the standard model will be Concurrent Reading and Exclusive Writing: CREW.
 
+\begin{figure}[ht!]
+\centering
+\resizebox {\columnwidth} {!} {
+\begin{tikzpicture}
+\def\i{4.5}
+\node[draw,minimum width=1cm] (n00) at (0,\i) {8};
+\node[draw,minimum width=1cm] (n01) at (1,\i) {5};
+\node[draw,minimum width=1cm] (n02) at (2,\i) {2};
+\node[draw,minimum width=1cm] (n03) at (3,\i) {9};
+\node[draw,minimum width=1cm] (n04) at (4,\i) {1};
+\node[draw,minimum width=1cm] (n05) at (5,\i) {0};
+\node[draw,minimum width=1cm] (n06) at (6,\i) {3};
+\node[draw,minimum width=1cm] (n07) at (7,\i) {4};
+\def\i{3}
+\node[draw,minimum width=1cm] (n10) at (0,\i) {5};
+\node[draw,minimum width=1cm,fill=black!50] (n11) at (1,\i) {5};
+\node[draw,minimum width=1cm] (n12) at (2,\i) {2};
+\node[draw,minimum width=1cm,fill=black!50] (n13) at (3,\i) {9};
+\node[draw,minimum width=1cm] (n14) at (4,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n15) at (5,\i) {0};
+\node[draw,minimum width=1cm] (n16) at (6,\i) {3};
+\node[draw,minimum width=1cm,fill=black!50] (n17) at (7,\i) {4};
+\def\i{1.5}
+\node[draw,minimum width=1cm] (n20) at (0,\i) {2};
+\node[draw,minimum width=1cm,fill=black!50] (n21) at (1,\i) {5};
+\node[draw,minimum width=1cm,fill=black!50] (n22) at (2,\i) {2};
+\node[draw,minimum width=1cm,fill=black!50] (n23) at (3,\i) {9};
+\node[draw,minimum width=1cm] (n24) at (4,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n25) at (5,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n26) at (6,\i) {3};
+\node[draw,minimum width=1cm,fill=black!50] (n27) at (7,\i) {4};
+\def\i{0}
+\node[draw,minimum width=1cm] (n30) at (0,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n31) at (1,\i) {5};
+\node[draw,minimum width=1cm,fill=black!50] (n32) at (2,\i) {2};
+\node[draw,minimum width=1cm,fill=black!50] (n33) at (3,\i) {9};
+\node[draw,minimum width=1cm,fill=black!50] (n34) at (4,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n35) at (5,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n36) at (6,\i) {3};
+\node[draw,minimum width=1cm,fill=black!50] (n37) at (7,\i) {4};
+% Add the arrows 
+\draw[->] (n00.south) -- (n10.north);
+\draw[-] (n01.south) -- ([yshift=-.5cm]n01.south) -- ([yshift=-.5cm]n00.south);
+\draw[->] (n02.south) -- (n12.north);
+\draw[-] (n03.south) -- ([yshift=-.5cm]n03.south) -- ([yshift=-.5cm]n02.south);
+\draw[->] (n04.south) -- (n14.north);
+\draw[-] (n05.south) -- ([yshift=-.5cm]n05.south) -- ([yshift=-.5cm]n04.south);
+\draw[->] (n06.south) -- (n16.north);
+\draw[-] (n07.south) -- ([yshift=-.5cm]n07.south) -- ([yshift=-.5cm]n06.south);
+
+\draw[->] (n10.south) -- (n20.north);
+\draw[-] (n12.south) -- ([yshift=-.5cm]n12.south) -- ([yshift=-.5cm]n10.south);
+\draw[->] (n14.south) -- (n24.north);
+\draw[-] (n16.south) -- ([yshift=-.5cm]n16.south) -- ([yshift=-.5cm]n14.south);
+
+\draw[->] (n20.south) -- (n30.north);
+\draw[-] (n24.south) -- ([yshift=-.5cm]n24.south) -- ([yshift=-.5cm]n20.south);
+
+
+\def\i{4.5}
+\node[draw,minimum width=1cm] (n00) at (11,\i) {8};
+\node[draw,minimum width=1cm] (n01) at (12,\i) {5};
+\node[draw,minimum width=1cm] (n02) at (13,\i) {2};
+\node[draw,minimum width=1cm] (n03) at (14,\i) {9};
+\node[draw,minimum width=1cm] (n04) at (15,\i) {1};
+\node[draw,minimum width=1cm] (n05) at (16,\i) {0};
+\node[draw,minimum width=1cm] (n06) at (17,\i) {3};
+\node[draw,minimum width=1cm] (n07) at (18,\i) {4};
+\def\i{3}
+\node[draw,minimum width=1cm] (n10) at (11,\i) {13};
+\node[draw,minimum width=1cm,fill=black!50] (n11) at (12,\i) {5};
+\node[draw,minimum width=1cm] (n12) at (13,\i) {11};
+\node[draw,minimum width=1cm,fill=black!50] (n13) at (14,\i) {9};
+\node[draw,minimum width=1cm] (n14) at (15,\i) {1};
+\node[draw,minimum width=1cm,fill=black!50] (n15) at (16,\i) {0};
+\node[draw,minimum width=1cm] (n16) at (17,\i) {7};
+\node[draw,minimum width=1cm,fill=black!50] (n17) at (18,\i) {4};
+\def\i{1.5}
+\node[draw,minimum width=1cm] (n20) at (11,\i) {24};
+\node[draw,minimum width=1cm,fill=black!50] (n21) at (12,\i) {5};
+\node[draw,minimum width=1cm,fill=black!50] (n22) at (13,\i) {11};
+\node[draw,minimum width=1cm,fill=black!50] (n23) at (14,\i) {9};
+\node[draw,minimum width=1cm] (n24) at (15,\i) {8};
+\node[draw,minimum width=1cm,fill=black!50] (n25) at (16,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n26) at (17,\i) {7};
+\node[draw,minimum width=1cm,fill=black!50] (n27) at (18,\i) {4};
+\def\i{0}
+\node[draw,minimum width=1cm] (n30) at (11,\i) {32};
+\node[draw,minimum width=1cm,fill=black!50] (n31) at (12,\i) {5};
+\node[draw,minimum width=1cm,fill=black!50] (n32) at (13,\i) {11};
+\node[draw,minimum width=1cm,fill=black!50] (n33) at (14,\i) {9};
+\node[draw,minimum width=1cm,fill=black!50] (n34) at (15,\i) {1};
+\node[draw,minimum width=1cm,fill=black!50] (n35) at (16,\i) {0};
+\node[draw,minimum width=1cm,fill=black!50] (n36) at (17,\i) {7};
+\node[draw,minimum width=1cm,fill=black!50] (n37) at (18,\i) {4};
+% Add the arrows 
+\draw[->] (n00.south) -- (n10.north);
+\draw[-] (n01.south) -- ([yshift=-.5cm]n01.south) -- ([yshift=-.5cm]n00.south);
+\draw[->] (n02.south) -- (n12.north);
+\draw[-] (n03.south) -- ([yshift=-.5cm]n03.south) -- ([yshift=-.5cm]n02.south);
+\draw[->] (n04.south) -- (n14.north);
+\draw[-] (n05.south) -- ([yshift=-.5cm]n05.south) -- ([yshift=-.5cm]n04.south);
+\draw[->] (n06.south) -- (n16.north);
+\draw[-] (n07.south) -- ([yshift=-.5cm]n07.south) -- ([yshift=-.5cm]n06.south);
+
+\draw[->] (n10.south) -- (n20.north);
+\draw[-] (n12.south) -- ([yshift=-.5cm]n12.south) -- ([yshift=-.5cm]n10.south);
+\draw[->] (n14.south) -- (n24.north);
+\draw[-] (n16.south) -- ([yshift=-.5cm]n16.south) -- ([yshift=-.5cm]n14.south);
+
+\draw[->] (n20.south) -- (n30.north);
+\draw[-] (n24.south) -- ([yshift=-.5cm]n24.south) -- ([yshift=-.5cm]n20.south);
+
+% Text 
+\node at (9,3.75) {4 threads};
+\node at (9,2.25) {2 threads};
+\node at (9,.75) {1 thread};
+
+\end{tikzpicture}
+}
+\caption{PRAM model example on minimum and reduction computation}
+\label{fig:pram_reduction}
+\end{figure}
+
+An example of PRAM model applied on a reduction is given on figure~\ref{fig:pram_reduction}.
+In this example the computation of minimum, maximum or a reduction can be perform on an array of $n$ values in $log(n)$ steps and $n-1$ operations.
+This kind of reduction or scan are used to reach performances on multi-core and many-core code in this study.
+We will give example of those reductions in different languages and API. 
+
 \subsection{Distributed Random Access Machine}
 \index{Distributed Random Access Machine}
 \index{No Remote Memory Access}
@@ -115,7 +244,7 @@ The processes with less than $w$ of work will be idle.
 \index{Fork-Join model}
 The Fork-Join model or pattern is presented in figure~\ref{fig:3_SOFT:bsp_fj}.
 A main thread pilot the overall execution. 
-When requested by the application, typically following the idea of \textit{divided-and-conquer} approach, the main thread will fork and then join other threads. \index{Divided-and-conquer approach}
+When requested by the application, typically following the idea of \textit{divide-and-conquer} approach, the main thread will fork and then join other threads. \index{Divide-and-conquer approach}
 The \textit{Fork} operation, called by a logical thread parent, creates new logical threads children working in concurrency.
 There is no limitations in the model and we find nested fork-join where a child can also call fork to generate sub-child and so on. 
 The \textit{Join} can be called by both parents and child. Children call join when done and the parent join by wait until children completion.
@@ -141,6 +270,21 @@ It allows the user to define threads that will execute concurrently on the proce
 PThreads is the low level handling of threads and the user need to handle concurrency with semaphores, conditions variables and synchronization "by hand".
 This makes the PThreads hard to use in complex applications and used only for very fine-grained control over the threads management. 
 
+\begin{figure}[t!]
+\begin{lstlisting}[language=C]
+...
+int min_val = MAX;
+#pragma omp parallel for reduction(min:min_val)
+for(int i = 0 ; i < X ; ++i){
+	min_val = arr[i]<min_val?arr[i]:min_val;
+}
+...
+\end{lstlisting}
+\caption{OpenMP reduction code for minimum}
+\label{code:openmp_reduction}
+\end{figure}
+
+
 \subsubsection{OpenMP}
 \index{OpenMP}
 \index{Unified Memory Access}
@@ -159,6 +303,9 @@ Perfect for loop parallelization and parallel sections, we show that we can have
 In our case, OpenMP is always use on the node to target all the processors cores in the shared memory. 
 
 We note that the new versions of OpenMP also allows to target directly accelerators like NVIDIA ones. 
+
+The code corresponding to a reduction using OpenMP API is presented on figure~\ref{code:openmp_reduction}.
+This is linked with the PRAM model reduction presented at the beginning of this part. 
 
 \subsection{Distributed programming}
 In the cluster once the code have been developed locally and using the multiple cores available, the new step is to distribute it all over the nodes of the cluster. 
@@ -224,6 +371,24 @@ In order to target accelerators like GPU, several specific API have been develop
 At first they were targeted for matrix computation with OpenGL or DirectX through specific devices languages to change the first purpose of the graphic pipeline. 
 The GPGPUs arriving forced an evolution and new dedicated language to appear. 
 
+\begin{figure}[t!]
+\begin{lstlisting}[language=C]
+__inline__ __device__ void warpReduceMin(int& val, int& idx)
+{
+    for (int offset = warpSize / 2; offset > 0; offset /= 2) {
+        int tmpVal = __shfl_down(val, offset);
+        int tmpIdx = __shfl_down(idx, offset);
+        if (tmpVal < val) {
+            val = tmpVal;
+            idx = tmpIdx;
+        }
+    }
+}
+\end{lstlisting}
+\caption{CUDA kernel for reduction of minimum}
+\label{code:cuda_reduction}
+\end{figure}
+
 \subsubsection{CUDA}
 \label{sec:CUDA}
 \index{CUDA}
@@ -277,6 +442,13 @@ Specific tools have been made for HPC in the NVIDIA GPGPUs.
   \item[NVIDIA GPU-Direct] GPUs' memory and CPU ones are different and the Host much push the data on GPU before allowing it to compute. GPU-Direct allows direct transfers from GPU devices through the network. Usually implemented using MPI.  
 \end{description}
 
+Indeed, working with a very low level API like CUDA can lead to better performances. 
+This can be very costly in development time. 
+Regarding the time involved in coding compared to the performances gain, one may consider to use higher levels API like OpenACC. 
+
+The reduction using the CUDA API is presented on figure~\ref{code:cuda_reduction}.
+It shows, compared to OpenMP, the complexity of CUDA code. 
+
 \subsubsection{OpenCL}
 \index{OpenCL}
 OpenCL is a multi-platform framework targeting a large part of nowadays architectures from processors to GPUs, FPGAs, etc.
@@ -291,6 +463,22 @@ Those questions are still empty but many tests prove that OpenCL can be as compa
 In this study most of the code had been developed using CUDA to have the best benefit of the NVIDIA GPUs present in the ROMEO Supercomputer. 
 Also the long time partnership of the University of Reims Champagne-Ardenne and NVIDIA since 2003 allows us to exchange directly with the support and NVIDIA developers. 
 
+
+\begin{figure}[t!]
+\begin{lstlisting}[language=C]
+...
+int min_val = MAX; 
+#pragma acc parallel loop copyin(arr[0:n]) reduction(min:min_val) 
+for (int i=0; i<n; i++) { 
+    min_val = arr[i]<min_val?arr[i]:min_val; 
+}
+...
+\end{lstlisting}
+\caption{OpenACC code for reduction of minimum}
+\label{code:openacc_reduction}
+\end{figure}
+
+
 \subsubsection{OpenACC}
 \index{OpenACC}
 Open ACCelerators is a "user-driven directive-based performance-portable parallel programming model"\footnote{https://www.openacc.org/} developed with Cray, AMD, NVIDIA, etc.
@@ -298,6 +486,10 @@ This programming model propose, in a similar way to OpenMP, pragmas to define th
 As the device memory is separated specific pragmas are use to define the memory movements.
 Research works\cite{wienke2012openacc} tend to show that OpenACC performances are good regarding the time spend in the implementation itself compare to fine grain CUDA or OpenCL approaches. 
 The little lack of performances can also be explain by the current contribution to companies in the wrapper for their architectures and devices. 
+
+The reduction example is given on figure~\ref{code:openacc_reduction}. 
+This shows the simplicity of writing accelerator code using high level API like OpenACC compared to the complex CUDA code. 
+Indeed, this approach works in most of the case but for specific ones CUDA might outperform OpenACC. 
 
 \begin{figure}
 \centering 

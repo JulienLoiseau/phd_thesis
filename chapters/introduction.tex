@@ -1,7 +1,7 @@
 \chapter*{Introduction}
 
-In the aurora 2020-2021 for United States of America and maybe before, like 2019 for China, the world of High Performance Computing (HPC) will reach another milestone in the power of machines: the Exascale. 
-These supercomputers will be $100$ times faster than the estimated overfall operations performed by the human brain and its $10^{16}$ \textbf{FL}oating point \textbf{O}perations \textbf{P}er \textbf{S}econd (FLOPS) and achieve a computational power of a quintillion of ($10^{18}$) FLOPS.
+In the aurora 2020-2021 for United States of America and Europe and maybe before, like 2019, for China, the world of High Performance Computing (HPC) will reach another milestone in the power of machines: the Exascale. 
+These supercomputers will be $100$ times faster than the estimated overfall operations performed by the human brain and its $10^{16}$ \textbf{FL}oating point \textbf{O}perations \textbf{P}er \textbf{S}econd (FLOPS) \cite[kurzweil2010singularity] and achieve a computational power of a quintillion of ($10^{18}$) FLOPS.
 This odyssey started a long time ago with the first vacuum tubes computers and the need of ballistic computation for war. 
 Nowadays the aim is very nearby and the power of a nation is represented by its army and money but also by the computational power of its supercomputers.
 HPC's applications also spread into all the area of science and technology.\\
@@ -52,7 +52,8 @@ Domain scientists applications like physics/astrophysics/chemist/biologist requi
 In this document we propose a metric that extracts the three main issues of HPC and apply them to accelerated architectures to figure out how to take advantage of those architectures and what the limitations are. 
 The first step to this metrics is obtained when merging two characteristic problems and then a third one combining all our knowledge.
 The first two are targeting computation and communication wall over very irregular cases with high memory accesses, using an academic combinatorial problem and the Graph500 benchmark. 
-The last is a computational scientific problem that covers both difficulties of the previous problems and appears to be hard to implement on supercomputers and even more on accelerated ones.\\
+The last is a computational scientific problem that covers both difficulties of the previous problems and appears to be hard to implement on supercomputers and even more on accelerated ones.
+The results obtain comfort our thesis and show hybrid architectures as the best solution to reach exascale.\\
 
 This thesis is composed of three parts.
 
@@ -64,15 +65,19 @@ The main methods of ranking and the issues regarding them are presented.\\
 In the second part we propose our metric based on characteristic problems to target classical and hybrid architectures.
 The Langford problem is described as an irregular and computationally heavy problem.
 This shows how the accelerators, in this case GPUs, are able to support the memory and computation wall. 
+This work leads to the publication of one journal paper \cite{krajecki2016many} and many conferences/presentations/posters \cite{deleau2014towards,j2016resolution,jaillet2014Langford}.
 This allowed us to beat a world record with the last instances of this academic problem.
+
 The Graph500 problem is then proposed as an irregular and communications heavy problem. 
-We present our implementation, and more over the logic to take advantage of the GPUs computational power for characteristic applications. \\
+We present our implementation, and more over the logic to take advantage of the GPUs computational power for characteristic applications. 
+This work leads to the publication of a conference paper \cite{krajecki2016bfs} and many presentations/posters \cite{loiseau2015parcours,loiseau2015GTC}.\\
 
 In the third part we consider a problem that is heavy and irregular regarding computation and communications.
 We analyze it and show that it combines all the previous limitations. 
 Then we apply our methodology and show how nowadays supercomputers can overcome those issues. 
 This computational science problem is based on the Smoothed Particle Hydrodynamics method.
 The former application we started with was developed on top of the FleCSI framework from the Los Alamos National Laboratory it allowed us to exchange directly with the LANL domain scientists on their need.
-Based on our global work to efficiently parallelize those kinds of production application, we intend to provide an efficient tool for physicists and astrophysicists called FleCSPH. \\
+Based on our global work to efficiently parallelize those kinds of production application, we intend to provide an efficient tool for physicists and astrophysicists called FleCSPH. 
+This work leads to several presentation and posters \cite{debrye20162HOT,loiseau2017SC}.\\
 
 The last part will conclude on this work and results and show some of the main prospects of this study and my future researches. 
