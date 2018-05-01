@@ -7,7 +7,7 @@
 
 \section{Introduction}
 
-The previous part describes the method we want to implement.
+The previous part describes the method we implement to set the last metric of our benchmark for hybrid architectures.
 It also presents the wall faced with smoothed particle hydrodynamics and gravitation. 
 We showed that this application meets the communication and computation wall in an irregular behavior context. 
 We intent to target astrophysical simulation using hybrid architectures. 
@@ -25,7 +25,7 @@ The last section exposes the results for both implementation and the simulations
 
 A lot of code already exists for SPH simulation and some are already made using hybrid architectures.
 The contribution of FleCSPH is, like FleCSI, to provide a transparent tool for domain scientists. 
-Those frameworks provides a bunch of topologies and functions and will handle the load balancing and distribution for the domain scientists. 
+Those frameworks provide a bunch of topologies and functions and will handle the load balancing and distribution for the domain scientists. 
 This allows the computer scientists to keep track of last hardware evolution and provide efficient algorithms for them while the physicists/astrophysicists/chemists can focus on the simulation itself. 
 In this context FleCSPH is focused on tree topologies and will be integrated in FleCSI later on. 
 
@@ -45,7 +45,7 @@ FleCSI's control and execution models provide formal nomenclature for describing
 FleCSI's data model provides a low-buy-in approach that makes it an attractive option for many application projects, as developers are not locked into particular layouts or data structure representations.
 
 FleCSI currently provides a parallel but not distributed implementation of Binary, Quad and Oct-tree topology. 
-This implementation is base on space filling curves domain decomposition, the Morton order. 
+This implementation is based on space filling curves domain decomposition, the Morton order. 
 The current version allows the user to specify the code main loop and the data distribution requested. 
 The data distribution feature is not available for the tree data structure needed in our SPH code and we provide it in the FleCSPH implementation. 
 The next step will be to incorporate it directly from FleCSPH to FleCSI as we reach a decent level of performance.
@@ -80,13 +80,14 @@ Before going further in the SPH implementation and our development, we need to g
 \end{algorithmic}
 \end{algorithm}
 %
-The general algorithm is presented on algorithm~\ref{alg:general_behavior} and present the features of SPH presented in the previous section. 
+The general algorithm is presented on algorithm~\ref{alg:general_behavior} and shows the features of SPH exposed in the previous section. 
 In this section we present the main features of our code and the problems involved: the domain decomposition, the tree data structure and traversal and our distribution strategy. 
 This project, in collaboration with the LANL, is named FleCSPH. 
 
 FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initially created as a part of FleCSI. 
 The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
-The final purpose of FleCSPH is to complement the tree topology and provide the colorer to FleCSI. 
+The final purpose of FleCSPH is to complement the tree topology and provide the \textit{colorer} to FleCSI. 
+The distribution strategies associate to a data structure.
 As presented in the previous sections, SPH is a very good candidate to benchmark the binary, quad and oct tree topology. 
 The demand is high for astrophysics simulation regarding the recent discoveries of the LIGO and the SPH method allows us to generate those simulations. 
 \begin{figure}[t!]
@@ -95,9 +96,9 @@ The demand is high for astrophysics simulation regarding the recent discoveries 
 \caption{FleCSI and FleCSPH frameworks }
 \label{fig:flecsi_flecsph_framework}
 \end{figure}
-Figure~\ref{fig:flecsi_flecsph_framework} present how FleCSI and FleCSPH are integrated. 
-FleCSPH is based on the tree topology of FleCSI and follows the same structure define in FleCI. 
-The ideal runtime in FleCSI is Legion but this in-development code does not allows us to do more than static data distribution. 
+Figure~\ref{fig:flecsi_flecsph_framework} presents how FleCSI and FleCSPH are integrated. 
+FleCSPH is based on the tree topology of FleCSI and follows the same structure define in FleCSI. 
+The ideal runtime in FleCSI is Legion but this in-development code does not allow us to do more than static data distribution. 
 This is why we decided to work with the MPI runtime in FleCSPH. 
 Those MPI functions can then be integrated to FleCSI to generate group of particles and labeled them, the coloring. 
 
@@ -110,7 +111,7 @@ Those MPI functions can then be integrated to FleCSI to generate group of partic
 
 Figure~\ref{fig:files_flecsph} present the file systems of the github repository. 
 We use the tools from Cinch\footnote{\url{http://github.com/laristra/cinch}} developed at LANL for the CMake and the makefile generation. 
-It also provide the GoogleTests API for our unit tests. 
+It also provides the GoogleTests API for our unit tests. 
 The FleCSPH code is currently public and available on github under the \textit{laristra} (Los Alamos Ristra) project.
 The continuous integration is ensured by using Travis based on Docker and \textit{Dockerfiles} provided in the Docker folder. 
 In addition to Travis for the unit tests we use use tools as CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
@@ -174,9 +175,9 @@ This increase the search time but allows less tree reconstructions.
 
 We use 64 bits to represent the keys to avoid conflicts.
 The FleCSI code allows us to use a combination of memory words to reach the desired size of keys (possibly more than 64 bits) but this will cost in memory occupancy. 
-The particle keys are generated by normalizing the space and then converting the floating-point representation to a 64 bits integer for each dimensions. 
-Then the Morton interlacing is done and the keys are created. 
-Unfortunately in some arrangements, like isolated particles, or scenarios with very close particles, the keys can be either badly distributed or duplicate keys can appear. 
+The particle keys are generated by normalizing the space and then converting the floating-point representation to a 64 bits integer for each dimension. 
+Then the Morton interlacing is done, and the keys are created. 
+Unfortunately, in some arrangements, like isolated particles, or scenarios with very close particles, the keys can be either badly distributed or duplicate keys can appear. 
 Indeed, if the distance between two particles is less than $2^{-64} \approx 1$e+$20$, in a normalized space, the key generated through the algorithm will be the same. 
 This problem is then handle during the particle sort and then the tree generation. 
 In both case two particles can be differentiate based on their unique ID generated at the beginning execution. 
@@ -206,8 +207,8 @@ This allows us to have up to $2^{63}$ different keys and unique particles.
 \subsubsection{Tree generation}
 
 After each particle get distributed on its final process using its space-filling curve key, we can recursively construct the tree.
-Each particle is added and the branches are created recursively if there is an intersection between keys. 
-Starting from the root of key "1" the branches are added at each levels until the particles are reached.
+Each particle is added, and the branches are created recursively if there is an intersection between keys. 
+Starting from the root of key "1" the branches are added at each level until the particles are reached.
 An example of a final tree is shown on figure~\ref{fig:quadtree}.
 
 \subsubsection{Tree search}
@@ -225,15 +226,15 @@ Beside of being easy to implement and to use in parallel this algorithm requires
 \label{fig:arbre}
 \end{figure}
 
-Our search algorithm, presented on Algorithm~\ref{alg:find_nodes}, is a two step algorithm like in Barnes trees: First create the interaction lists and then using them on the sub-tree particles. 
+Our search algorithm, presented on Algorithm~\ref{alg:find_nodes}, is a two-step algorithm like in Barnes trees: First create the interaction lists and then using them on the sub-tree particles. 
 In the first step we look down for nodes with a target sub-mass of particles $tmass$. 
 Then for those branches we compute an interaction list and continue the recursive tree search. 
 When a particle is reached, we compute the physics using the interaction list as the neighbors. 
-The interaction list is computing using an opening-angle criterion comparing the boundary box and an user define angle. 
+The interaction list is computing using an opening-angle criterion comparing the boundary box and a user define angle. 
 This way we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
 On figure~\ref{fig:arbre} we present the classical and the two steps algorithm. 
 We see that the first method, on left, force to do one walk per particle, compute the interaction list and then apply to particles. 
-On the left, the two step method, only perform one tree traversal for the whole block of particles, compute the interaction list and then processed to the local computation. 
+On the left, the two-step method, only perform one tree traversal for the whole block of particles, compute the interaction list and then processed to the local computation. 
 Indeed, this implies a check of particle distance during the computation since all the particles from the interaction list are not useful for every particle. 
 
 \begin{algorithm}
@@ -336,22 +337,22 @@ The main distributed algorithm is presented on algorithm \ref{alg:main_distribut
 \label{fig:big_tree}
 \end{figure*}
 
-The sort step, line \ref{alg_main:qsort}, is base on a distributed quick sort algorithm. 
+The sort step, line \ref{alg_main:qsort}, is based on a distributed quick sort algorithm. 
 The keys are generated using the Morton order described in part \ref{sec:domain_decomposition}. 
 As we associate a unique number to each particle we are able to sort them using the keys and, in case of collision keys, using their unique ID. 
 This gives us a global order for the particles. 
 Each process sends to a master node (or submaster for larger cases) a sample of its keys. 
-We determined this size to be 256 KB of key data per process for our test cases but it can be refined for larger simulations. 
+We determined this size to be 256 KB of key data per process for our test cases, but it can be refined for larger simulations. 
 Then the master determines the general ordering for all the processes and shares the pivots. 
-Then each process locally sort its local keys and, in a global communication step, the particles are distributed to the process on which they belong. 
+Then each process locally sorts its local keys, and, in a global communication step, the particles are distributed to the process on which they belong. 
 This algorithm gives us a good partition in term of number of particles. 
 But some downside can be identified:
 \begin{itemize}
 	\item The ordering may not be balanced in term of number of particles per processes. But by optimizing the number of data exchanged to the master can lead to better affectation. 
-	\item The load balance also depend on the number of neighbors of each particle. If a particle get affected a poor area with large space between the particles, this can lead to bad load balancing too. 
+	\item The load balance also depend on the number of neighbors of each particle. If a particle gets affected a poor area with large space between the particles, this can lead to bad load balancing too. 
 \end{itemize}
 This is why we also provide another load balancing based on the particles neighbors. 
-Depending on the user problem, the choice can be to distribute the particles on each processes regarding the number of neighbors, having the same amount of physical computation to perform on each processes. 
+Depending on the user problem, the choice can be to distribute the particles on each process regarding the number of neighbors, having the same amount of physical computation to perform on each process. 
 
 \begin{figure}[t!]
 \centering
@@ -376,16 +377,15 @@ Then after this step, the ghosts data can be exchanged as wanted several times d
 
 \subsection{Fast Multipole Methods}
 
-We described in the previous chapter a method to compute gravitational interactions faster then the $O(n^2)$ algorithm.
-The Fast Multipole Method, FMM.
+We described in the previous chapter a method to compute gravitational interactions faster than the $O(N^2)$ n-body algorithm, the Fast Multipole Method, FMM.
 This allows an approach with a precision depending of a parameter called the Multipole Acceptance Criterion, MAC. 
-This is needed for us to target binary neutron stars simulations.
+This is needed for us to target binary neutron stars simulations with high number of particles.
 
 This approach is also based on the tree topology used for the SPH method. 
-Three main functions have been defined: 
+Three main functions are used: 
 \begin{itemize}
-	\item \begin{verbatim}mpi_exchange_cells\end{verbatim} share the centers of mass computed in the tree up to a determined mass. By default the program share the lowest COM, the leaves. 
-	\item \begin{verbatim}mpi_compute_fmm\end{verbatim} After gathering the COM this step perform the M2M computation and also isolate the particles needed for the distant P2P step. 
+	\item \begin{verbatim}mpi_exchange_cells\end{verbatim} share the centers of mass computed in the tree up to a determined mass. By default, the program shares the lowest COM, the leaves. 
+	\item \begin{verbatim}mpi_compute_fmm\end{verbatim} After gathering the COM this step performs the M2M computation and also isolate the particles needed for the distant P2P step. 
 	\item \begin{verbatim}mpi_gather_cells\end{verbatim} Gather The contribution of all the other processes and sum in the local branch.
 	Then this step performs both the M2P and P2P computations. 
 	A specific P2P for distant particles is added to take in account the particles found on other processes in the M2M step.
@@ -395,74 +395,120 @@ Three main functions have been defined:
 \centering
 \includegraphics[width=.8\columnwidth]{\locpath/figures/flecsph/fmm_mac.png}
 \caption{Evolution of time regarding the multipole acceptance criterion for FMM method.}
+\label{fig:mac_angle}
 \end{figure}
 
-The speed of computation vary with the choose of the MAC angle. 
-An example is give on figure~\ref{fig:mac_angle}
-This presents the time varying with the angle. 
+The speed of computation varies with the choose of the MAC angle. 
+An example is given on figure~\ref{fig:mac_angle}.
+It presents the time varying with the angle. 
 We note that bigger the angle, faster the computation time. 
 The limit of the angle is $\Theta =  \frac{\pi}{2}$.
-But the loss of precision can be quantify with the evolution of linear and angular momentum.
+The loss of precision can be quantified with the evolution of linear and angular momentum.
 We fixed our MAC to $\Theta = 1$.
 
 \subsection{I/O}
 Regarding the high number of particles, an efficient, parallel and distributed I/O implementation is required. 
-Several choices were available but we wanted a solution that can be specific for our usage. 
+Several choices were available, but we wanted a solution that can be specific for our usage. 
 The first requirement is to allow the user to work directly with the Paraview visualization tool and splash\footnote{\url{http://users.monash.edu.au/~dprice/splash/}}~\cite{price2007splash}.
 
 We base this first implementation on HDF5~\cite{folk1999hdf5} file structure with H5Part and H5Hut~\cite{howison2010h5hut}. 
-HDF5 support MPI runtime with distributed read and write in a single or multiple files. 
-We added the library H5hut to add normalization in the code to represent global data, steps, steps data and the particles data for each steps.
+HDF5 support MPI runtime with distributed read and write in a single or multiple file. 
+We added the library H5hut to add normalization in the code to represent global data, steps, steps data and the particles data for each step.
 The I/O code was developed internally at LANL and provides a simple way to write and read the data in H5Part format. 
 The usage of H5Hut to generate H5part data files allows us to directly read the output in Paraview without using a XDMF descriptor like requested in HDF5 format.
-
-%\subsection{Further-works}
-%The FleCSPH code for this version is based on synchronous communication. 
-%This reduces the scalability performances. 
-
 
 \section{Distributed SPH on hybrid architectures}
 We constructed an efficient and reliable SPH code working on classical architecture clusters. 
 In this section we present our multi-GPU implementation and compare it with our multi-CPU code. 
 We kept the same data structure, distribution strategy and code architecture in the accelerator code. 
-Several options are possible for the accelerator implementation but we wanted to keep the code usable and working for the domain scientists to work on. 
-As the current version of FleCSI does not allow utilization of accelerator like GPU for the data structure, we decided to embedded the GPU code directly on FleCSPH. 
-We provided the same approach we studies in the Langford problem offloading part of the tree computation on the accelerators. 
+Several options are possible for the accelerator implementation, but we wanted to keep the code usable and working for the domain scientists. 
+As the current version of FleCSI does not allow utilization of accelerator like GPU for the data structure, we decided to embed the GPU code directly on FleCSPH. 
+We provided the same approach we studied in the Langford problem offloading part of the tree computation on the accelerators. 
 
 \subsection{Distribution strategies} 
-\todo{WORKING ON}
-During our study we 
+The FleCSPH framework provides all the tools and distribution strategies for multi-CPU and distributed computation.
+In order to target hybrid architectures several approaches were possible.
+They were identified in the previous metrics for the Langford problem.
 The first one is to implement the whole tree traversal and data representation on GPU. 
-This strategy imposes several downside especially for asynchronous communication.
-\todo{add elements later}
+This strategy imposes several downsides especially for asynchronous communication.
+The data structure of FleCSI and FleCSPH does not allows the full transformation of the data structure into CUDA code and, furthermore, this would transform the framework into a problem dependent API. 
+Even if the performances would be slightly better, the aim of this framework is to target multi-physics problems and thus general.
+
+The second strategy is the one used in the Langford problem case. 
+The smoothing length computation is a tree traversal that's lead to a group of particles and their neighbors. 
+We decided to offload the physics computation on accelerators. 
+
 \begin{figure}[t!]
 \input{\locpath/figures/tikz/part3/tree_topology_gpu}
 \caption{Task resolution using GPUs}
 \label{fig:multi_gpu_implementation}
 \end{figure}
-Figure~\ref{fig:multi_gpu_implementation} present the choose distribution of tasks with the accelerator. 
-The tree traversal itself stay on the host processor and lower part of the tree are offloaded to the accelerators. 
-
+Figure~\ref{fig:multi_gpu_implementation} presents the distribution of tasks with the accelerator. 
+The tree traversal itself stays on the host processor and lower part of the tree are offloaded to the accelerators. 
+The traversal is done in parallel on the host and, when a group of particles and its neighbors list is reached, the data are transferred to the GPU for computation. 
+With this method the GPU is fully used for regularized computation and the CPU handle the data structure. 
+When the tree traversal is done, the CPU wait for last GPU tasks to complete and can gather the result or start another traversal leaving data on GPUs. 
 
 \subsection{Physics on accelerators}
-
+The computation of physics is also slightly different on accelerators. 
+Indeed, the CPU send to the GPU indexes with the particles and their possible neighbors. 
+The GPU perform a brute force computation with $O(n^2)$ algorithm. 
+It keeps checking if the particles received are inside the smoothing length radius. 
+The target particle is loaded in local memory and its neighbors are stored in the local memory for a WARP based computation.
+The threads then iterate on the local particles and output together in global memory.
 
 \section{Results}
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
-We decided to conduct the tests on the 2D and 3D fluids.
+We show the benefit of using hybrid architecture even on irregular problem with high communications and computations.
+
 \subsection{Performances}
+The two metrics we worked on, in part II, gave us hint in order to reach performances in this simulation code. 
+The first step was to find the best repartition between the host and device. 
+
+\begin{figure}[t!]
+\centering
+\begin{minipage}[b]{.5\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/task_gpu.png}
+	\caption{CPU-GPU tasks work balancing}
+	\label{fig:cpu_gpu_rep}
+\end{minipage}%
+\begin{minipage}[b]{.5\textwidth}
+\centering
+	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/scalability.png}
+	\caption{CPU vs GPU scalability}
+	\label{fig:cpu_gpu_scala}
+\end{minipage}
+\end{figure}
+
+Figure~\ref{fig:cpu_gpu_rep} shows the work balancing. 
+With the smallest distribution the CPU and GPU keep exchange data for very small amount of computation. 
+Art the opposite, if the CPU value is too high the $O(n^2)$ part is too important. 
+We choose the value to be configured by the user and defaulted at  XX.
+
+On figure~\ref{fig:cpu_gpu_scala} we find the strong scaling tests for CPU and GPU version using the empiric best depth of repartition.
+We see that the GPU allows the system to go up to XX\% faster in a one million particles example. 
+These tests were made using XX nodes of the ROMEO supercomputer in a classical submission using Slurm.
 
 \subsection{Simulations}
-As explained in the previous part we simulated several physical and astrophysical event in order to check the code behavior and reliability. 
+The results and tests were done on several physical and astrophysical simulations in order to check the code behavior and reliability. 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
 \caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
 \label{fig:fluid_simulation}
 \end{figure}
-The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous part, showed perfect results. 
-The fluid simulations are presented on figure~\ref{fig:fluid_simulation}.
 
+The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous chapter, showed perfect results. 
+
+The fluid simulation is presented on figure~\ref{fig:fluid_simulation}.
+In this figure we can see a 40,000 particles simulation executed on multiples node of the ROMEO supercomputer. 
+This dam break simulation gave us the opportunity to represent the behavior of boundary conditions with a high number of particles. 
+
+In order to target a problem with both SPH and gravitation we decided to work on Astrophysics events like Binary Neutron Stars.
+The initial data were generated using python 3.5 to compute the position, mass and smoothing length of every particles. 
+A first step is done for the relaxation, the particles take their location. 
+The system relaxed then evolve following the merging equations proposed in the previous chapter. 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/flecsph/bns_merger}
@@ -470,16 +516,20 @@ The fluid simulations are presented on figure~\ref{fig:fluid_simulation}.
 \label{fig:bns_simulation}
 \end{figure}
 
-Based on the initial data generation presented in the previous part, figure~\ref{fig:bns_simulation}.
-
+Figure~\ref{fig:bns_simulation} presents the binary neutron star coalescence for 40,000 particles. 
+The computation took 5 hours on four nodes of the supercomputer ROMEO. 
+This simulation is done with a total of 750 outputted steps with more than 100,000 iterations. 
 
 \section{Conclusion}
 In this section we presented a tool completing our metric. 
 This production application dedicated to smoothed particles hydrodynamics and gravitation simulation is called FleCSPH. 
 It allows us to target both computation and communication walls in a highly irregular context.
 
+We based our hybrid implementation on the knowledge from the two first metric of our benchmark.
 We showed the advantage of using hybrid architecture on this kind of application and this behavior can be find in many others. 
 
-
-This application is based on the FleCSI framework also developed at the Los Alamos National Laboratory.
-The experience and exchanges with this important laboratory of DoE and NNSA was a real opened my eyes on simulation and the complexity of such codes
+It is important to notice that the GPU usage is not the best in this case. 
+Indeed, a dedicated application for each specific SPH problem would be more efficient. 
+The aim is to provide a framework that can be use on a large set of cluster and architectures. 
+Even with those limitations, the GPU was able to provide an acceleration of XX\% compare to the full-CPU computation.
+ 
