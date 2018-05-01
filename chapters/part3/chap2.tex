@@ -374,6 +374,37 @@ Then each process is able to do synchronously or asynchronously communications t
 In the current version of FleCSPH an extra step is required to synchronously share data of the particles needed during the next tree traversal and physics part. 
 Then after this step, the ghosts data can be exchanged as wanted several times during the same time step. 
 
+\subsection{Fast Multipole Methods}
+
+We described in the previous chapter a method to compute gravitational interactions faster then the $O(n^2)$ algorithm.
+The Fast Multipole Method, FMM.
+This allows an approach with a precision depending of a parameter called the Multipole Acceptance Criterion, MAC. 
+This is needed for us to target binary neutron stars simulations.
+
+This approach is also based on the tree topology used for the SPH method. 
+Three main functions have been defined: 
+\begin{itemize}
+	\item \begin{verbatim}mpi_exchange_cells\end{verbatim} share the centers of mass computed in the tree up to a determined mass. By default the program share the lowest COM, the leaves. 
+	\item \begin{verbatim}mpi_compute_fmm\end{verbatim} After gathering the COM this step perform the M2M computation and also isolate the particles needed for the distant P2P step. 
+	\item \begin{verbatim}mpi_gather_cells\end{verbatim} Gather The contribution of all the other processes and sum in the local branch.
+	Then this step performs both the M2P and P2P computations. 
+	A specific P2P for distant particles is added to take in account the particles found on other processes in the M2M step.
+\end{itemize}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=.8\columnwidth]{\locpath/figures/flecsph/fmm_mac.png}
+\caption{Evolution of time regarding the multipole acceptance criterion for FMM method.}
+\end{figure}
+
+The speed of computation vary with the choose of the MAC angle. 
+An example is give on figure~\ref{fig:mac_angle}
+This presents the time varying with the angle. 
+We note that bigger the angle, faster the computation time. 
+The limit of the angle is $\Theta =  \frac{\pi}{2}$.
+But the loss of precision can be quantify with the evolution of linear and angular momentum.
+We fixed our MAC to $\Theta = 1$.
+
 \subsection{I/O}
 Regarding the high number of particles, an efficient, parallel and distributed I/O implementation is required. 
 Several choices were available but we wanted a solution that can be specific for our usage. 
@@ -391,8 +422,7 @@ The usage of H5Hut to generate H5part data files allows us to directly read the 
 
 
 \section{Distributed SPH on hybrid architectures}
-\todo{WORKING ON}
-We constructed an efficient and reliable SPH code working on multi-CPU clusters. 
+We constructed an efficient and reliable SPH code working on classical architecture clusters. 
 In this section we present our multi-GPU implementation and compare it with our multi-CPU code. 
 We kept the same data structure, distribution strategy and code architecture in the accelerator code. 
 Several options are possible for the accelerator implementation but we wanted to keep the code usable and working for the domain scientists to work on. 
@@ -415,17 +445,16 @@ The tree traversal itself stay on the host processor and lower part of the tree 
 
 
 \subsection{Physics on accelerators}
-\todo{WORKING ON}
 
-\section{Results }
-\todo{WORKING ON}
+
+\section{Results}
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
 We decided to conduct the tests on the 2D and 3D fluids.
 \subsection{Performances}
 
 \subsection{Simulations}
 As explained in the previous part we simulated several physical and astrophysical event in order to check the code behavior and reliability. 
-\begin{figure}[ht!]
+\begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
 \caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
@@ -434,7 +463,15 @@ As explained in the previous part we simulated several physical and astrophysica
 The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous part, showed perfect results. 
 The fluid simulations are presented on figure~\ref{fig:fluid_simulation}.
 
-The final test of our study is a binary neutron stars merging simulation. 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{\locpath/figures/flecsph/bns_merger}
+\caption{Binary Neutron Stars coalescence with 40.000 particles.}
+\label{fig:bns_simulation}
+\end{figure}
+
+Based on the initial data generation presented in the previous part, figure~\ref{fig:bns_simulation}.
+
 
 \section{Conclusion}
 In this section we presented a tool completing our metric. 
