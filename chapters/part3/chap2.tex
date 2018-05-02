@@ -463,30 +463,37 @@ We show the benefit of using hybrid architecture even on irregular problem with 
 
 \subsection{Performances}
 The two metrics we worked on, in part II, gave us hint in order to reach performances in this simulation code. 
-The first step was to find the best repartition between the host and device. 
+The first step was to find the best repartition between the host and device.
 
 \begin{figure}[t!]
 \centering
-\begin{minipage}[b]{.5\textwidth}
-	\centering
-	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/task_gpu.png}
-	\caption{CPU-GPU tasks work balancing}
-	\label{fig:cpu_gpu_rep}
-\end{minipage}%
-\begin{minipage}[b]{.5\textwidth}
-\centering
-	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/scalability.png}
-	\caption{CPU vs GPU scalability}
-	\label{fig:cpu_gpu_scala}
-\end{minipage}
-\end{figure}
+\includegraphics[width=.8\textwidth]{\locpath/figures/flecsph/task_gpu.png}
+\caption{CPU-GPU tasks work balancing}
+\label{fig:cpu_gpu_rep}
+\end{figure}%
 
 Figure~\ref{fig:cpu_gpu_rep} shows the work balancing. 
 With the smallest distribution the CPU and GPU keep exchange data for very small amount of computation. 
 Art the opposite, if the CPU value is too high the $O(n^2)$ part is too important. 
 We choose the value to be configured by the user and defaulted at  XX.
 
-On figure~\ref{fig:cpu_gpu_scala} we find the strong scaling tests for CPU and GPU version using the empiric best depth of repartition.
+\begin{figure}[t!]
+\centering
+\begin{minipage}[b]{.5\textwidth}
+\centering
+	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/time_CPU_vs_GPU.png}
+	\caption{CPU vs GPU time per iteration}
+	\label{fig:cpu_gpu_time}
+\end{minipage}
+\begin{minipage}[b]{.5\textwidth}
+\centering
+	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/scalability_CPU_vs_GPU.png}
+	\caption{CPU vs GPU scalability per iteration}
+	\label{fig:cpu_gpu_scala}
+\end{minipage}
+\end{figure}
+
+On figure~\ref{fig:cpu_gpu_time} and figure~\ref{fig:cpu_gpu_scala} we find the strong scaling and scalability tests for CPU and GPU version using the empiric best depth of repartition.
 We see that the GPU allows the system to go up to XX\% faster in a one million particles example. 
 These tests were made using XX nodes of the ROMEO supercomputer in a classical submission using Slurm.
 
