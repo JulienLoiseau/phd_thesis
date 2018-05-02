@@ -9,23 +9,22 @@
 \section{Introduction}
 
 High Performance Computing (HPC) takes its roots from the beginning of computer odyssey in the middle of 20th century.
-A lot of rules, observations and theories emerged from it and most of the Computer Science fields. 
-In order to understand and characterize HPC and supercomputers, some knowledge on theory is required. 
-This part describes the Von Neumann model, the generic model of sequential computer on which every nowadays machine is built.
-It is presented along with the Flynn taxonomy that is a classification of the different execution models. 
-We also present the different memory models based on those elements. 
+From this emerged rules, observations, theories, and most computer science fields.
+Knowledge of the theory is required to understand and characterize HPC and supercomputers.  
+This part describes the Von Neumann model, the generic model of sequential computer on which every modern machine is built.
+The Von Neumann model, along with the Flynn taxonomy which is the classification of the different execution models, will be presented. 
+We also review the different memory models based on those elements. 
 
-Then we give more details on what parallelism is and how to reach performances though it. 
-And thus we define what performance implies in HPC. 
-The Amdahl's and Gustafson's laws are presented and detailed along with the strong and weak scaling used in our study. 
+Parallelism will be discussed in detail and we present how it can be used to reach performances, and thus examine what performance implies in HPC.
+The Amdahl's and Gustafson's laws are presented in detail, along with the strong and weak scaling used in our study. 
 
 \section{Von Neumann Model}
 \index{Von Neumann Model}
-First computers, in early 20th century, were built using vacuum tubes making them high power consuming, hard to maintain and expensive to build.
+The first early 20\textsuperscript{th} century computers were built using vacuum tubes making them high power consuming, and therefore were hard to maintain and expensive to build.
 The most famous of first vacuum tubes supercomputers, the ENIAC, was based on a decimal system.
-It might be the most known of first supercomputers but the real revolution came from its successor.
-In 1944 the first binary system based computer was created, called the Electric Discrete Variable Automatic Computer (EDVAC). 
-In the EDVAC team, a physicist described the logical model of this computer and provided a model on which every nowadays computing device is based. 
+As well-known as this supercomputer may be, the real revolution came from its successor.
+The first binary system based computer was created in 1944 and was called the Electric Discrete Variable Automatic Computer (EDVAC). 
+A physicist from the EDVAC team a described the logical model of this computer and provided a model on which every modern computing device is based. 
 
 \begin{figure}
 \centering 
@@ -34,34 +33,35 @@ In the EDVAC team, a physicist described the logical model of this computer and 
 \label{fig:1_HPC:von_neumann_model}
 \end{figure}
 
-John Von Neumann published its \textit{First Draft of a Report on the EDVAC}~\cite{von1993first} in 1945. 
-Extracted from this work, the model is known as the Von Neumann model or more appears as generally Von Neumann Machine. 
+John Von Neumann published the \textit{First Draft of a Report on the EDVAC}~\cite{von1993first} in 1945. 
+The model known as the Von Neumann model, more commonly referred as the Von Neumann Machine, came from this work.
 The model is presented on figure~\ref{fig:1_HPC:von_neumann_model}.
 
-On that figure we identify three parts: the input and output devices and, in the middle, the computational device itself. 
+The figure has tree identified parts: the input and output devices and, in the middle, the computational device itself in the middle. 
 \paragraph{Input/Output devices}
 The input and output devices are used to store data in a read/write way. 
 They can be represented as hard drives, solid state drives, monitors, printers or even mouse and keyboard.
 The input and output devices can also be the same, reading and writing in the same area.\\
 
-\paragraph{Memory} Inside the computational device we have to mention the memory for data storage.
-For the most common nowadays architectures it can be considered as a Random Access Memory (RAM). 
-Several kinds of memory exists and will be discussed later. 
+\paragraph{Memory} 
+Inside the computational unit we find the general memory to store program and data. 
+The most common architectures it can be considered as a Random Access Memory (RAM). 
+There are several types of memory and will be discussed later in this thesis. 
 
 \paragraph{Central Processing Unit}
 \index{Central Processing Unit}
-The Central Processing Unit, CPU, is composed of several elements in this model. 
+The Central Processing Unit (CPU) is composed of several elements in this model. 
 \begin{itemize}[noitemsep,nolistsep]
-\item[-] On one hand, the \textit{Arithmetic and Logic Unit}, ALU, which takes as input one or two values, the data, and applies an operation on them. 
-The operation can be either logic with operations such as AND, OR, XOR, etc. or arithmetic with operations such as ADD, MUL, SUB, etc. 
-Those operations may be more complex on modern CPUs. 
-\item[-] On the other hand, we find the \textit{Control Unit}, CU, which controls the data carriage to the ALU from the memory and the operation to be performed on data.
-It is also the part that takes care of the Program Counter (PC): the address of the next instruction in the program. 
-\item[-] We can also identify the \textit{Registers} section which represents data location used for both ALU and CU to store temporary results, the current instruction address, etc. 
+\item[-] On one hand, the \textit{Arithmetic and Logic Unit} (ALU) takes as input one or two values, the data and applies an operation on them. 
+The operation can be either logic with operators such as AND, OR, XOR, etc. or arithmetic with operators such as ADD, MUL, SUB, etc. 
+These operators may be more complex on modern CPUs. 
+\item[-] Conversely, we find the \textit{Control Unit} (CU) which controls the data carriage to the ALU from the memory and the operation to be performed on data.
+It is also involved in the Program Counter (PC), which is the address of the next instruction in the program. 
+\item[-] We can identify the \textit{Registers} section which represents data location used for both ALU and CU to store temporary results, the current instruction address, etc. 
 Some representations may vary since the \textit{Registers} can be represented directly inside the ALU or the CU. 
 \end{itemize}
 \paragraph{Buses}
-The links between those elements are called Buses and can be separated in data buses, control buses and addresses buses.
+The links between those elements are called buses and can be separated in data buses, control buses and addresses buses.
 These will have a huge importance for the first machines optimizations, growing the size of the buses from 2, 8, 16, 32, 64 and even more for vector machines with 128 and 256 bits.\\
 
 The usual processing flow on such architectures can be summarized as a loop: 
@@ -74,17 +74,17 @@ The usual processing flow on such architectures can be summarized as a loop:
 \item[-] Store results, increase PC.\\
 \end{itemize}
 
-With some instructions sets and new architectures several similar operations can be processed in the same clock time.
+With the instruction sets and new architectures, several similar operations can be processed in the same clock time.
 Every device or machine we describe in the next chapter has this architecture as a basis. 
 One will consider execution models and architecture models to characterize HPC architectures.
 
 \section{Flynn taxonomy and execution models}
 \index{Flynn taxonomy}
-The Von Neumann model gives us a generic idea of how a computational unit is fashioned. 
-The constant demand in more powerful computers required the scientists to find more ways to provide this computational power.
+The Von Neumann model gives us a general idea of how a computational unit is fashioned. 
+The constant demand for more powerful computers required scientists to find different ways to provide this computational power.
 In 2001, IBM proposed the first multi-core processor on the same die: the Power4 with its 2 cores.
 This evolution required new paradigms.
-A right characterization is then essential to be able to target the right architecture for the right purpose. 
+A right characterization become essential to be able to target the right architecture for the right purpose. 
 The Flynn taxonomy presents a hierarchical organization of computation machines and executions models.
 
 \begin{table}
@@ -119,56 +119,51 @@ In this classification~\cite{flynn1972some} from 1972, Michael J. Flynn presents
 Each of those execution models, presented on table~\ref{tab:1_HPC:taxonomy_flynn} and figure~\ref{fig:1_HPC:flynn_taxonomy}, corresponds to a specific machine and function.
 
 \subsection{Single Instruction, Single Data: SISD}
-This is the model corresponding to a single core CPU like in the Von Neumann model. 
-This sequential model takes one instruction, operates on one data and the result is then stored and the process continues over. 
+The model corresponding to a single core CPU is similar to the Von Neumann model. 
+This sequential model takes one instruction, operates on one data and the result is then stored before the process continues over. 
 SISD is important to consider for a reference computational time and will be taken into account in the next part for Amdahl's and Gustafson's laws.
 
 \subsection{Multiple Instructions, Single Data: MISD}
 This model can correspond to a pipelined computer.
-Different operations flows are applied to the datum, which is transfered to the next computational unit and so on. 
+Different operation flows are applied to the datum, which is transferred to the next computational unit and so on. 
 This is the least common execution model.
 
 
 \subsection{Multiple Instructions, Multiple Data: MIMD}
-In MIMD every element executes its own instructions flow on its own data set. 
+Every element in MIMD executes its own instructions flow on its own data set. 
 This can represent the behavior of a processor using several cores, threads or even the different nodes of a supercomputer cluster. 
 Two subcategories are identified in this model: SPMD and MPMD.
 
 \subsubsection{SPMD}
-The Single Program Multiple Data model, SPMD, is the most famous parallelism way for HPC purpose: each process executes the same program. 
-The programs are the same but does not share the same instruction counter. 
-This model was proposed for the first time in \cite{darema1988single} in 1988 using Fortran.
+The Single Program Multiple Data model (SPMD), where each process executes the same program, is the most famous parallelism way for HPC purpose.
+All programs are the same, but does not share the same instruction counter. 
+SPMD was proposed for the first time in \cite{darema1988single} in 1988 using Fortran.
 This is the common approach working with runtime like MPI. 
 The programs are the same and the executions are independent but based on their ID the processes will target different data. 
 
 \subsubsection{MPMD}
-The Multiple Program Multiple Data model is also know for HPC: Some of the processes may execute programs for different purposes.  
-Generally with a separation between a main program generating data for sub-programs. 
-This is the model on which we work in part II, regarding the Langford problem resolution using a master program generating tasks for the slaves CPUs/GPGPUs programs.
+The Multiple Program Multiple Data (MPMD) model is also known for HPC.
+MPMD involves some of the processes to execute different programs, generally with a separation between a main program generating data for sub-programs. 
+This is the model on which we work in Part II, regarding the Langford problem resolution using a master program generating tasks for the slaves CPUs/GPGPUs programs.
 
 \subsection{Single Instruction, Multiple Data: SIMD}
 This execution model corresponds to many-core architectures like a GPU. 
-SIMD can be extended from 2 to 16 elements for classical CPUs to hundreds and even thousands of core for GPGPUs. 
+SIMD can be extended from two to sixteen elements for classical CPUs to hundreds and even thousands of core for GPGPUs. 
 In the same clock cycle, the same operation is executed on every process on different data. 
-A good example is the work on matrices with stencils: same instruction executed on every element of the matrix in a synchronous way: the processing elements share one instruction unit and program counter. 
+A good example is the work on matrices with stencils: the same instruction is executed on every element of the matrix in a synchronous way and the processing elements share one instruction unit and program counter. 
 
 \subsection{SIMT}
 \index{Single Instruction Multiple Threads}
-We find another characterization to describe the new GPUs architecture: Single Instruction, Multiple Threads. 
+Another characterization was determined to describe the new GPUs architecture: Single Instruction Multiple Threads. 
 This first appears in one of NVIDIA's company paper~\cite{lindholm2008nvidia}. 
-This model describes a combination of MIMD and SIMD architectures, every block of threads is working with the same control processor on different data and in such a way that every block has its own instruction counter.  
-This is the model we describe in part~\ref{sec:CUDA}, used for the \textit{warps} model in NVIDIA CUDA.
+This model describes a combination of MIMD and SIMD architectures where every block of threads is working with the same control processor on different data and in such a way that every block has its own instruction counter.  
+The model we describe in Part~\ref{sec:CUDA}, used for the \textit{warps} model in NVIDIA CUDA.
 
 \section{Memory}
 \label{sec:NORMA}
-In addition to the execution model and parallelism, the memory access patterns have a main role in performances in SIMD and MIMD. 
+In addition to the execution model and parallelism, the memory access patterns have an important role in performances of SIMD and MIMD. 
 In this classification we identify three categories: UMA, NUMA and NoRMA for shared and distributed cases. 
 This classification has been pointed out in the Johnson's taxonomy\cite{johnson1988completing}.
-
-%We can also find Error-Correcting Code, ECC, memory which implements a bunch of data correction algorithm to guaranty the validity of them when error is not allowed. 
-
-%\todo{MCDRAM}
-%\todo{3D memory}
 
 \begin{figure}
 \centering 
@@ -201,12 +196,11 @@ This classification has been pointed out in the Johnson's taxonomy\cite{johnson1
 
 Those different types of memory for SIMD/MIMD model are summarized in figure~\ref{fig:1_HPC:mimd_memory_model}, and presented below.
 
-\subsection{Shared memory}
-%In case of the SISD the memory access is just serial and no really rules needs to be set for its usage. 
+\subsection{Shared memory} 
 Several kinds of memory models are possible when it comes to multi-threaded and multi-cores execution models like MIMD or SIMD models.
 We give a description of the most common shared memories architectures.
-Those shared memory models are the key stone for the next parts of our study. 
-We find them in multi-core but also many-core architectures and the performances are completely dependent of their usage. 
+Those shared memory models are the keystone for the next parts of this study. 
+Not only are they found in multi-core but also in many-core architectures with the performances are completely dependent on their usage. 
 
 \hspace*{-2cm}
 \begin{figure}
@@ -268,54 +262,57 @@ We find them in multi-core but also many-core architectures and the performances
 \subsubsection{UMA}
 \index{Unified Memory Access}
 The Uniform Memory Access architecture have a global memory shared by every threads or cores. 
-In UMA every processor uses its own cache as local private memory and the accesses consume the same amount of time: the addresses can be accessed directly by each processor which makes the access time ideal. 
+Every processor in UMA uses its own cache as local private memory and the accesses consume the same amount of time.
+The addresses can be accessed directly by each processor which makes the access time ideal. 
 The downside is that more processors require more buses and thus UMA is hardly scalable. 
-The cache consistency problem also appears in this context and will be discussed in next part: indeed, if a data is loaded in one processor cache and modified, this information has to be spread to the memory and maybe other processes cache. 
+Cache consistency problem also appears in this context and will be discussed in next part.
+Indeed, if a data is loaded in one processor cache and modified, this information has to be spread to the memory and possibly other processes cache. 
 
-With the arising of accelerators like GPUs and their own memory, some constructors found ways to create UMA with heterogeneous memory: AMD created the heterogeneous UMA, hUMA~\cite{rogers2013amd} in 2013, allowing CPU and GPU to target the same memory area, but the performances still need to be checked in an HPC context.
+With the rise of accelerators like GPUs and their own memory, some constructors found ways to create UMA with heterogeneous memory.
+AMD created the heterogeneous UMA, hUMA~\cite{rogers2013amd} in 2013, allowed CPU and GPU to target the same memory area, but the performances still needed to be checked in an HPC context.
 
 \subsubsection{NUMA}
 \index{Non Uniform Memory Access}
-In Non Uniform Memory Access every processor has access to its own private memory but allows other processors to access it though Lightning Data Transport, LDT, or Quick Path Interconnect, QPI, for Intel architectures. 
+In Non Uniform Memory Access every processor has access to its own private memory but allows other processors to access it though Lightning Data Transport (LDT) or Quick Path Interconnect (QPI) for Intel architectures. 
 
 As mentioned for the UMA memory, even if the processors do not directly access to the memory cache, coherency is important. 
-Two methods are possible: on one hand, the most used is Cache-Coherent NUMA (CC-NUMA) where protocols are used to keep data coherency through the memory. 
-On the other hand No Cache NUMA (NC-NUMA) forces the processes to avoid cache utilization and write results to main memory, losing all the benefits of caching data. 
+There are two methods possible to aid in coherency.
+First, the most used is Cache-Coherent NUMA (CC-NUMA) where protocols are used to keep data coherency through the memory. 
+Second, No Cache NUMA (NC-NUMA) forces the processes to avoid cache utilization and write results to main memory, losing all the benefits of caching data. 
 
 \subsubsection{COMA}
 \index{Cache-Only Memory Access}
-In Cache-Only Memory Accesses, the whole memory is see as a cache shared by all the processes processes.
-An \textit{Attraction memory} pattern is used to \textit{attract} the data near the process that will use them. 
-This model is less commonly use and, in best cases, lead to same results as NUMA.
+In Cache-Only Memory Accesses, the whole memory is seen as a cache shared by all the processes processes.
+A \textit{Attraction memory} pattern is used to \textit{attract} the data near the process that will use them. 
+This model is less commonly used and, in best cases, leads to same results as NUMA.
 
 \subsection{Distributed memory}
 \index{No Remote Memory Access}
-The previous models are dedicated on shared memory, if the processes can access memory of their neighbors processes. 
+The previous models are dedicated to shared memory, as in the processes can access memory of their neighboring processes. 
 In some cases, like supercomputers, it would be too heavy for processors to handle the requests of all the others through the network. 
-Each process or node will then possess its own local memory, that can be shared only between local processes. 
-Then, in order to access to other nodes memory, communications through the network have to be done and copied into local memory. 
+Each process or node will then possesses its own local memory that can be shared only between local processes. 
+In order to access to other nodes memory, communications through the network has to be done and copied into local memory. 
 This distributed memory model is called No Remote Memory Access (NoRMA).
-This requires transfer schemes, that have to be added to local read-write accesses.
+This requires transfer schemes that have to be added to local read-write accesses.
 
 \section{Performances characterization in HPC}
-In the previous parts we described the different execution models and memory models for HPC. 
-Based on those aspects we need to be able to emphasis the performances of a computer and a cluster. 
+Previously we described the different execution models and memory models for HPC. 
+We need to be able to emphasis the performances of a computer and a cluster based on those aspects.
 
-The performance can be of several kinds. 
-It can first be defined by the speed of the processors themselves with the frequency defined in GHz. 
-We define the notion of \textit{cycle} to be the number that determine the speed of a processor. 
-This is the amount of time between two pulses of the oscillator at the best frequency. 
-Higher cycles per seconds is better. 
-It can be used to estimate the highest computational power of a machine. 
-This information is not perfect because the ALU is not busy all the time due to memory accesses, communications or side effects. 
-Then we have to go through more accurate ways to characterize performance.
+There can be several types of performances.
+First, it can be defined by the speed of the processors themselves with the frequency defined in GHz. 
+We define the notion of \textit{cycle} to be the number that determines the speed of a processor. 
+This is the amount of time between two pulses of the oscillator at the best frequency with higher cycles per seconds being better. 
+This can be used to estimate the highest computational power of a machine. 
+The information is not perfect, however, because the ALU is not constantly busy due to memory accesses, communications or side effects. 
+Therefore, we need to utilize more accurate ways to characterize performance.
 
 \subsection{FLOPS}
 
 \index{Floating-point Operations Per Second}
 
-The FLoating point Operations Per Second value considers the number of floating-point operation that the system will execute in a second. 
-Higher FLOPS is better and this is the most common scale used to consider supercomputers computational power. 
+The FLoating point Operations Per Second (FLOPS) value considers the number of floating-point operations that the system will execute in a second. 
+Higher FLOPS is better and is the most common scale used to consider supercomputers' computational power. 
 For a cluster we can compute the theoretical FLOPS (peak) based on the processor frequency in GHz with:
 \begin{equation}
 FLOPS_{cluster} = \#nodes \times \frac{\#sockets}{\#node} \times \frac{\#cores}{\#socket} \times \frac{\#GHz}{\#core} \times \frac{FLOPS}{cycle}
@@ -323,7 +320,7 @@ FLOPS_{cluster} = \#nodes \times \frac{\#sockets}{\#node} \times \frac{\#cores}{
 With $\#nodes$ the number of computational node of the system, $\frac{\#sockets}{\#node}$ the number of sockets (=processors) per node, $\frac{\#cores}{\#socket}$ the number of cores in the processor, $\frac{\#GHz}{\#core}$ the frequency of each core and finally $\frac{\#FLOP}{\#cycle}$ the number of floating-point operations per cycles for this architecture. 
 
 
-Table~\ref{tab:1_HPC:flops_year} presents the scale of FLOPS and the year of the first world machine reached this step.
+Table~\ref{tab:1_HPC:flops_year} presents the scale of FLOPS and the year that the first world machine reached this step.
 The next milestone, the exascale, is expected to be reach near 2020.  
 
 \begin{table}
@@ -348,21 +345,23 @@ The next milestone, the exascale, is expected to be reach near 2020.
 	\label{tab:1_HPC:flops_year}
 \end{table}
 
-Even though, many ways exist to measure computer's performance: Instructions Per Seconds (IPS), Instructions per Cycle (IPC) or Operations Per Seconds (OPS) but none of these consider what an instruction or operation is. 
-Thus, floating point can be considered as a basis, and a comparison can be provided. 
+
+There still exists many ways to measure computer's performance such as: Instructions Per Seconds (IPS), Instructions per Cycle (IPC) or Operations Per Seconds (OPS).
+However, it is hard to consider what an operation or instruction can be.
+Thus, floating point can be considered as a basis, providing a comparison for performance. 
 
 
 \subsection{Power consumption}
-Another way to consider machine performance is to estimate the number of operations regarding the power consumption. 
-It considers all the previous metrics like FLOPS, IPS, IPC or OPS. 
+An additional way to consider machine performance is to estimate the number of operations regarding the power consumption. 
+This considers all the previous metrics like FLOPS, IPS, IPC or OPS. 
 Benchmarks like the Green500 consider the FLOPS delivered over the watts consumed. 
-For nowadays architectures the many-cores accelerated architectures with GPUs seems to deliver the best FLOPS per watt ratio.
+For current architectures the many-cores accelerated architectures with GPUs seems to deliver the best FLOPS per watt ratio.
 
 This subject is the underlying goal of our study. 
-Without the power consumption limit we should just build supercomputer made of an addition of supercomputers. 
-This is indeed not doable due to processors power consumption and cooling cost.
-This question have been studied in our laboratory with the development of tools like \textit{Powmon} (Power Monitor).
-It allows to instantaneously query the power consumption with CPU and GPU on a running node of a cluster. 
+Without the power consumption limit we would already be able to build exascale or even more powerful machine by combining billions and billions of nodes. 
+This is not doable due to processors power consumption and cooling cost.
+The question have been studied in our laboratory with the development of tools like \textit{Powmon} (Power Monitor).
+This power monitor allows to instantaneously query the power consumption with CPU and GPU on a running node of a cluster. 
 
 \subsection{Scalability}
 
@@ -371,13 +370,12 @@ The scalability expresses the way a program reacts to parallelism.
 When an algorithm is implemented on a serial machine and is ideal to solve a problem, one may consider to use it on more than one core, socket, node or even cluster. 
 Indeed, while using more resources one may expect less computation time or access larger instances, or a combination of both. 
 This is completely dependent of the algorithm's parallelization and is expressed through scalability. 
-A scalable program will scale on as many processors as provided, whereas a poorly scalable one will give same of even worst results than the serial code.  
+A scalable program will scale on as many processors as provided, whereas a poorly scalable one will give the same, or even worst results, than the serial code.  
 Scalability can be approached using speedup and efficiency.
 
 \subsection{Speedup and efficiency}
-The latency is the time required to complete a task in a program.
+The latency is the time required to complete a task in a program with lower latency being better. 
 \index{Latency} 
-Lower latency is better. 
 
 The speedup compares the latency of both sequential and parallel algorithm. 
 In order to get relevant results, one may consider the given best serial program against the best parallel implementation.
@@ -424,16 +422,17 @@ As the number of processes grows, a scalable application will keep an efficiency
 As shown on figure \ref{fig:1_HPC:speedup_obs} several kinds of speedup can be observed. 
 \paragraph{Linear, reference speedup: }
 The linear speedup usually represents the target for every program in HPC. 
-Indeed, having a constant efficiency, which means that the speedup grows linearly as the number of processors grows is the ideal case. 
-Codes fall typical into two cases, typical and hyper-linear speedup. 
+To have a constant efficiency means that the speedup grows linearly as the number of processors grows is the ideal case. 
+Codes fall typical into two cases: typical and hyper-linear speedup. 
 \paragraph{Typical speedup: }
 This represents the most common observed speedup. 
-As the number of processors grows, the program faces several of the HPC walls like communications wall or memory wall. 
-The increasing number of computational power may be lost in parallel overhead, and efficiency reduced. 
+As the number of processors grows, the program faces several of the HPC walls, such as communications wall or memory wall. 
+The increasing number of computational power may be lost in parallel overhead resulting in efficiency being reduced. 
 \paragraph{Hyper-linear speedup: }
-In some cases we observe an hyper-linear speedup, meaning that the results in parallel are even better than the ideal case. 
-This increasing efficiency can occur if the program fits exactly in memory for less data on each processor or even fit perfectly for the cache utilization. 
-The parallel algorithm can also be more efficient than the sequential one, for example with optimizations application: if the search space is divided over processing units, one can find good solutions more quickly.
+In some cases, we observe an hyper-linear speedup, meaning the results in parallel are even better than the ideal case. 
+This increasing efficiency can occur if the program fits exactly in memory with less data on each processor or even fit perfectly for the cache utilization. 
+The parallel algorithm can also be more efficient than the sequential one.
+For example, if the search space in an optimized application is divided over processing units, one can find good solutions more quickly.
 
 \subsection{Amdahl's and Gustafson's law}
 The Amdahl's and Gustafson's laws are ways to evaluate the maximal possible speedup for an application taking into account different characteristics. 
@@ -487,17 +486,18 @@ E_n = \frac{Seq}{n} + Par
 
 Both Amdahl's and Gustafson's law are applicable and they represent two solutions to check the speedup of our applications. 
 \textbf{The strong scaling}\index{Strong scaling}, looking at how the computation time vary evolving only the number of processes, not the problem size. 
-\textbf{The weak scaling}\index{Weak scaling}, at the opposite to strong scaling, regards to how the computation time evolutes varying the problem size but keeping the same amount of work per processes. 
+\textbf{The weak scaling}\index{Weak scaling}, at the opposite to strong scaling, regards to how the computation time changes with the varying of the problem size, but keeping the same amount of work per processes. 
 
 \section{Conclusions}
 
-In this chapter we presented the different basic considerations to be able to understand HPC: the Von Neumann model that is implemented in every nowadays architecture; the Flynn taxonomy that is in constant evolution with new paradigms like recent SIMT from NVIDIA. 
-We also presented the memory types that will be used at different layers in our clusters, from node memory, CPU-GPGPU shared memory space to global fast shared memory. 
+In this chapter, we presented the different basic considerations to be able to understand HPC: the Von Neumann model that is implemented in every current architecture and the Flynn taxonomy that is in constantly in evolution with new paradigms like recent SIMT from NVIDIA. 
+We discussed the memory types that will be used with the different layers in our clusters, from node memory, CPU-GPGPU shared memory space to global fast shared memory. 
 We finished by presenting the most important laws with Amdahl's and Gustafson's laws.
-We introduced the concept of strong and weak scaling that will lead our tests through all the examples in Part II and Part III.
+The concept of strong and weak scaling was introduced and will lead our tests through all the examples in Part II and Part III.
 
 Those models have now to be confronted to the reality with hardware implementation and market reality, the vendors. 
-The next chapter introduces chronologically hardware enhancements and their optimization and always keeps a link with the models presented in this part.
+The next chapter introduces chronologically hardware enhancements and their optimization, always keeping a link with the models presented in this part.
 
-As there is always a gap between models and implementation we will have to find ways to rank and characterize those architectures. 
-This will be discussed in the last chapter. 
+We will have to find ways to rank and characterize those architectures as there is always a gap between models and implementation. 
+This will be discussed in the last chapter.
+
