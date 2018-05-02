@@ -111,11 +111,11 @@
 	\huge 
 	% TITRE EN 
 	\vspace{1cm}
-	\phdTitleEN\\
+	\phdTitleFR\\
 	\large
 	% TITRE FR 
 	\vspace{0.5cm}
-	\phdTitleFR
+	\phdTitleEN
 	%% LIGNE SEPARATION
 	\vspace{1.0cm}
 	\hrule
@@ -170,12 +170,13 @@
 % Setup numbering for beginning 
 \frontmatter
 
-% Acknoledgments, thanks everybody !
-\addcontentsline{toc}{chapter}{Acknowledgements}
-\input{chapters/acknoledgments}
+% resumes
 
-\addcontentsline{toc}{chapter}{Abstract}
-\input{chapters/abstract}
+
+% Acknoledgments, thanks everybody !
+%\addcontentsline{toc}{chapter}{Acknowledgements}
+%\input{chapters/acknoledgments}
+
 
 % Add the tableofcontentes in itself
 \addcontentsline{toc}{chapter}{Contents}
@@ -217,8 +218,13 @@
 \bibliography{biblio/my_papers.bib,biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc,biblio/biblio_part2_chap1}
 
 % index just in case it is useful 
-\addcontentsline{toc}{chapter}{Index}
-\printindex
+%\addcontentsline{toc}{chapter}{Index}
+%\printindex
+
+\markboth{}{}
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Abstract}
+\input{chapters/abstract}
 
 
 \end{document}
