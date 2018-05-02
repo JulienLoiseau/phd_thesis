@@ -435,12 +435,10 @@ performance for 64 GPUs is lower.
 Indeed as the problem scale does not change, the computational part is reduced compared to the communication one. 
 Using 16 GPUs we were able to perform up to 4.80 GTEPS. 
 
-
 For the weak scaling, the $SCALE$ evolves with the number of GPUs. 
 So the computation part grows and the limitation of communications is reduced. 
 On figure~\ref{fig:bfs_weak_scaling}, the problem SCALE is presented on each point. 
 With our method we were able to reach up to 12 GTEPS using this scaling. 
-
 
 \subsection{Communications and GPUDirect}
 
@@ -487,13 +485,12 @@ As the major limitation is the communications stage, using only GPU 0 allowed us
 \end{figure}
 
 \section{Conclusions}
-%\todo{Repenser la conclusion}
 
 The Graph500 is already a benchmark and focus on memory and communication wall in an irregular behavior.
 We presented an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster for the purpose of our metric to emphasis behavior of hybrid architectures.
 It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
 This work highlights different key points.
-First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. % data representation. 
+First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. 
 Although this representation requires more memory, it significantly reduces  the computation workload and allows us to achieve outstanding performance.
 Second, the inter-node and intra-node communication is a critical bottleneck. 
 Each compute node has two GPUs, however only one shares the same PCIe bridge with the Infiniband HCA that allows to take advantage of the GPUDirect technology.
@@ -508,6 +505,12 @@ All the communications are directly GPU to GPU using a CUDA-aware MPI library an
 These results have been published in the Graph500 list of November 2016 list. 
 The ROMEO supercomputer was ranked 105th.\\ 
 
+Another library appears in the same time that our study. 
+The Gunrock library\cite{wang2015gunrock} provides a very efficient framework for graph traversal on NVIDIA GPUs. 
+Unfortunately this work is not implemented in a distributed way. 
+A next part of this work would be to use our distributions strategies on top of Gunrock.\\
+
 In addition to the previous benchmarks proposed in our thesis, the Graph500 complete the communication and memory irregular behavior. 
 It shows the benefit of using many-core architectures in this context allowing twice better results using accelerators than CPUs.
+It shows the advantage of using GPU even up to the scale. 
  
