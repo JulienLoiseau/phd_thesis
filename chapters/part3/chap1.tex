@@ -564,6 +564,7 @@ We can cite a code developed in the LANL, 2HOT \cite{warren20132hot} that introd
 There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014gizmo} and the most recent publication is GASOLINE \cite{wadsley2017gasoline2} based on PKDGRAV, a specific tree+gravity implementation. 
 Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems  \cite{harada2007smoothed,crespo2011gpus}.
 We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
+Several other works gave us hint for the best implementation of parallel and accelerated SPH\cite{ihmsen2011parallel,ihmsen2014sph}
 
 Our implementation have not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
 This study provide a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.

@@ -87,12 +87,17 @@ As this supercomputer is accelerated by GPUs, three successive approaches had to
 The first section performs a survey of graph representation and analysis; it also describes some specific implementations.
 The second section  describes the Graph500 protocol and focuses on the Kronecker graph generation method and the BFS validation.
 The third section presents the chosen methods to implement graph representation and work distribution over the supercomputer nodes. It particularly focuses on the interest of a hybrid CSR and CSC representation.
-We compare the results for different graph scales and load distributions.
+We compare the results for different graph scales and load distributions.\\
+
+This work also leads us to work on similar algorithms like the evaluation of centrality\cite{bader2006parallel,brandes2007centrality,brandes2001faster,geisberger2008better,jin2010novel,shi_fast_2011,sariyuce2013betweenness} and SSSP/APSP\cite{davidson2014work,djidjev_efficient_2014} on large graphs. 
+This similar application gave us hint for the best BFS implementation.
+The betweenness centrality computation in particular was interesting and we will to apply it in the case of power grid analysis or nowadays problems like network mapping\cite{krebs2002mapping,soman_fast_2011}. 
 
 \section{Existing methods}
 The most efficient algorithm to compute BFS traversal is used and detailed in \cite{6468459}. 
 It uses a 2D partition of the graph which will be detailed later. 
 This algorithm is used on the BlueGene/P and BlueGene/Q architectures but can be easily adapted to any parallel cluster.
+Several other work\cite{gonzalez2012powergraph} propose a distributed graph traversal but are very similar to the BlueGene version.
 
 We use another key study in order to build our Graph500 CPU/GPU implementation. 
 \cite{merrill2015high} proposes various effective methods on GPU for BFS. 

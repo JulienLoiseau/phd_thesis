@@ -1,0 +1,53 @@
+\select@language {english}
+\begin{multicols}{2}
+\contentsline {chapter}{Introduction}{}
+\contentsline {part}{I\hspace {1em}Exascale et calcul haute performance}{}
+\contentsline {chapter}{\numberline {1}Modèles pour le HPC}{}
+\contentsline {section}{\numberline {1.1}Introduction}{}
+\contentsline {section}{\numberline {1.2}Modèle de Von Neumann}{}
+\contentsline {section}{\numberline {1.3}Taxonomie de Flynn et modèles d'execution}{}
+\contentsline {section}{\numberline {1.4}Mémoires}{}
+\contentsline {section}{\numberline {1.5}Caractérisation des performances dans le HPC}{}
+\contentsline {section}{\numberline {1.6}Conclusion}{}
+\contentsline {chapter}{\numberline {2}Hardware dans le HPC}{}
+\contentsline {section}{\numberline {2.1}Introduction}{}
+\contentsline {section}{\numberline {2.2}Évolution du modèle de Von Neumann}{}
+\contentsline {section}{\numberline {2.3}Architectures du 21ème siècle}{}
+\contentsline {section}{\numberline {2.4}Architectures distribuées architectures}{}
+\contentsline {section}{\numberline {2.5}Le supercalculateur ROMEO}{}
+\contentsline {section}{\numberline {2.6}Conclusion}{}
+\contentsline {chapter}{\numberline {3}Software dans le HPC}{}
+\contentsline {section}{\numberline {3.1}Introduction}{}
+\contentsline {section}{\numberline {3.2}Modèles parallèles et distribués}{}
+\contentsline {section}{\numberline {3.3}Software/API}{}
+\contentsline {section}{\numberline {3.4}Benchmarks}{}
+\contentsline {section}{\numberline {3.5}Conclusion}{}
+\contentsline {part}{II\hspace {1em}Métrique de problème complexes}{}
+\contentsline {chapter}{\numberline {4}Calcul : Le problème de Langford}{}
+\contentsline {section}{\numberline {4.1}Introduction}{}
+\contentsline {section}{\numberline {4.2}Algorithme de Miller}{}
+\contentsline {section}{\numberline {4.3}Méthode algébrique de Godfrey}{}
+\contentsline {section}{\numberline {4.4}Conclusion}{}
+\contentsline {chapter}{\numberline {5}Communication : Graph500}{}
+\contentsline {section}{\numberline {5.1}Introduction}{}
+\contentsline {section}{\numberline {5.2}Méthodes existantes}{}
+\contentsline {section}{\numberline {5.3}Environnement}{}
+\contentsline {section}{\numberline {5.4}Parcours en largeur}{}
+\contentsline {section}{\numberline {5.5}Résultats}{}
+\contentsline {section}{\numberline {5.6}Conclusions}{}
+\contentsline {part}{III\hspace {1em}Application}{}
+\contentsline {chapter}{\numberline {6}Modélisation et systèmes complexes}{}
+\contentsline {section}{\numberline {6.1}Introduction}{}
+\contentsline {section}{\numberline {6.2}Modélisation physique et limitations}{}
+\contentsline {section}{\numberline {6.3}Cas appliqués}{}
+\contentsline {section}{\numberline {6.4}Conclusion}{}
+\contentsline {chapter}{\numberline {7}Simulations complexes sur architecture hybride}{}
+\contentsline {section}{\numberline {7.1}Introduction}{}
+\contentsline {section}{\numberline {7.2}FleCSI}{}
+\contentsline {section}{\numberline {7.3}SPH distribué sur architecture multi-core}{}
+\contentsline {section}{\numberline {7.4}SPH distribué sur architecture hybride}{}
+\contentsline {section}{\numberline {7.5}Resultats}{}
+\contentsline {section}{\numberline {7.6}Conclusion}{}
+\contentsline {chapter}{Conclusion}{}
+\contentsline {chapter}{Bibliographie}{}
+\end{multicols}

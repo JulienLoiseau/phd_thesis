@@ -23,6 +23,12 @@
 
 \setcounter{tocdepth}{2}
 
+% For the 4th cover
+\newcommand*\cleartoleftpage{%
+  \clearpage
+  \ifodd\value{page}\hbox{}\newpage\fi
+}
+
 
 \newcommand\todo[1]{\textcolor{red}{#1}}
 \newcommand{\locpath}{.}
@@ -37,6 +43,7 @@
 \hyphenation{Tech-ni-cal}
 \hyphenation{Avail-able}
 \hyphenation{PRO-GRAM-MING}
+\hyphenation{a-stro-phy-sics}
 
 \makeindex
 
@@ -136,13 +143,13 @@
 \begin{tabular}{l l l}
 		\textbf{JURY} &  & \\
 		&&\\
-		Pr. Françoise Baude & I3S, Université de Nice Sophia Antipolis& Pr\'esidente\\
 		Pr. Michaël Krajecki & CReSTIC, Université de Reims Champagne-Ardenne & Directeur \\
 		Dr. François Alin & CReSTIC, Université de Reims Champagne-Ardenne & Co-directeur  \\
 		Dr. Christophe Jaillet & CReSTIC, Université de Reims Champagne-Ardenne & Co-directeur \\
 		Pr. William Jalby & Université de Versailles Saint-Quentin & Rapporteur\\
 		Dr. Benjamin Bergen & Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
 		Pr. Zineb Habbas & LCOMS, Université de Lorraine & Rapporteur \\ 
+		Pr. Françoise Baude & I3S, Université de Nice Sophia Antipolis& Examinateur\\
 		Guillaume Colin de Verdiere & Ingénieur au CEA & Invit\'e
 \end{tabular}
 \vspace{0.5cm}
@@ -214,15 +221,16 @@
 % Bibliography,
 \addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{alpha}
-\nocite{*}
+%\nocite{*}
 \bibliography{biblio/my_papers.bib,biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc,biblio/biblio_part2_chap1}
 
+\pagenumbering{gobble}
 % index just in case it is useful 
 %\addcontentsline{toc}{chapter}{Index}
 %\printindex
 
 \markboth{}{}
-\cleardoublepage
+\cleartoleftpage
 \addcontentsline{toc}{chapter}{Abstract}
 \input{chapters/abstract}
 

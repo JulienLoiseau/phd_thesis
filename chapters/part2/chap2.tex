@@ -92,7 +92,7 @@ Table \ref{tab:result_base} presents the latest results and number of solutions.
 $L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
 
 The most efficient known algorithms are: the Miller backtrack method, the Godfrey algebraic method and the Larsen inclusion-exclusion method.
-The Miller one is based on backtracking and can be modeled as a CSP\cite{habbas2005decomposition}; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go further. 
+The Miller one is based on backtracking and can be modeled as a CSP\cite{HKS00,habbas2005decomposition}; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go further. 
 Then, we use the Godfrey method to achieve $L(2,24)$ more quickly and then recompute $L(2,27)$ and $L(2,28)$, presently known as the last instances.
 The Larsen method is based on inclusion-exclusion \cite{larsen2009counting}; although this method is effective, practically the Godfrey one is better. 
 The latest known work on the Langford Problem is a GPU implementation proposed in \cite{ASS_LGF} in 2015. Unfortunately this study does not provide any performance considerations but just gives the number of solution of $L(2,27)$ and $L(2,28)$.
@@ -340,7 +340,7 @@ This section presents our methodology to implement Miller's method on a multi-GP
 
 \paragraph{Tasks generation: }
 In order to parallelize the resolution we have to generate tasks. 
-Considering the tree representation, we construct tasks by fixing the different values of a first set of variables [pairs] up to a given level. Choosing the development level allows to generate as many tasks as necessary. This leads to a \textit{Finite number of Irregular and Independent Tasks} (\emph{FIIT} applications \cite{krajecki1999object}). 
+Considering the tree representation, we construct tasks by fixing the different values of a first set of variables [pairs] up to a given level. Choosing the development level allows to generate as many tasks as necessary. This leads to a \textit{Finite number of Irregular and Independent Tasks}, \emph{FIIT} applications \cite{krajecki1999object,CONFIIT,SKF10}. 
 
 \paragraph{Cluster parallelization: } 
 The generated tasks are independent and we spread them in a client-server manner: a server generates them and makes them available for clients. As we consider the cluster as a set of CPU-GPU(s) machines, the clients are these machines. 
