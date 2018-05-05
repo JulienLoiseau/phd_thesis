@@ -1,48 +1,57 @@
 \chapter*{Conclusion}
-This study starts by introducing the tools and theory needed to understand and reach performances in HPC. 
-We presented several architectures and their advantages and showed that the next objective for the world most powerful countries is to reach the computational power of one exaflop near 2020. 
-Our believe is that those architectures will be hybrid powering accelerators like GPUs, specific many-cores or FPGAs. \\
+The first part of this study described the tools and theories needed to understand and reach performances in HPC. 
+We presented several architectures and their advantages and showed the next objective for the world most powerful countries is to reach the computational power of one exaflop by the year 2020. 
+Our belief is that these architectures will be hybrid powered by accelerators with many-cores, such as GPU or FPGAs. \\
 
-From this observation regarding the power consumption and computation performances we defined a metric targeting the most important walls of HPC. 
-The intent of this metric is to confront classical and hybrid architecture to show the real benefit that can be obtained using accelerators. 
-This metric is decomposed in two parts. 
+We defined a metric targeting the most important walls of HPC from this observation regarding the power consumption and computation performances.
+The intent of this metric was to confront classical and hybrid architecture to show the real benefit that can be obtained by using accelerators. 
+This metric is separated in two parts. 
 
-In the fist part we target classical, academical and even benchmark problems as a metric. 
-We confront the classical architecture to hybrid one on a problem featuring heavy computation and another one heavy communications. 
-In two cases we wanted to fit production code and their worst behavior: irregularity. 
+In the fist part, we targeted classical, academical and even benchmark problems as the metric. 
+We compared the classical architecture to a hybrid counterpart using on a problem featuring heavy computation and a second one focusing heavy communications. 
+In both cases, we wanted to fit production code and their worst behavior: irregularity. 
 
-The first problem is the Langford pairing counting problem. 
-This problem is study with two different approaches based on respectively a tree traversal and a mathematic resolution. 
-The tree resolution shows very good results and up to 80\% of the overall work handle by the GPU with an efficient load balancing strategy. 
-The mathematical solution is also very irregular due to the big integer arithmetic on GPUs. 
-In this case we showed that the GPU is able to handle up to 65\% of the computation effort. 
-This hybrid architecture implementation allows us to beat a time record for the computation of the last instances using best-effort on the ROMEO supercomputer. 
+The first problem was the Langford pairing counting problem. 
+This problem was studied with two different approaches based on a tree traversal and an arithmetic resolution, respectively. 
+The tree resolution showed very good results and up to 80\% of the overall work handle by the GPU with an efficient load balancing strategy. 
+The mathematical solution was also very irregular due to the large integer arithmetic on GPUs. 
+In this case, we showed that the GPU was able to handle up to 65\% of the computation effort. 
+This hybrid architecture implementation allowed us to beat a timed record for the computation of the last instances using best-effort on the ROMEO supercomputer. 
 
-The second problem we choose is the Graph500. 
-This is a perfect candidate in order to consider communication problem without heavy computation. 
-Indeed, the only operations are memory checking for values and copy in queues. 
-This problem stay very irregular in both memory and communication usage. 
+The second problem we addressed was the Graph500 benchmark. 
+This was a perfect candidate in order to consider communication problems without heavy computation. 
+Indeed, the only operations needed were memory checking for values and copies in queues. 
+This problem stayed very irregular in both the memory and the communication usage. 
 We proposed an algorithm based on both NVIDIA and IBM BlueGene/Q state of the art algorithm. 
-This allows us to rank the ROMEO supercomputer 105th in the Graph500 list of November 2016.\\
+This allowed us to rank the ROMEO supercomputer 105th in the November 2016 Graph500 list.
+This metric showed the high level of scalability that can be reach with GPUs.\\
 
-Those two first approaches give a lot of credit for the hybrid architecture on both walls separately. 
-In order to complete our metric we needed to confront the classical and hybrid architecture to a production application issuing both walls. 
+These two first approaches gave a lot of credit to the hybrid architecture on both walls separately. 
+In order to complete our metric we needed to examine the classical and hybrid architectures to a production application issuing both walls. 
 We targeted a complex simulation application. 
-The problem fitting our needs in computational and communication over irregular context is the smoothed particle hydrodynamics and gravitation simulation of hard astrophysics events. 
-We developed, in collaboration with the LANL, a framework named FleCSPH dedicated for tree topology and physics/astrophysics simulations. 
+The problem fitting our needs in computational and communication over irregular context was the smoothed particle hydrodynamics and gravitation simulation of hard astrophysics events. 
+We developed, in collaboration with the Los Alamos National Laboratory, a framework named FleCSPH dedicated to tree topology and physics/astrophysics simulations. 
 We showed with this metric the performances using hybrid architectures. 
-Even keeping an approach of production code, not fully GPU, the performances on hybrid architectures can be way superior to classical CPU ones. 
+Even keeping an approach of production code, not fully GPU, the performances on hybrid architectures can be greatly superior to classical CPU ones. 
 
-This study shows based three cases that the hybrid architecture can be the solution for exascale supercomputer.
-The main walls are solved using specific implementation and other ways of thinking the algorithm them-self. 
-The problem of nowadays architectures resides in the framework and tools developed. 
-On one hand the old softwares on which rely most of nowadays libraries need to be re-think and ported for massively parallel architectures. 
-On the other hand, frameworks like FleCSI can be developed to hide the complexity of clusters, nodes, accelerators offloading to domain scientists.\\
+This study showed three base cases where the hybrid architecture can be the solution for exascale supercomputer.
+The main walls are solved using generic strategies and new ways of thinking about the algorithms. \\
 
-Hybrid architectures seems to be the way to build Exascale supercomputers but a major technology change could find another solution. 
-Nowadays, a solution for specific problems seems to find ways in so called Quantum Computing.
-The bits of classical processors are replaced by \textit{qubits}, quantum bits, and can provide more states than the usual 0 - 1 of bits.
-Those specific machines are based on probabilities and seem to target very specific application. 
-They are always in development but some center, like the ROMEO supercomputer center, provide simulation of quantum computers behavior in order to learn their utilizations.\\
+Hybrid architectures appears to be the approach for building Exascale supercomputers but computer science is a very fast evolving field of research.  
+The release of a new technologies can change the cards and lead to better, alternative solutions.
+The main proposal, beside classical architectures and hybrid ones, is the ARM powered supercomputers. 
+We presented the Montblanc project, the European effort to reach exascale with reduce instruction set processors enabling low energy consumption. 
+Other groups are also interested in this type of ARM architecture. 
+The Japanese supercomputer center, K computer with RIKEN, is known to integrate a very efficient interconnect with a 6 dimensional torus.
+The next generation of this project, the post-K\footnote{http://www.fujitsu.com/global/Images/post-k-supercomputer-overview.pdf} computer, will keep the same TOFU interconnection topology, but provide ARMv8 processors. 
 
-Parallelism is the way of the future, and always will be. 
+Currently, another solution for specific problems seems to be resolved in so called Quantum Computing.
+The \textit{bits} of classical processors are replaced by \textit{qubits}, quantum bits, and can provide more states than the usual 0 - 1 of bits.
+These specific machines are based on probabilities and seem to target very specific applications. 
+Quantum Computers are always in development but some center, like the ROMEO supercomputer center, provide simulation of quantum computers behavior in order to learn their utilizations.\\
+
+The evolution of hardware will lead to bigger and more complex supercomputers. 
+Computer scientists need to reconsider new ways to think of algorithms and implementation. 
+On one hand, the tools like API and framework have to be able to target all the architecture and topologies.
+On the other hand, algorithms have to be think natively for massive parallel architecture and most of the existing ones changed.
+As an example, stochastic approaches can a way to reach a result faster with an error determined by the user, perfect for computations based on Montecarlo or current fields, such as AI. 

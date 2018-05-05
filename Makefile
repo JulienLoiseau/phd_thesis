@@ -22,12 +22,14 @@ $(FILE).pdf: $(FILE).tex chapters/abstract.tex chapters/introduction.tex chapter
 
 clean_all:
 	$(MAKE) clean
+	cd french_report/ && $(MAKE) clean
 	cd chapters_alone/part1 && $(MAKE) clean
 	cd chapters_alone/part2 && $(MAKE) clean
 	cd chapters_alone/part3 && $(MAKE) clean
 
 make_all:
 	$(MAKE) 
+	cd french_report/ && $(MAKE)
 	cd chapters_alone/part1 && $(MAKE) 
 	cd chapters_alone/part2 && $(MAKE) 
 	cd chapters_alone/part3 && $(MAKE) 

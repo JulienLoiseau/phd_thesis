@@ -494,8 +494,9 @@ We choose the value to be configured by the user and defaulted at  XX.
 \end{figure}
 
 On figure~\ref{fig:cpu_gpu_time} and figure~\ref{fig:cpu_gpu_scala} we find the strong scaling and scalability tests for CPU and GPU version using the empiric best depth of repartition.
-We see that the GPU allows the system to go up to XX\% faster in a one million particles example. 
-These tests were made using XX nodes of the ROMEO supercomputer in a classical submission using Slurm.
+The time comparison with strong scaling shows us that the GPU version go faster than the CPU one with a peak of 5 times faster. 
+On the other hand, the scalability graph present that the CPU version is more scalable than the GPU version. 
+This can be explain in two ways.
 
 \subsection{Simulations}
 The results and tests were done on several physical and astrophysical simulations in order to check the code behavior and reliability. 
@@ -538,5 +539,4 @@ We showed the advantage of using hybrid architecture on this kind of application
 It is important to notice that the GPU usage is not the best in this case. 
 Indeed, a dedicated application for each specific SPH problem would be more efficient. 
 The aim is to provide a framework that can be use on a large set of cluster and architectures. 
-Even with those limitations, the GPU was able to provide an acceleration of XX\% compare to the full-CPU computation.
- 
+Even with those limitations, the GPU was able to provide an acceleration of up to 5 times faster compare to the full-CPU computation. 

@@ -6,7 +6,10 @@
 \chapter{Complex system modelization}
 
 \section{Introduction}
-In this chapter we give details on our choice for the generic application which is confronted to both computation and communication walls in irregular context. 
+In this chapter we give details on our choice for a generic complex system which confront us to several problematics. 
+A complex system is a problem which gather several layers of complexity. 
+In our case: the physics modelization and the computer science implementation with many sub-problems like computation and communication walls with underlying high irregularity. 
+ 
 The problem we choose, the Smoothed Particle Hydrodynamics simulation method, is described on a physical aspect.
 We point out the difficulties involved in the implementation on supercomputers and especially hybrid architectures.  
 A lot of work have been spent on the comprehension of the physical aspects to produce a code that meet the behavior of real astrophysics simulations.
@@ -44,7 +47,7 @@ The development of new reliable, parallel and distributed tools for this method 
 The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of a group of particles representing physical quantities.
 Those physical quantities are either invariant or computed for every particle at each step regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel\index{Smoothing Kernel}. 
-The fundamental SPH formulation for any physical quantity $A$ is then, with all the neighbors $b$ of a particle $a$:
+The fundamental SPH formulation computes the physical value of any quantity $A$ of a particle $a$ regarding its neighbors particles $b$ by:
 \begin{equation}
 A(\vec{r})_a \simeq \sum_b \frac{m_b}{\rho_b} A(\vec{r}_b) W ( |\vec{r}-\vec{r}_b|,h)
 \end{equation}
@@ -549,6 +552,12 @@ Using $a$ as the distance between the two polytropes  (Here $a=2.9$ for $R=1$) a
 
 After the generation we are able to perform BNS coalescence. 
 This provides us a code using SPH, self-gravity and gravitation. 
+
+This will be the perfect candidate to provide a benchmark for our study.
+First, a high computation cost with the SPH and FMM computation of hydrodynamics and gravitation. 
+The problem size can grow accordingly to the number of particles but also their physical data like the number of neighbors. 
+Secondly, a lot of communications for both SPH and FMM to share local particles and non-local center of mass. 
+In completion of those two aspect, the irregularity provided by a huge number of particles moving in a 2D or 3D space at every iteration, making impossible the prediction of their position and values. 
 
 \section{Conclusion}
 The problem we presented in this part fulfill all the objectives for our metric. 
