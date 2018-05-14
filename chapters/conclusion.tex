@@ -34,7 +34,7 @@ We developed, in collaboration with the Los Alamos National Laboratory, a framew
 We showed with this metric the performances using hybrid architectures. 
 Even keeping an approach of production code, not fully GPU, the performances on hybrid architectures can be greatly superior to classical CPU ones. 
 
-This study showed three base cases where the hybrid architecture can be the solution for exascale supercomputer.
+This study showed three base cases where the hybrid architecture can be the solution for exascale supercomputers.
 The main walls are solved using generic strategies and new ways of thinking about the algorithms. \\
 
 Hybrid architectures appears to be the approach for building Exascale supercomputers but computer science is a very fast evolving field of research.  
@@ -50,8 +50,20 @@ The \textit{bits} of classical processors are replaced by \textit{qubits}, quant
 These specific machines are based on probabilities and seem to target very specific applications. 
 Quantum Computers are always in development but some center, like the ROMEO supercomputer center, provide simulation of quantum computers behavior in order to learn their utilizations.\\
 
+This study focuses on the ways to reach the necessary computational power for the Exascale. 
+Indeed, the main limitations are the computation and communication walls which we targeted with hybrid architectures on irregular behavior problems. 
+As these modern architectures, such as GPU, are the less power consuming regarding their efficiency, the power consumption wall is also studied. 
+We know that other issues will rise at the Exascale. 
+We cited in the introduction the interconnect wall, interconnecting efficiently billions of node will be very expensive to keep the bandwidth high enough between them.
+On the other hand, the error made by environmental reasons or bugs in computation is around one per week at Petascale, this error will rise to one per hour at the Exascale. 
+We will need to create new ways to ensure the computation correctness and on-the-fly verifications.
+We find the same idea for component failure.
+The resilience wall, the way to recover faster after a crash or loss of computation element.
+This will need robust algorithm and task base parallelism to ensure the computation.
+
+The last one is the complexity wall.
 The evolution of hardware will lead to bigger and more complex supercomputers. 
-Computer scientists need to reconsider new ways to think of algorithms and implementation. 
+Computer scientists need to consider new ways to think of algorithms and implementation. 
 On one hand, the tools like API and framework have to be able to target all the architecture and topologies.
 On the other hand, algorithms have to be think natively for massive parallel architecture and most of the existing ones changed.
 As an example, stochastic approaches can a way to reach a result faster with an error determined by the user, perfect for computations based on Montecarlo or current fields, such as AI. 
