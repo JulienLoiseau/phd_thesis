@@ -28,6 +28,10 @@
 \newcommand\todo[1]{\textcolor{red}{#1}}
 \newcommand{\locpath}{.}
 
+% interlignes
+\linespread{1.125}\selectfont
+
+
 
 \usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2.5cm]{geometry}
 
@@ -54,7 +58,7 @@
 \newcommand{\phdDiscipline}{Informatique}
 \newcommand{\phdSpeciality}{Calcul Haute Performance}
 \newcommand{\phdTitleEN}{Hybrids Architectures to Reach Exascale}
-\newcommand{\phdTitleFR}{Les Architectures Hybrides pour Atteindre l'Exascale}
+\newcommand{\phdTitleFR}{Le choix des architectures hybrides, une stratégie réaliste pour atteindre l'échelle exaflopique}
 \newcommand{\phdDirector}{Michaël KRAJECKI, Professeur des Universités}
 
 %% ------------------------------------------------------------------
@@ -68,7 +72,7 @@
 % LOGO URCA
 {
 	\includegraphics[scale=1]{../figures/style/logo_urca_front_page.jpg}
-	\vspace{0.5cm}
+	\vspace{0.3cm}
 }
 
 % UNIVERSITE ET ECOLE DOCTORALE
@@ -76,22 +80,22 @@
 	UNIVERSIT\'E DE REIMS CHAMPAGNE-ARDENNE\\
 	\vspace{0.5cm}
 	\'Ecole Doctorale Sciences Technologie Sant\'e\\
-	\vspace{1cm}
+	\vspace{.5cm}
 	\huge
 	\textbf{Rapport français}
-	\vspace{.5cm}
+	\vspace{.3cm}
 }
 
 %% TITRE ET GRADE + DISCIPLINE ET SPECIALITY
 {
 	Pour obtenir le grade de:\\ 
-	\vspace{.4cm}
+	\vspace{.3cm}
 	\Large 
 	\textbf{Docteur de l'Université de Reims Champagne-Ardenne}\\
-	\vspace{.4cm}
+	\vspace{.3cm}
 	\large
 	\textbf{\textit{Discipline : }\phdDiscipline}\\
-	\vspace{.4cm}
+	\vspace{.3cm}
 	\textbf{\textit{Sp\'ecialit\'e : }\phdSpeciality}
 }
 
@@ -99,10 +103,10 @@
 {
 	\vspace{1cm}
 	Pr\'esent\'ee et soutenue par:\\
-	\vspace{.4cm}
+	\vspace{.3cm}
 	\Large
 	\textbf{\phdAuthor}\\
-	\vspace{.4cm}
+	\vspace{.3cm}
 	\large
 	\defenseDate
 	\vspace{.5cm}	
@@ -112,18 +116,18 @@
 	%% LIGNE SEPARATION 
 	\hrule height 2pt
 	\vspace{2pt}
-	\Large 
+	\huge 
 	% TITRE EN 
-	\vspace{1cm}
+	\vspace{.8cm}
 	\phdTitleFR\\
 	\large
 	% TITRE FR 
 	%\vspace{0.5cm}
 	%\phdTitleEN
 	%% LIGNE SEPARATION
-	\vspace{1.0cm}
+	\vspace{.8cm}
 	\hrule
-	\vspace{1cm}
+	\vspace{.8cm}
 }
 
 %% UNDER DIRECTION OF 
@@ -131,7 +135,7 @@
 	Sous la direction de :\\ 
 	\textbf{\phdDirector}
 	\vspace{0.5cm}
-	\vspace{\fill}
+	%\vspace{\fill}
 }
 
 %% JURY 
@@ -170,13 +174,12 @@
 \newgeometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.5cm}
 
 
-Ce document comprend un résumé substantiel de ma thèse rédigée en anglais.
-Il présente tout d'abord la traduction de la table des matières de la thèse. 
-Une traduction de l'introduction générale, une synthèse des trois parties de la thèse ainsi que de la conclusion générale. 
+%Ce document comprend un résumé substantiel de ma thèse rédigée en anglais.
+%Il présente tout d'abord la traduction de la table des matières de la thèse. 
+%Une traduction de l'introduction générale, une synthèse des trois parties de la thèse ainsi que de la conclusion générale. 
 
 \section*{Table des matières traduite en français}
 Cette traduction de la table des matières a été réduite aux Parties, Chapitres et Sections de la thèse. 
-\vspace{-5pt}
 % Add the tableofcontentes in itself
 %\newgeometry{left=1cm,right=.3cm,top=2.0cm,bottom=2.5cm}
 \vspace{.2cm}
@@ -191,86 +194,87 @@ Cette traduction de la table des matières a été réduite aux Parties, Chapitr
 \section*{Introduction}
 
 Le monde du calcul haute performance (HPC) va prochainement atteindre une puissance de calcul inégalée avec l'échelle exaflopique.
-Les \'Etats Unis d'Amériques et l'Europe devraient l'atteindre aux horizons 2020-2021 mais la Chine pourrait proposer une telle machine dès 2019.
-Ces superordinateurs seront $100$ fois plus rapides que l'estimation actuelle des performances du cerveau humain avec $10^{16}$ calculs à virgules flottante par secondes (FLOPS)\cite[kurzweil2010singularity] et atteindre une puissance sans précédent d'un milliard de milliard ($10^{18}$) de FLOPS.
-Cette aventure a commencé avec les premiers ordinateurs à tube à vides et les besoins de la balistique militaire. 
+Les \'Etats-Unis d'Amérique et l'Europe devraient l'atteindre aux horizons 2020-2021, mais la Chine pourrait proposer une telle machine dès 2019.
+Ces superordinateurs seront $100$ fois plus rapides que l'estimation actuelle des performances du cerveau humain avec $10^{16}$ calculs à virgule flottante par seconde (FLOPS)\cite{kurzweil2010singularity} et atteindre une puissance sans précédent d'un milliard de milliard ($10^{18}$) de FLOPS.
+Cette aventure a commencé avec les premiers ordinateurs à tube à vide et les besoins de la balistique militaire. 
 De nos jours les supercalculateurs étendent leur domaine d'application et sont des éléments phares pour représenter la puissance d'une nation.
-Les applications se sont répandues dans tous les secteurs de la science et de la technologie.\\
+Ils sont maintenant utilisés dans tous les secteurs de la science et de la technologie.\\
 
-Depuis 1962, et en considérant le Cray CDC 6600 tel que le premier superordinateur, la puissance de calcul de ces machines n'a fait qu'augmenter tout en suivant une observation faite par le co-fondateur de l'entreprise Intel, Gordon Moore. 
-Mieux connue sous le nom de "Loi de Moore", cette loi de 1965 explique que, considérant l'évolution constante de la technologie, le nombre de transistors sur un circuit intégré va doubler environs tous les deux ans pour un prix similaire. 
+Depuis 1962, et en considérant le Cray CDC 6600 tel que le premier superordinateur, la puissance de calcul des machines n'a fait qu'augmenter en suivant une observation faite par le co-fondateur de l'entreprise Intel, Gordon Moore. 
+Cette loi de 1965 mieux connue sous le nom de "Loi de Moore" explique que, considérant l'évolution constante de la technologie, le nombre de transistors sur un circuit intégré va doubler environ tous les deux ans pour un prix similaire. 
 Ceci va permettre une augmentation de la puissance de calcul que peuvent fournir les ordinateurs et superordinateurs. 
 Plus important encore, comme "\textit{L'argent est le nerf de la guerre}", le prix des puces pour de meilleures performances va diminuer. 
 
-Cette théorie de Gordon Moore peut être observée avec l'évolution de la puissance des supercalculateurs, la liste TOP500\footnote{https://www.top500.org}.
-Présenté sur la figure~\ref{fig:intro_top500}, le loi de Moore se poursuit et reste vraie après des décennies d'évolution du matériel informatique.
+Cette théorie de Gordon Moore peut être observée sur le benchmark du TOP500\footnote{https://www.top500.org}, classement mondial des supercalculateurs avec l'évolution de la puissance des supercalculateurs.
+Présentée sur la figure~\ref{fig:intro_top500}, la Loi de Moore se poursuit et reste vraie après des décennies d'évolution du matériel informatique.
 
-\begin{figure}[h]
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=.7\linewidth]{../figures/introduction/top500_list_approximation.png}
-\caption{\'Evolution de la puissance de calcul, liste du TOP500}
+\caption{\'Evolution de la puissance de calcul des supercalculateurs, liste du TOP500}
 \label{fig:intro_top500}
 \end{figure}
 
 La diminution de la taille des semi-conducteurs avec des transistors de plus en plus petits n'est pas la seule raison de cette évolution linéaire. 
-Les premiers processeurs étaient bâtis autour d'un unique cœur de calcul (CPU) avec une augmentation du nombre de transistors et une meilleure fréquence d'opération.
-Ils ont vite rencontré une limitation pour atteindre des fréquences toujours plus élevées du fait de l'énergie requise mais aussi de la chaleur générée devant être canalisée.
+Les premiers processeurs étaient bâtis autour d'un unique cœur de calcul (CPU), avec une augmentation du nombre de transistors et une meilleure fréquence d'opération.
+Ils ont vite rencontré une limitation pour atteindre des fréquences toujours plus élevées du fait de l'énergie requise, mais aussi de la chaleur générée devant être canalisée.
 C'est pourquoi, au début du vingtième siècle, IBM proposa le premier processeur multi-cœur, le Power4.
-Les constructeurs ont commencé à créer des cartes avec plus d’un cœur pour augmenter la puissance de calcul tout en continuant à réduire la taille des composants. 
-Cela permis de répondre à la constante demande en puissance de calcul et la Loi de Moore fut conservée. 
-Bien entendu cette nouvelle architecture demandait de nouveaux paradigmes et se confronta plusieurs limitations. 
-Un coût supplémentaire en synchronisation entre les cœurs pour l'accès à la mémoire, le partage des tâches mais aussi une complexité des algorithmes parallèles. 
-De nos jours un CPU classique propose de deux à des dizaines de cœurs de calcul sur une seule carte.\\
+Les constructeurs ont commencé à créer des puces avec plus d’un cœur pour augmenter la puissance de calcul tout en continuant à réduire la taille des composants. 
+Cela a permis de répondre à la constante demande en puissance de calcul et la Loi de Moore fut conservée. 
+Bien entendu cette nouvelle architecture demandait de nouveaux paradigmes et se confronta à plusieurs limitations : un coût supplémentaire en synchronisation entre les cœurs pour l'accès à la mémoire, le partage des tâches mais aussi une complexité des algorithmes parallèles. 
+De nos jours un CPU classique propose de deux à des dizaines de cœurs de calcul sur un seul processeur.\\
 
-Pour atteindre une puissance de calcul encore plus importante et dépasser les contraintes énergétiques, les chercheurs se sont intéressés aux approches many-cores. 
+Pour atteindre une puissance de calcul encore plus importante et dépasser les contraintes énergétiques, les chercheurs se sont intéressés aux approches many-coeurs. 
 Ces machines utilisent des centaines, voire des milliers, de cœurs de calcul "simples".
-Leur fréquence de fonctionnement est plus base ce qui réduit la consommation mais ils s'exécutent de manière synchrone. 
-Ce synchronisme d'exécution ajouter une complexité lors du développement pour pouvoir atteindre les meilleures performances.
-Ces architectures sont généralement couplées à un CPU qui gère l'envoie des données et les exécutions de fonctions appelées "Kernels".
-On notera que certaines architectures se placent entre les multi-core et many-core, proposant près de cent cœurs de calcul utilisant un réseau de processeurs multi-core, le Xeon Phi d'Intel.
-Les architecture many-cores sont généralement appelées accélérateurs, ils augmentent sensiblement la puissance de calcul du CPU auquel il est associé. 
-Les plus connus sont dons les General-Purpose Graphics Processing Unit (GPGPU), les Xeon Phi, les Field Programmable Gate Array (FPGA) ou encore les Application-Specific Integrated Circuit (ASIC).
-L'architecture basée sur un processeur "Host" avec un ou plusieurs "Device" apparait et est appelé architecture hybride. 
-Un supercalculateur peut être classique, avec uniquement des processeurs multi-cœurs, hybride avec des accélérateur du même type ou encore hétérogène avec des nœuds présentant différents types de d'accélérateurs. \\
+Leur fréquence de fonctionnement est plus basse, ce qui réduit la consommation mais ils doivent s'exécuter de manière synchrone. 
+Ce synchronisme d'exécution ajoute une complexité lors du développement pour pouvoir atteindre les meilleures performances.
+Ces architectures sont généralement couplées à un CPU qui gère l'envoi des données et les exécutions de fonctions appelées "Kernels".
+On notera que certaines architectures se placent entre les architectures multi-coeurs et many-coeurs proposant près de cent cœurs de calcul utilisant un réseau de processeurs multi-coeurs.
+Le Xeon Phi d'Intel est un parfait exemple de ce modèle. 
+Les architectures many-coeurs sont généralement appelées accélérateurs, ils augmentent sensiblement la puissance de calcul du CPU auquel ils sont associés. 
+Les accélérateurs les plus connus sont les \textit{General-Purpose Graphics Processing Unit} (GPGPU), les Xeon Phi, les \textit{Field Programmable Gate Array} (FPGA) ou encore les \textit{Application-Specific Integrated Circuit} (ASIC).
+L'architecture de calcul basée sur un processeur "Host" avec un ou plusieurs "Device" apparait et est appelée architecture hybride. 
+Un supercalculateur peut être classique, avec uniquement des processeurs multi-cœurs, hybride avec des accélérateur du même type ou encore hétérogène, avec des nœuds présentant différents types d'architectures ou d'accélérateurs. \\
 
-Depuis 2013 et 2014, beaucoup d'entreprises, comme celle de Gordon Moore avec Intel, pensent que la loi de Moore est terminée. 
-La figure~\ref{fig:intro_top500} présente l'évolution de la puissance des supercalculateurs. 
-On peut en effet voir sur la partie droite du graphe que l'évolution n'est plus linéaire mais tend à décroitre doucement dans le temps. 
-Ceci peut s'expliquer par deux facteurs. 
-Tout d'abord la taille minimale des transistors est peu à peu atteinte et induit des effets de bord difficiles à gérés. 
+Depuis 2013 et 2014 beaucoup d'entreprises, comme celle de Gordon Moore avec Intel, pensent que la loi de Moore n'est plus valable. 
+Pour illustrer ce fait la figure~\ref{fig:intro_top500} présente l'évolution de la puissance des supercalculateurs. 
+On peut en effet voir sur la partie droite du graphique que l'évolution n'est plus linéaire mais tend à décroître dans le temps. 
+Ceci peut s'expliquer par deux facteurs.
+Tout d'abord la taille minimale des transistors est peu à peu atteinte et induit des effets de bord difficiles à gérer. 
 De plus, l'augmentation de la surface de silicium, le grand nombre de transistors et les fréquences élevées augmentent sensiblement la consommation énergétique. 
 
-Malgré ces dernières technologies, les supercalculateurs actuels sont confrontés à plusieurs limitations dans leur conception et utilisation.
-Les trois principales limitations qui limitent la puissance de calcul sont : la consommation énergétique, la communication et la mémoire. 
-On trouve plusieurs sous-problématiques avec le réseau d'interconnexion, la résilience et la complexité d'utilisation de ces machines contenant des milliards de composants de calcul.\\
+Malgré les technologies modernes, les supercalculateurs actuels sont confrontés à plusieurs limitations dans leur conception et utilisation.
+Les trois principales limitations à la puissance de calcul sont : la consommation énergétique, la communication et la mémoire. 
+On trouve plusieurs sous-problématiques avec le réseau d'interconnexion, la résilience et la complexité d'utilisation de ces machines contenant des milliards de composants dédiés au calcul.\\
 
 Dans cette période de questionnement par rapport aux futures architectures du calcul haute performance, cette étude propose plusieurs points de vue. 
-Nous pensons que le futur du calcul haute performance sera bâti autour des architectures hybrides et des accélérateurs utilisant des API et Framework adaptés. 
-Nous considérons que les benchmarks classiques, tel que le fameux TOP500, n'est pas représentatif des problématiques actuelles et des défis du calcul haute performance.
-Les applications des scientifiques tels que la physique, l'astrophysique, la chimie ou encore la biologie nécessitent des benchmarks basés sur des problèmes lourds en calcul, en communication mais surtout au comportement irrégulier.
+Nous pensons que le futur du calcul haute performance sera bâti autour des architectures hybrides et des accélérateurs utilisant des \textit{API} et \textit{framework} adaptés. 
+Nous considérons que les benchmarks classiques, tel que le fameux TOP500, ne sont pas représentatifs des problématiques actuelles et des défis du calcul haute performance.
+Les applications scientifiques, telles que la physique, l'astrophysique, la chimie ou encore la biologie, nécessitent des benchmarks basés sur des problèmes lourds en calcul, en communication mais surtout au comportement irrégulier qui sont à même de représenter des codes de production.
 
-Dans cette étude nous proposons notre métrique pour extraire les principales problématiques du calcul haute performance et de les appliquer aux architecture hybrides. 
-Nous montrons comment tirer avantage de ces architectures malgré un groupe de problème qui ne se prête pas à leur modèle d'exécution.
-Notre métrique est bâtie en rassemblant deux problèmes caractéristiques puis un troisième problème, combinant tout notre les acquis précédents. 
-Les deux premiers ciblent le calcul et la communication avec un comportement très irrégulier avec un grand nombre d'accès mémoire, en utilisant un problème combinatoire académique et le benchmark du Graph500.
-La dernière étape est un problème de calcul scientifique qui couvre l'ensemble des problématiques précédentes, considéré difficile à implémenter sur des architecture hybrides. 
+Dans cette étude nous proposons notre métrique pour extraire les principales problématiques du calcul haute performance et les appliquer aux architecture hybrides. 
+Nous montrons comment tirer avantage de ces architectures malgré un groupe de problèmes qui ne se prête pas à leur modèle d'exécution.
+Notre métrique est bâtie sur deux problèmes caractéristiques puis un troisième problème, combinant tous les aspects limitants identifiés précédemment.
+Les deux premiers ciblent le calcul et la communication avec un comportement très irrégulier avec un grand nombre d'accès mémoire.
+Cette première métrique est bâtie en utilisant un problème combinatoire académique et le benchmark du Graph500.
+La dernière étape utilise un problème de calcul scientifique qui couvre l'ensemble des problématiques précédentes, considéré difficile à implémenter sur des architecture hybrides. 
 Les résultats montrent le net avantage des architectures hybrides et confortent notre thèse. \\
 
 Cette thèse se décompose en trois parties.
-La première partie explore l'état de l'art du calcul haute performance depuis les lois fondamentales jusqu'au machines actuelles. 
-Nous présentons les lois d'Amdahl et de Gustafson ainsi que les notions d'accélération et d'efficacité.  
-Les processeurs classiques, les GPGPU et les autres accélérateurs sont présentés en compléments des modèles d'exécution et de mémoire. 
+La première partie explore l'état de l'art du calcul haute performance depuis les lois fondamentales jusqu'aux machines actuelles. 
+Nous présentons les lois d'Amdahl et de Gustafson, ainsi que les notions d'accélération et d'efficacité.  
+Les processeurs classiques, les GPGPU et autres accélérateurs sont présentés en compléments des modèles d'exécution et de mémoire. 
 Les principales méthodes de classement des supercalculateurs et les problématiques inhérentes sont détaillées.
 Nous montrons que ces classements ne sont pas suffisants pour représenter les problématiques actuelles.\\
 
-Dans la seconde partie nous présentons notre métrique 
+Dans la seconde partie nous présentons notre métrique. 
 Le problème de Langford est décrit sous son aspect lourd en calcul et irrégulier. 
 Ce premier élément montre l'avantage des accélérateurs, dans notre cas les GPGPU, sur ce type de problème ne mettant pas en jeu de communications.
-Ce travail a mené à la publication d'un article de journal\cite{krajecki2016many} ainsi que plusieurs conférences, présentations et posters\cite{deleau2014towards,j2016resolution,jaillet2014Langford}.
+Ce travail a mené à la publication d'un article de journal\cite{krajecki2016many}, ainsi qu'à plusieurs conférences, présentations et posters\cite{deleau2014towards,j2016resolution,jaillet2014Langford}.
 Notre implémentation de ce problème nous a permis de battre un record en termes de temps de calcul sur les dernières instances.
 
-Le problème du Graph500 est ensuite proposé pour cibler, cette fois, la problématique des communications conjointement à l'irrégularité. 
-Nous présentons notre implémentation et la logique utilisée pour obtenir des résultats GPGPU bien supérieurs aux architectures classiques. 
+Le problème du Graph500 est ensuite proposé pour cibler la problématique des communications conjointement à l'irrégularité. 
+Nous présentons notre implémentation et la logique utilisée pour obtenir des résultats sur GPGPU bien supérieurs aux architectures classiques. 
 Ce travail a mené à la publication d'un papier de conférence\cite{krajecki2016bfs} ainsi que plusieurs présentations et posters\cite{loiseau2015parcours,loiseau2015GTC}.\\
 
 Dans la troisième et dernière partie nous considérons un problème confrontant à la fois la puissance de calcul et la communication avec un comportement hautement irrégulier. 
@@ -279,58 +283,59 @@ Nous détaillons ensuite notre méthode pour implémenter ce problème sur les a
 Notre choix, explicité dans l'analyse, s'est porté sur la méthode Smoothed Particle Hydrodynamics (SPH).
 Cette application commence avec le développement du framework FleCSI au Los Alamos National Laboratory (LANL) pour répondre à la demande des scientifiques des domaines appliqués. 
 Le but est de mettre en place un outil efficace pour les physiciens et les astrophysiciens appelé FleCSPH. 
-Ce travail a mené à la production de présentation ainsi que de posters\cite{debrye20162HOT,loiseau2017SC}.\\
+Ce travail a mené à la publication de plusieurs conférence\cite{loiseau2018Flecsphg,loiseau2018CARLA}, de présentations ainsi que de posters\cite{debrye20162HOT,loiseau2017SC}.\\
 
 La dernière partie résume l'ensemble du travail et les résultats obtenus. 
-Elle montre l'avantage certain des architectures hybrides sur l'ensemble des limitations abordées dans notre métrique.
+Elle montre l'avantage certain des architectures hybrides dans la course à l'échelle exaflopique sur l'ensemble des limitations abordées dans notre métrique.
 
 \section{Modèles du HPC}
-Cette partie présente l'état de l'art de la théorie et des technologies qui font le calcul haute performance d'aujourd'hui.
+Cette partie présente l'état de l'art de la théorie et des technologies qui font le calcul haute performance moderne.
 Elle décrit les outils nécessaires à la compréhension de la problématique et de notre méthodologie scientifique. 
 Le calcul haute performance ne trouve pas de définition stricte. 
-Elle est définie en trois chapitres avec la théorie, les technologies et enfin les logiciels, API et framework pour les utiliser. 
+Nous le définissons au travers de trois chapitres avec la théorie, les technologies et enfin les logiciels, API et framework les plus performants. 
 
 Le premier chapitre présente la machine de Von Neumann, base de toutes les machines actuelles, et des premiers processeurs mono-cœurs. 
-Ils ont ensuite évolué avec une approche parallèle et une augmentation de la fréquence et du nombre de cœurs de calcul. 
-Ceci nous permet d'introduire la taxonomie de Flynn et en particulier les modèles d'exécution SIMD et SIMT qui représentent les architectures massivement parallèles et en particulier les GPGPU. 
+Ces processeurs ont ensuite évolué vers une approche parallèle avec une augmentation de la fréquence et du nombre de cœurs de calcul. 
+Ceci nous permet d'introduire la taxonomie de Flynn et en particulier les modèles d'exécution SIMD et SIMT qui représentent les architectures massivement parallèles et en particulier les GPGPU, utilisés dans notre étude. 
 Les modèles de mémoires sont ensuite introduits avec le NUMA, CC-NUMA et NoRMA.
-Nous introduisons ensuite la notion de performance avec tout d'abord les FLOPS, opérations à virgule flottantes. 
+Nous présentons ensuite la notion de performance avec les FLOPS, opérations à virgule flottante. 
 Nous définissons enfin la scalabilité et l'efficacité en HPC.
-Cela nous améne aux lois de Amdahl et Gustafson permettant de définir les notions de \textit{Strong} et \textit{Weak scaling}.
+Cela nous améne aux lois de Amdahl et Gustafson permettant de définir le \textit{Strong} et le \textit{Weak scaling}.
 
 Le second chapitre propose une présentation chronologique des technologies qui composent les supercalculateurs d'aujourd'hui.
 Nous présentons en détail les architectures multi-cœurs avec le calcul \textit{out-of-order}, le \textit{pre-fecthing}, etc.
-Les architectures many-cores sont présentées avec les GPGPU de NVIDIA et AMD, les PEZY ainsi que les FPGA.
-Une fois les composants de base des supercalculateurs introduits nous présentons la topologie d'interconnexion et les principaux supercalculateurs au monde.
+Les architectures many-coeurs sont présentées avec les GPGPU de NVIDIA et AMD, les PEZY ainsi que les FPGA.
+Une fois les composants de base des supercalculateurs introduits, nous présentons la topologie d'interconnexion et les principaux supercalculateurs mondiaux par rapport au classement TOP500.
 Nous présentons enfin le supercalculateur sur lequel l'ensemble des tests de cette étude ont été réalisés, le méso-centre ROMEO de l'Université de Reims Champagne-Ardenne.
 
-Le dernier chapitre de cette première partie nous permet de mettre en avant les logiciels, API et framework dédiés au HPC que nous avons utilisés pour mettre en place nos implémentations multi-CPU et multi-GPU. 
-Nous faisons un lien entre les modèles parallèles et distribués come PRAM, \textit{Fork-Join} et BSP avec les outils de développements disponibles. 
+Le dernier chapitre de cette première partie nous permet de mettre en avant les logiciels, \textit{API} et \textit{framework} dédiés au HPC que nous avons utilisés pour mettre en place nos implémentations multi-CPU et multi-GPU. 
+Nous faisons un lien entre les modèles parallèles et distribués comme PRAM, \textit{Fork-Join} et BSP et les outils de développement les plus performants. 
 
 Tous ces éléments nous permettent de présenter les benchmarks actuels des supercalculateurs. 
-Le plus connu est le TOP500, utilisé comme classement mondial des machines contenant les 500 plus puissants supercalculateurs publics au monde. 
-Nous montrons que ce benchmark, et les autres, ne sont pas représentatif des besoins et des problèmes actuels rencontrés dans les problèmes de production avec une irrégularité sous-jacente non représentée dans ces benchmarks. 
-IL faut donc mettre en place une métrique permettant de déterminer le comportement des architectures dans les conditions représentatives de calcul, communication et d'irrégularité. 
+Le plus connu est le TOP500, utilisé comme classement mondial des machines et contenant les 500 plus puissants supercalculateurs publics au monde. 
+Nous montrons que ce benchmark, et les autres, ne sont pas représentatifs des besoins et des problèmes actuels. 
+Les problèmes de production ont en effet une irrégularité sous-jacente non représentée dans ces benchmarks. 
+Il faut donc mettre en place une métrique permettant de déterminer le comportement des architectures dans les conditions représentatives de calcul, de communication et d'irrégularité. 
 
 \section{Métrique de problème complexes}
-Cette seconde partie détaille notre travaille méthodologique et notre métrique, adaptée aux problématiques actuelles. 
-Nous rappelons tout d'abord les différents murs auquel le calcul haute performance est confronté et nous décidons de cibler les deux principales limitations, le calcul et la communication tout en gardant des exemples représentatif de l'irrégularité à la fois de calcul, communication mais aussi de l'utilisation mémoire. 
+Cette seconde partie détaille notre travail méthodologique et notre métrique, adaptée aux problématiques actuelles. 
+Nous rappelons tout d'abord les différents murs auquel le calcul haute performance est confronté et nous décidons de cibler les deux principales limitations, le calcul et la communication, tout en gardant des exemples représentatifs de l'irrégularité à la fois de calcul, de communication mais aussi de l'utilisation mémoire. 
 Il convient de comparer sur ces problèmes les architectures classiques et hybrides à leur meilleur niveau d'optimisation.
 
 
 
 
 \subsection{Calcul: Problème de Langford}
-Pour cibler l'aspect de calcul sans communication et en environnement irregulier nous avons choisis le problème académique de dénombrement combinatoire de Langford.
-Ce problème est présenté sous deux approches, l'une générlisable à l'ensemble des problématiques de \textit{Constraint Satisfaction Problem} (CSP) et l'autre dédié à la résolution de ce problème.
+Pour cibler l'aspect de calcul sans communication et en environnement irrégulier, nous avons choisi le problème académique de dénombrement combinatoire de Langford.
+Ce problème est présenté sous deux approches, l'une généralisable à l'ensemble des problématiques de \textit{Constraint Satisfaction Problem} (CSP) et l'autre dédiée à la résolution de ce problème.
 \begin{itemize}[noitemsep,nolistsep]
 \item[-] Une résolution arborescente, appelée méthode de Miller, nous permet de mettre en place un premier travail sur les parcours d'arbre, irréguliers par nature. 
-\item[-] La méthode algébrique, dite de Godfrey, nous montre l'avantage des architectures hybrides avec un comportement irrégulier induit par l'utilisation de grand entiers.  
+\item[-] La méthode algébrique, dite de Godfrey, nous montre l'avantage des architectures hybrides avec un comportement irrégulier induit par l'utilisation de grands entiers. \\
 \end{itemize}
 
-C. Dudley Langford a donné son nom à un problème combinatoire classique~\cite{Gard56, Simp83}.  
+C. Dudley Langford a donné son nom à un problème combinatoire classique\cite{Gard56, Simp83}.  
 En observant son fils jouer avec des cubes de couleurs différentes, il a remarqué des arrangements spécifiques de trois paires de cubes (jaune, rouge et bleu) : la paire rouge - 1 - était séparée par un cube, la paire bleue - 2 - séparée par deux cubes et enfin la paire jaune - 3 - séparée par trois cubes, tel que représenté sur la figure~\ref{fig:lang}.\\
-
+%
 \begin{figure}   
 \begin{center}    
 %\includegraphics[scale=0.45]{\locpath/figures/langford/lgf_cubes}   
@@ -346,30 +351,30 @@ En observant son fils jouer avec des cubes de couleurs différentes, il a remarq
 \draw (p1_1.south) -- ([yshift=-10pt]p1_1.south) -- ([yshift=-10pt]p1_2.south) -- (p1_2.south) ;
 \end{tikzpicture}  
 \end{center}
-\caption{L(2,3) arrangement} \label{fig:lang}  
+\caption{Exemple de solution pour l'instance L(2,3) du problème de Langford} \label{fig:lang}  
 \end{figure}
-
-Ce problème a ensuite été généralise à un ensemble de $n$ couleurs et un nombre $s$ de cubes de la même couleur.   
+%
+Ce problème a ensuite été généralisé à un ensemble de $n$ couleurs et un nombre $s$ de cubes de la même couleur.   
 $L(s,n)$ consiste en la recherche du nombre de solution au problème de Langford à une symétrie près. 
 
 \subsubsection{Méthode de Miller}
 La méthode de Miller propose une résolution arborescente du problème de Langford en explorant l'ensemble des cas possibles.
 Les branches impossibles de l'arbre sont éliminées au fur et à mesure du parcours.
-Avec l'explosion combinatoire le nombre de branches à explorer devient vite bien trop grand et ne permet pas de résoudre les dernières instances. 
-Néanmoins elle fournit un parfait exemple de problème irrégulier et lourd en calcul et ne semble pas s'adapter à l'architecture SIMD des accélérateurs du fait de l'irrégularité du parcours. 
+Avec l'explosion combinatoire le nombre de branches à explorer devient vite bien trop grand et ne permet pas de résoudre les dernières instances du problème. 
+Néanmoins, elle fournit un parfait exemple de problème irrégulier et lourd en calcul qui ne semble pas s'adapter apriori à l'architecture SIMD des accélérateurs, du fait de l'irrégularité du parcours. 
 
 Notre implémentation propose un découpage de l'arbre de recherche par niveaux. 
-Un premier programme génère des tâches qui sont transmissent à l'ensemble des programmes esclaves. 
+Un premier programme génère des tâches qui sont transmisent à l'ensemble des programmes esclaves. 
 Une fois leur calcul terminé ils transmettent le résultat et se mettent en attente d'une nouvelle tâche de travail.
-Nous proposons et détaillons la mise en place de cette distribution sur architectures classiques utilisant MPI-OpenMP ainsi qu'avec l'utilisation de GPGPU avec MPI-OpenMP-CUDA.
-Nous exposons les choix d'implémentation pour la répartition et l'utilisation de l'accélérateur. 
+Nous proposons et détaillons la mise en place de cette distribution sur architectures classiques utilisant MPI-OpenMP, ainsi qu'avec l'utilisation de GPGPU avec MPI-OpenMP-CUDA.
+Nous exposons les choix d'implémentation pour la répartition et l'utilisation des accélérateurs. 
 Pour la résolution des tâches nous proposons une approche régulière, explorant chaque branche et feuille, mais aussi l'approche \textit{backtrack} classique. 
 
-Les résultats sont très bon et nous ont permis d'aborder des instances du problème de Langford encore non calculées avec cette méthode, au-dessus de l'instance $L(2,19)$.
-Ces résultats sont réalisés sur 20 nœuds du supercalculateur ROMEO de l'Université de Reims Champagne-Ardenne soit 40 CPU-GPU.
-Les résultats sont présentés sur les figures~\ref{ tab:result_base_regu,tab:result_backtrack}
-Avec la méthode classique le GPU apporte un speed-up de 1.6 fois plus rapide en comparant le \textit{backtrack} sur CPU avec un parcours complet de l'arbre sur GPU. 
-Dans ce cas le GPU réalise une exploration de $200 000$ fois plus de noeuds mais est tout de même plus rapide que le CPU. 
+Les résultats sont très bons et nous ont permis d'aborder des instances du problème de Langford au-dessus de l'instance $L(2,19)$, encore non calculées avec cette méthode
+Les résultats sont présentés sur les figures~\ref{tab:result_base_regu} et~\ref{tab:result_backtrack}.
+Avec la méthode régularisée qui réalise donc un parcours complet de l’arbre, le GPU apporte une accélération de 1.6 fois plus rapide en comparant au \textit{backtrack} sur CPU. 
+Ce test a été réalisé sur 20 nœuds du supercalculateur ROMEO de l'Université de Reims Champagne-Ardenne, soit 40 CPU-GPU.
+Dans ce cas le GPU réalise une exploration de $200 000$ fois plus de nœuds mais est tout de même plus rapide que le CPU. 
 
 \begin{table}[t!]
 \begin{subfigure}[b]{0.5\linewidth}
@@ -406,146 +411,235 @@ Dans ce cas le GPU réalise une exploration de $200 000$ fois plus de noeuds mai
 \caption{Backtrack  (seconds)}
 \label{tab:result_backtrack}
 \end{subfigure}
-\caption{Comparison between multi-core processors and GPUs for regularized and backtrack method}
+\caption{Comparaison du temps de calcul CPU et GPU avec la méthode régularisée et la méthode \textit{backtrack}}
 \end{table}
 
 Dans le cas \textit{backtrack}, les tests ont été réalisés sur 129 nœuds du supercalculateur ROMEO, un total de 258 CPU-GPU. 
-Malgré cette méthode qui ne semble pourtant pas s'adapter à l'architecture synchrone et du modèle SIMD du GPU permet une accélération de 15 fois plus rapide en utilisant le GPU. 
-Nous avons repoussés les limites de la méthode en résolvant les instances $L(2,20)$ en moins de trois heures et $L(2,21)$ en 33 heures.
+Malgré cette méthode, qui ne semble pourtant pas s'adapter à l'architecture synchrone du modèle SIMD du GPU, nous observons une accélération de 15 fois plus.
+Nous avons repoussé les limites de la méthode en résolvant les instances $L(2,20)$ en moins de trois heures et $L(2,21)$ en 33 heures.
 
 \subsubsection{Méthode Godfrey}
-Nous avons ensuite travaillé sur la méthode la plus rapide actuellement connue pour dénombrer les arrangements du problème de Langford. 
-La méthode algébrique de Godfrey propose une sommation en explorant un sous ensemble des combinaisons possibles du problème avec : 
+Nous avons ensuite travaillé sur la méthode la plus rapide, actuellement connue pour dénombrer les arrangements du problème de Langford. 
+La méthode algébrique de Godfrey propose une sommation en explorant un sous-ensemble des combinaisons possibles du problème avec : 
 \begin{equation}
 \sum\limits_{(x_1,...,x_{2n}) \in \{-1,1\}^{2n}} \big( \prod\limits_{i=1}^{2n} x_i \big) \prod\limits_{i=1}^{n} \sum\limits_{k=1}^{2n-i-1} x_kx_{k+i+1} = 2^{2n+1} L(2,n)
 \end{equation}
 
-Plusieurs optimisations sont possibles et permettent de réduire le nombre de calculs à réaliser rendant cette méthode bien plus intéressante que l'approche classique arborescente. 
+Plusieurs optimisations sont possibles et permettent de réduire le nombre de calculs à réaliser, rendant cette méthode bien plus intéressante que l'approche classique arborescente. 
 Nous donnons le détail de ces optimisations ainsi que notre implémentation de la méthode. 
-L'idée reste la même que pour la méthode de Miller, les tâches sont cette fois-ci basée sur le positionnement de paires au format binaire.
-Chaque CPU ou GPU travaille sur une tâche et les résultats sont ensuite rassemblés. 
-L'irrégularité avec cette résolution vient de l'utilisation de grands entiers nécessitant une représentation sur plusieurs mots mémoires et des propagations de retenues qui ne peuvent être anticipées. 
+L'idée reste la même que pour la méthode de Miller, les tâches sont cette fois-ci basées sur le positionnement de paires représentées au format binaire.
+Chaque CPU ou GPU travaille sur une tâche spécifique et les résultats sont ensuite rassemblés. 
+L'irrégularité avec cette résolution vient de l'utilisation de grands entiers, nécessitant une représentation sur plusieurs mots mémoires et des propagations de retenues qui ne peuvent être anticipées. 
 La thèse présente le détail de nos choix et implémentation de cette méthode. 
 
-Les résultats sont très bon et montrent une nouvelle fois l'avantage des architectures hybrides confronté au calcul irrégulier, sans communications. 
-Il nous a permis de recalculer les dernières itérations du problème, $L(2,27)$ et $L(2,28)$ dans un temps record avec respectivement 1.9 jours et 23 jours avec une stratégie de répartition Best-Effort sur le supercalculateur ROMEO (environs 70\% du cluster). 
+Les résultats sont très bons et montrent une nouvelle fois l'avantage des architectures hybrides confrontées au calcul irrégulier, sans communications. 
+Cette implémentation nous a permis de recalculer les dernières itérations du problème, $L(2,27)$ et $L(2,28)$ dans un temps record, avec respectivement 1.9 jours et 23 jours avec une stratégie de répartition Best-Effort sur le supercalculateur ROMEO (environs 70\% du cluster). 
 Cette stratégie nous permet de bénéficier des nœuds de calcul non utilisés par les chercheurs mais nécessite des redémarrages et interruptions de tâches. 
 Les résultats avec une répartition classique de l'ensemble du cluster auraient été encore meilleurs.\\ 
 
-Ce premier élément de notre métrique, confrontant les architectures au problème de calcul dans un environnement irrégulier montre nettement l'avantage des accélérateurs. 
-Ils permettent une montée à l'échelle dans les deux méthodes abordées et s'adaptent même a des problématiques qui ne semblent pas nativement adaptées à leur architecture. 
+Ce premier élément de notre métrique, confrontant les architectures au problème de calcul dans un environnement irrégulier, montre nettement l'avantage des accélérateurs. 
+Ils permettent une montée à l'échelle dans les deux méthodes abordées et s'adaptent même à des problématiques qui ne semblent pas nativement adaptées à leur architecture. 
 
 \subsection{Communication: Graph500}
-La deuxième partie de notre métrique vise la problématique de communication en conservant le comportement irrégulier. 
+La deuxième partie de notre métrique cible la problématique de communication en conservant le comportement irrégulier. 
 Nous avons choisi le benchmark du Graph500\footnote{https://www.graph500.org}. 
-Ce problème de parcours en largeur d'un très grand graphe est utilisé comme base pour le classement des supercalculateurs avec une métrique spécifique, le nombre d'arête du graphe traversées par secondes, les TEPS. 
+Ce problème de parcours en largeur d'un très grand graphe est utilisé comme base pour le classement des supercalculateurs avec une métrique spécifique, le nombre d'arêtes du graphe traversées par seconde, les TEPS. 
 
-\begin{figure}
+\begin{figure}[ht!]
 \centering
 \input{../figures/tikz/part2/bfs_example.tex}
-\caption{Example of Breadth First Search in an undirected graph}
+\caption{Exemple de parcours en largeur sur un graphe non-orienté}
 \label{fig:part2_chap3:BFS}
 \end{figure}
 
-L'algorithme d'un parcours en largeur sur un graphe est détaillé sur la figure~\ref{fig:part2_chap3:BFS }.
-Il comprend beaucoup de phase de communications pour échanger les frontières et réaliser des réductions entre les processus. 
-La parcours du voisinage de chaque sommet ne comprend pas de calcul uniquement des accès mémoire irréguliers et des tests avec copie. 
+L'algorithme d'un parcours en largeur sur un graphe est détaillé sur la figure~\ref{fig:part2_chap3:BFS}.
+Il comprend beaucoup de phases de communications pour échanger les frontières et réaliser des réductions entre les processus. 
+La parcours du voisinage de chaque sommet ne comprend pas de calcul mais uniquement des accès mémoire irréguliers et des tests avec copie. 
 
-Nous proposons l'implémentation multi-CPU et multi-GPU de ce benchmark. 
-Notre travaille se base sur les travaux de NVIDIA avec Merill~\cite{merrill2015high} ainsi que le meilleur algorithme distribué actuellement avec le code utilisé sur les architectures BlueGene/P et BlueGene/Q~\cite{6468459} de IBM. 
+Nous proposons une implémentation multi-CPU et multi-GPU de ce benchmark. 
+Notre travail se base sur les travaux de NVIDIA avec Merill~\cite{merrill2015high}, ainsi que le meilleur algorithme distribué avec le code utilisé sur les architectures BlueGene/P et BlueGene/Q~\cite{6468459} de IBM. 
 
-Notre approche propose une représentation compressée de la matrice d'adjacence appelée \textit{Compressed Sparse Row} et \textit{Compressed Sparse Column} en complément d'une représentation binaire des listes de frontière. 
+Notre approche propose une représentation compressée de la matrice d'adjacence appelée \textit{Compressed Sparse Row} et \textit{Compressed Sparse Column} en complément d'une représentation binaire des listes de frontière et d'exploration.
 
-Les communications de la version GPU se vont directement dans la mémoire de ceux-ci en utilisant la technologie GPU-Direct de NVIDIA. 
+Les communications de la version GPU se font directement dans la mémoire de ceux-ci en utilisant la technologie GPU-Direct de MPI et en évitant les transferts temporaires sur la mémoire \textit{Host}. 
 
-Notre implémentation montre une nouvelle fois l'avantage des architectures hybrides face aux architecture classiques.
+Notre implémentation montre une nouvelle fois l'avantage des architectures hybrides face aux architectures classiques.
 
-\begin{figure}[htb]
+\begin{figure}[ht!]
 \begin{subfigure}[t]{0.48\linewidth}
 \centering
 \includegraphics[width=1\linewidth]{../figures/graph500/weak_scaling}
-\caption[]{CPU \textit{vs} GPU weak scaling. The number of CPUs is the same as the number of GPUs.}
+\caption[]{CPU et GPU \textit{weak scaling}. Le nombre de CPU est le même que le nombre de GPU. Le $SCALE$ est présenté sur la courbe GPU }
 \label{fig:bfs_weak_scaling}
 \end{subfigure}
 \hfill
 \begin{subfigure}[t]{0.48\linewidth}
 \centering
 \includegraphics[width=1\linewidth]{../figures/graph500/strong_scaling}
-\caption[]{CPU \textit{vs} GPU strong scaling. The $SCALE$ is showed on the GPU line. The number of CPUs is the same as the number of GPUs.}
+\caption[]{CPU et GPU \textit{strong scaling}. Le nombre de CPU est le même que le nombre de GPU}
 \label{fig:bfs_strong_scaling}
 \end{subfigure}
 \caption{Weak and Strong scaling between CPU and GPU}
 \end{figure}
-Les résultats présentés en figure~\ref{ fig:bfs_weak_scaling} et figure~\ref{ fig:bfs_strong_scaling} montrent respectivement le \textit{weak scaling} et le \textit{strong scaling} de nos deux versions. 
-La version CPU se base sur le meilleur algorithme fournis par le groupe Graph500 sur leur page internet. 
+Les résultats présentés en figure~\ref{fig:bfs_weak_scaling} et figure~\ref{fig:bfs_strong_scaling} montrent respectivement le \textit{weak scaling} et le \textit{strong scaling} de nos deux versions. 
+La version CPU se base sur le meilleur algorithme fournis par l'organisation Graph500 et optimisé pour notre architecture de supercalculateur. 
 
+Nous arrivons à obtenir une accélération deux fois supérieure en temps de calcul avec l'utilisation de GPGPUs sur l'ensemble du cluster ROMEO. 
+Nous avons aussi réalisé des tests sur différents types d'architectures GPU, tels que des cartes graphiques grand public, la GTX980Ti, et des GPU embarqués comme le NVIDIA TX1. 
+Ce travail montre une nouvelle fois l'efficacité des accélérateurs sur une problématique uniquement basée sur la communication et le parcours aléatoire de la mémoire. 
+Nous avons été à même de classer le supercalculateur ROMEO, datant de 2014, à la 105ème place au classement Graph500 dans la liste de novembre 2016. \\
+
+Cette section, avec les deux cas spécifiques que nous avons choisi pour cibler différentes problématiques du calcul haute performance, montrent clairement l'avantage des architectures hybrides.
+Cela est mis en avant avec respectivement un contexte lourd en calcul, lourd en communication et avec dans chaque cas une utilisation irrégulière de la mémoire et des calculs. 
+La scalabilité de ces accélérateurs est aussi mise en avant avec des technologies de communication avancées, comme GPU-Direct ou encore l'arrêt et le redémarrage de tâches avec l'utilisation Best-Effort sur le cluster ROMEO. 
 
 \section{Application}
+Dans ce dernier chapitre nous présentons une application mettant en jeu tous les aspects présentés précédemment : calculs lourds, communications coûteuses et irrégularités.
+Cette application se devait d'être représentative des problématiques réelles pour valider notre thèse. 
+Après deux visites et de nombreux échanges avec les physiciens et astrophysiciens du laboratoire national de Los Alamos (LANL) aux États-Unis, nous avons choisi un problème de simulation adapté aux fluides et aux évènements astrophysiques. 
+Nous présentons la méthode \textit{Smoothed Particle Hydrodynamics} (SPH), complémentée avec la méthode \textit{Fast Multipole Method} (FMM) pour le calcul des interactions gravitationnelles. 
+
+\begin{figure}
+\centering
+\input{../figures/tikz/part3/general_sph}
+%\includegraphics[scale=.4]{\locpath/figures/flecsph/sph.pdf}
+\caption{SPH kernel $W$ and smoothing length $h$ representation}
+\label{fig:sph_base}
+\end{figure}
+
+La méthode Lagrangienne SPH est résumée sur la figure~\ref{fig:sph_base}.
+Le calcul des grandeurs physiques d'une particule se fait par l'intermédiaire des contributions de ses particules voisines à l'intérieur d'une surface de lissage $h$ et par l'action d'une fonction de lissage $W$. 
+Cette méthode se prête parfaitement à une représentation sous forme arborescente des particules avec des outils de décomposition de domaine, tels que les courbes de Morton ou Hilbert. 
+Ceci permet une complexité de l'ordre de $O(Nlog(N))$ au lieu de $O(N^2)$ pour les calculs N-body et la recherche de voisinage. 
+Elle fournit, de plus, à notre étude un parcours irrégulier d'un arbre. 
+
+Pour envisager des calculs avec un très grand nombre de particules sur des évènements astrophysiques majeurs nous avons besoin d'une manière rapide de calculer les interactions gravitationelles. 
+
+\begin{figure}[ht!]
+\input{../figures/tikz/part3/gravitation}
+\caption{Schéma de  la Fast Multipole Method. Particles to Multipole (P2M), Multipole to Multipole (M2M), Multipole to Particles (M2P), Multipole to Local (M2L), Local to Local (L2L) et Particles to Particles (P2P). Schéma inspiré de~\cite{yokota2011treecode}}
+\label{fig:gravitation_fmm}
+\end{figure}
+
+Nous avons pour cela mis en place la \textit{Fast Multipole Method} (FMM) détaillée sur la figure~\ref{fig:gravitation_fmm}.
+Cette méthode se décompose en une succession de sous-étapes avec une approximation selon la distance des particules concernées et des centres de masses. 
+Cette méthode nativement séquentielle a été adaptée en mode distribué pour notre application. 
+
+Cette partie a nécessité un lourd travail de compréhension des phénomènes et des équations physiques et astrophysiques nécessaires pour l'implémentation Ex Nihilo de ces simulations.
+
+Notre implémentation se base sur le \textit{framework} FleCSI développé au LANL qui fournit un ensemble d'outils pour les simulations multi-physiques. 
+Il fournit différentes topologies et va gérer pour l'utilisateur la répartition des données, des tâches et du calcul.
+Il propose déjà des topologies de \textit{mesh}, graphes, et structures arborescentes. 
+Notre programme, FleCSPH, propose de mettre en place la stratégie de distribution des représentations arborescentes. 
+Dans un second temps, nous avons mis en place une version GPU de ce programme.
+La répartition du travail entre le CPU et les GPU se fait localement. 
+Une liste d'interaction par groupe de particules est créée et déléguée au GPU pour un calcul en $O(N^2)$ sur un petit nombre de particules. 
+\begin{figure}[t!]
+\centering
+\begin{minipage}[b]{.45\textwidth}
+\centering
+	\includegraphics[width=\textwidth]{../figures/flecsph/time_CPU_vs_GPU.png}
+	\caption{CPU vs GPU time per iteration}
+	\label{fig:cpu_gpu_time}
+\end{minipage}
+\begin{minipage}[b]{.45\textwidth}
+\centering
+	\includegraphics[width=\textwidth]{../figures/flecsph/traversal_CPU_vs_GPU.png}
+	\caption{CPU vs GPU time  per traversal}
+	\label{fig:cpu_gpu_iter}
+\end{minipage}
+\end{figure}
+
+Les résultats de la version hybride, comparée à la version CPU, sont très encourageants et sont juste 3,5 fois plus rapide sur un million de particules pour une fusion d'étoiles à neutrons. 
+Ils sont présentés sur la figure~\ref{fig:cpu_gpu_time} et \ref{fig:cpu_gpu_iter} et avec respectivement le temps global d'une itération de calcul et du calcul du parcours de l'arbre pour la recherche de voisinage. 
+
+Notre code propose une topologie d'arbre pour une, deux et trois dimensions qui se valide par les résultats de nos modèles physiques. 
+Nous avons réalisé des simulations sur les cas génériques d'hydrodynamique avec le \textit{shock Sod tube} et le \textit{Sedov blast wave}.
+Nous avons ensuite testé notre implémentation sur un grand nombre de particules, pour des simulations de fluides utilisant des conditions limites propre à la méthode SPH.
+Enfin, pour rejoindre notre objectif principal, nous avons simulé la fusion d'étoiles à neutrons. 
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{../figures/sph/fluid_flow}
+\caption{Écoulement de fluide, le barrage. Pour $t=0$, $t=0,4$, $t=0,8$ et $t=1$ secondes}
+\label{fig:fluid_simulation}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{../figures/flecsph/bns_merger}
+\caption{Coalescence d'étoiles à neutrons avec 40.000 particules.}
+\label{fig:bns_simulation}
+\end{figure}
+
+Les résultat des simulations sont présentés pour un fluide et une fusion d'étoile à neutrons respectivement sur les figures~\ref{fig:fluid_simulation} et \ref{fig:bns_simulation}.
 
 \chapter*{Conclusion}
 La première partie de cette étude décrit les outils et la théorie nécessaire pour comprendre et atteindre la performance dans le calcul haute performance. 
-Nous avons présenté plusieurs architectures et leurs avantages en montrant l'objectif d'un supercalculateur à échelle exaflopique aux environs 2020. 
-Nous pensons que la solution actuelle reste l'utilisation d'architectures hybrides munies de machines many-cores tels que les GPGPU ou les FPGA.\\
+Nous avons présenté plusieurs architectures et leurs avantages en présentant l'objectif d'un supercalculateur à échelle exaflopique aux environs 2020. 
+Nous pensons que la solution actuelle réside dans l'utilisation d'architectures hybrides munies de machines many-coeurs tels que les GPGPU ou les FPGA.\\
 
 Nous avons défini une métrique ciblant les principales limitations du calcul haute performance avec le calcul, la communication et le comportement irrégulier. 
-L'objectif de cette métrique est de confronter les architectures classiques et hybrides à des problèmes réels.
+L'objectif de cette métrique est de confronter les architectures classiques et hybrides à des problèmes représentatifs des problématiques actuelles.
 
 Cette métrique est séparée en deux parties. 
 Dans un premier temps nous avons visé des problèmes classiques, académiques et même un benchmark. 
 Nous avons comparé les architectures classiques aux hybrides sur un premier problème lourd en calcul et un second lourd en communications.
-Dans les deux cas nous voulions retrouver une spécificité des codes appliqués, l'irrégularité de calcul, communication et accès mémoire.  
+Dans les deux cas nous voulions retrouver une spécificité des codes appliqués : l'irrégularité de calcul, communication et accès mémoire.  
 
 Le premier problème choisit est le problème de dénombrement combinatoire de Langford.
 Nous avons étudié ce problème avec deux méthodes différentes, respectivement un parcours arborescent et une méthode algébrique. 
-La résolution arborescente montre de très bons résultats sur accélérateurs avec jusque 80 pourcents du travail réalisé par les GPGPU avec une stratégie de répartition des taches efficace. 
+La résolution arborescente montre de très bons résultats sur accélérateurs, avec jusque 80 pourcents du travail réalisé par les GPGPU avec une stratégie de répartition des tâches efficace. 
 La solution algébrique propose des calculs régularisés mais des accès mémoires aléatoires, irréguliers, par l'utilisation de grands entiers. 
 Dans ce cas le GPU est capable de gérer jusque 65 pourcents de l'effort global de calcul. 
-Notre version basée sur les architecture hybrides nous a permis de battre un record de temps pour le calcul des dernières instances en utilisant le supercalculateur ROMEO de l'Université de Reims Champagne-Ardenne en mode Best-Effort. 
+Notre version basée sur les architectures hybrides nous a permis de battre un record de temps pour le calcul des dernières instances, en utilisant le supercalculateur ROMEO de l'Université de Reims Champagne-Ardenne en mode Best-Effort. 
 
 Le second problème pour notre métrique est le benchmark du Graph500. 
 C'est un candidat parfait pour considérer uniquement les communications, sans calculs. 
 En effet, les seules opérations nécessaires sont des tests et des copies de zone de mémoire qui se réalisent de manière irrégulière. 
 Ce problème respecte aussi la problématique d'irrégularité. 
-Nous proposons une implémentation basée sur les derniers travaux à la fois de NVIDIA mais aussi BlueGene/Q et BlueGene/P. 
-Ce travail nous a permis de classer le supercalculateur ROMEO à la 105ème place du Graph500 dans la liste de Novembre 2016. 
-Cela montre le haut niveau de parallélisme et de scalabilité qui peut être obtenu avec des GPGPU.\\
+Nous proposons une implémentation basée sur les derniers travaux à la fois de NVIDIA, mais aussi BlueGene/Q et BlueGene/P. 
+Ce travail nous a permis de classer le supercalculateur ROMEO à la 105ème place du Graph500 dans la liste de novembre 2016. 
+Cela montre le haut niveau de parallélisme et de scalabilité qui peut être obtenu avec les architectures hybrides.
 
-Ces deux premières approches montrent un grand avantage aux architectures hybrides malgré des problèmes inadaptés au modèle d'exécution SIMD. 
+Ces deux premières approches montrent un grand avantage aux architectures hybrides malgré des problèmes qui semblent inadaptés au modèle d'exécution SIMD. \\
+
 Pour compléter notre métrique, nous avions besoin de confronter les deux types d'architectures à un problème présentant à la fois les problématiques de calcul et de communication avec un comportement irrégulier. 
 Nous avons choisi une application de simulation complexe.
-Le problème que nous avons choisi et répondant aux problématiques est la méthode Smoothed Particle Hydrodynamics (SPH) ainsi que le calcul de la gravitation appliqué à des simulations d'astrophysique.  
-Nous avons développé, en partenariat avec le Los Alamos National Laboratory, un framework appelé FleCSPH dédié aux topologies arborescentes utilisées pour les simulations de physique et d'astrophysique. 
-Nous montrons avec cette dernière métrique les avantages des architecture hybrides. 
-Même en conservant une approche de code de production, pas entièrement porté sur GPU, les performances restent bien supérieures que sur les architectures classiques. 
-Cette étude a montré que dans tous les cas étudiés, les architectures hybrides sont la meilleure solution actuelle pour atteindre l'échelle exaflopique.  
+Ce problème répondant aux problématiques est la méthode Smoothed Particle Hydrodynamics (SPH), ainsi que le calcul de la gravitation appliqué à des simulations d'astrophysique.  
+Nous avons développé, en partenariat avec le Los Alamos National Laboratory, un framework appelé FleCSPH et dédié aux topologies arborescentes utilisées pour les simulations de physique et d'astrophysique. 
+Nous montrons avec cette dernière métrique les avantages des architectures hybrides. 
+Même en conservant une approche de code de production, pas entièrement porté sur GPU, les performances restent bien supérieures que sur les architectures classiques. \\
+
+Cette étude a montré que, dans tous les cas étudiés, les architectures hybrides sont la meilleure solution actuelle pour atteindre l'échelle exaflopique.  
 Les limitations sont résolues en utilisant des stratégies qui peuvent être généralisées à d'autres problèmes et de nouvelles méthodes de résolution doivent encore être trouvées.\\
 
- Les architectures hybrides semblent être la meilleure approche pour bâtir des architectures exaflopiques mais l'Informatique est une science évoluant très rapidement. 
+ Les architectures hybrides semblent être la meilleure approche pour bâtir des machines exaflopiques mais l'Informatique est une science évoluant très rapidement. 
 L'arrivée d'une nouvelle technologie pourrait changer la donne et permettre un meilleur rapport puissance de calcul et consommation énergétique. 
-La principale autre solution réside pour le moment dans les architectures ARM.
+La principale autre solution réside pour le moment dans l'utilisation des architectures ARM.
 Le projet MontBlanc, que nous avons présenté en partie I, est le projet Européen de supercalculateur implémentant ces processeurs à jeu d'instruction réduit.  
 Le projet Japonais avec RIKEN va proposer le post-K\footnote{http://www.fujitsu.com/global/Images/post-k-supercomputer-overview.pdf}, successeur du K Computer.
-Il sera bâti sur des processeurs ARMv8 et utilisera la même topologie en tore à six dimensions. 
+Il sera bâti sur des processeurs ARMv8 et utilisera la même topologie que son prédécesseur avec une topologie réseau de tore à six dimensions. 
 
 Une autre solution pour des problèmes spécifiques semble émerger avec l'Informatique Quantique. 
-Les \textit{bits} des processeurs classiques sont remplacés par des \textit{qbits}, quantums bits, qui permettent de représenter plus de deux valeurs.  
+Les \textit{bits} des processeurs classiques sont remplacés par des \textit{qbits}, quantums bits, qui permettent de représenter plus de deux valeurs simultanément.  
 Ces machines sont basées sur des probabilités et ne sont utilisables que sur une sous-catégorie de problèmes. 
-Cette technologie est toujours en développement mais dans certain centre de calcul, comme ROMEO à l'Université de Reims Champagne-Ardenne, il est d’ores et déjà possible de travailler sur simulateur pour en comprendre le comportement.\\
+Cette technologie est toujours en développement mais dans certains centres de calcul, comme ROMEO à l'Université de Reims Champagne-Ardenne, il est d’ores et déjà possible de travailler sur simulateur pour en comprendre le comportement.\\
 
-Cette étude s'est intéressée aux moyens d'attendre la puissance nécessaire pour atteindre l'échelle exaflopique.
-Les principales limitations sont la puissance de calcul, la communication et la demande énergétique que nous avons déjà abordés dans ce travail. 
-Mais une fois l'exaflop atteint d'autres problèmes vont survenir. 
-Nous avons cité le problème du réseau d'interconnexion qui va augmenter lorsque les supercalculateurs vont contenir des millions de composants, rendant difficile la conservation d'une bande passante suffisante entre eux.
+Cette étude s'est intéressée aux moyens d'atteindre la puissance nécessaire à exaflopique.
+Les principales limitations sont la puissance de calcul, la communication et la demande énergétique que nous avons déjà abordés dans cette thèse. 
+Mais une fois l'exaflop atteint, d'autres problèmes vont survenir. 
+Nous avons cité le problème du réseau d'interconnexion, qui va augmenter lorsque les supercalculateurs vont contenir des millions de composants, rendant difficile la conservation d'une bande passante suffisante entre eux.
 Une autre problématique est l'augmentation des erreurs de calculs due aux influences environnementales. 
 Elles sont de l'ordre d'une erreur par semaine sur un calculateur petaflopique mais vont atteindre de l'ordre d'une par heure pour des machines exaflopiques. 
-Il faudra inventer de nouvelles méthodes de vérification à la volée. 
+Il faudra alors inventer de nouvelles méthodes de vérification à la volée. 
 De la même manière les algorithmes devront être résistants aux défaillances matérielles. 
-La problématique de résilience, le rétablissement après la perte d'un élément de calcul, nécessitera la mise en place d'algorithmes robustes et de parallélisme de taches. 
+La problématique de résilience, le rétablissement après la perte d'un élément de calcul, nécessitera la mise en place d'algorithmes robustes et de parallélisme de tâches. 
 
-Enfin, la dernière problématique sera la complexité. 
+La dernière problématique sera la complexité. 
 Les Informaticiens ont besoin d'inventer de nouvelles manières de penser les algorithmes parallèles. 
-D'une part la mise en place de nouveau framework et API pour gérer et cibler tous les types de topologies et d'architectures.
-D'autre part la production de nouvelles méthodes non hérités du calcul séquentiel pour repenser les algorithmes et calculs. 
+D'une part la mise en place de nouveaux \textit{framework} et \textit{API} pour gérer et cibler tous les types de topologies et d'architectures.
+D'autre part la production de nouvelles méthodes non héritées du calcul séquentiel pour repenser les algorithmes et les calculs. 
 
 
 \renewcommand\bibname{Bibliographie}

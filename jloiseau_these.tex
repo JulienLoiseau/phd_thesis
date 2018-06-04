@@ -20,6 +20,7 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{patterns}
+\usepackage{emptypage}
 
 \setcounter{tocdepth}{2}
 
@@ -53,7 +54,7 @@
 %% DATA OF TITLE PAGE 
 %% ------------------------------------------------------------------
 \newcommand{\phdAuthor}{Julien LOISEAU}
-\newcommand{\defenseDate}{le 18 Mars 2018}
+\newcommand{\defenseDate}{le 22 Mai 2018}
 \newcommand{\phdDiscipline}{Informatique}
 \newcommand{\phdSpeciality}{Calcul Haute Performance}
 \newcommand{\phdTitleEN}{The choose of hybrids architectures, a realistic strategy to reach the Exascale}
@@ -101,7 +102,7 @@
 %% AUTHOR
 {
 	\vspace{1cm}
-	Pr\'esent\'ee et soutenue par:\\
+	%Pr\'esent\'ee et soutenue par:\\
 	\vspace{.4cm}
 	\Large
 	\textbf{\phdAuthor}\\
@@ -147,7 +148,7 @@
 		Dr. François Alin & CReSTIC, Université de Reims Champagne-Ardenne & Co-directeur  \\
 		Dr. Christophe Jaillet & CReSTIC, Université de Reims Champagne-Ardenne & Co-directeur \\
 		Pr. William Jalby & Université de Versailles Saint-Quentin & Rapporteur\\
-		Dr. Benjamin Bergen & Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
+		Dr. Christoph Junghans & Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
 		Pr. Zineb Habbas & LCOMS, Université de Lorraine & Rapporteur \\ 
 		Pr. Françoise Baude & I3S, Université de Nice Sophia Antipolis& Examinateur\\
 		Guillaume Colin de Verdiere & Ingénieur au CEA & Invit\'e
@@ -210,8 +211,8 @@
 % Chapter Three 
 \input{chapters/part3/part3}
 % Conclusion
-\addcontentsline{toc}{chapter}{Conclusion}
-\markboth{CONCLUSION}{}
+\addcontentsline{toc}{chapter}{Conclusion and future works}
+\markboth{CONCLUSION AND FUTURE WORKS}{}
 \input{chapters/conclusion}
 
 % Annexes
@@ -228,7 +229,7 @@
 % index just in case it is useful 
 %\addcontentsline{toc}{chapter}{Index}
 %\printindex
-\newgeometry{left=1cm,right=1cm,top=1.0cm,bottom=1.5cm}
+\newgeometry{left=1cm,right=1cm,top=1cm,bottom=1.5cm}
 
 \markboth{}{}
 \cleartoleftpage

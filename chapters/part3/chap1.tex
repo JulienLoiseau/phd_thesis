@@ -6,23 +6,23 @@
 \chapter{Complex system modelization}
 
 \section{Introduction}
-In this chapter we give details on our choice for a generic complex system which confront us to several problematics. 
-A complex system is a problem which gather several layers of complexity. 
-In our case: the physics modelization and the computer science implementation with many sub-problems like computation and communication walls with underlying high irregularity. 
+In this chapter, we give details on our choice for a generic complex system which encounters several problematics. 
+A complex system is a problem which gathers several layers of complexity. 
+In our case, these complexities are the physics modelization and the computer science implementation with many sub-problems like computation and communication walls with underlying high irregularity. 
  
 The problem we choose, the Smoothed Particle Hydrodynamics simulation method, is described on a physical aspect.
 We point out the difficulties involved in the implementation on supercomputers and especially hybrid architectures.  
-A lot of work have been spent on the comprehension of the physical aspects to produce a code that meet the behavior of real astrophysics simulations.
+A lot of work was spent on the comprehension of the physical aspects to produce a code that met the behavior of real astrophysics simulations.
 
-The first section is a presentation of the SPH method itself and the overall limitation we face. 
-Then we describe different kind of specific simulations we use as a benchmark of the application itself. 
+The first section is a presentation of the SPH method and the overall limitation we face. 
+Then we describe different types of specific simulations we used as a benchmark of the application. 
 
 \section{Physical modelization and downsides}
-We identified two main walls in our metrics:
-The computational wall and the communication/memory one.
-We conducted tests on both aspects keeping the irregularity behavior as a good representative of production codes.
-We show how these requirements are meet in the same problem with SPH and gravitation.
-In order to add another complexity layer in term of irregularity for both computation and communication we targeted astrophysical simulations. 
+We identified two main walls in our metric.
+The computational, the communication and the memory walls.
+We conducted tests on all aspects keeping the irregularity behavior as a good representative of production codes.
+We show how these requirements are met in the same problem with SPH and gravitation.
+We targeted astrophysical simulations in order to add another complexity layer in term of irregularity for both computation and communication. 
 They require the computation of gravitation in addition to SPH on a very high number of particles. 
 This part describes the SPH method itself and the gravitation computation based on fast multipole methods. 
 
@@ -31,9 +31,9 @@ This part describes the SPH method itself and the gravitation computation based 
 Smoothed Particle Hydrodynamics (SPH) is an explicit numerical mesh-free Lagrangian method.
 It is used to solve hydrodynamical partial differential equations (PDEs)\index{Partial Differential Equations} by discretized them into a set of fluid elements called particles. 
 This computational method was invented for the purpose of astrophysics simulations by Monaghan, Gingold and Lucy in 1977 \cite{lucy1977numerical,gingold1977smoothed}. 
-This first SPH work conserved mass and they later proposed a method which also conserves linear and angular momenta \cite{gingold1982kernel}. 
-The method was extended for general fluid simulations and many more fields from ballistics to oceanography.
-The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming exascale systems.
+This first SPH work conserved mass and they later proposed a method which also conserved linear and angular momenta \cite{gingold1982kernel}. 
+The method was extended for general fluid simulations and many other fields from ballistics to oceanography.
+The development of new reliable, parallel and distributed tools for this method is a challenge for future HPC architectures with the upcoming Exascale systems.
 
 %
 \begin{figure}
@@ -47,25 +47,25 @@ The development of new reliable, parallel and distributed tools for this method 
 The method, as illustrated in figure~\ref{fig:sph_base}, computes the evolution of a group of particles representing physical quantities.
 Those physical quantities are either invariant or computed for every particle at each step regarding its neighbors in the radius of its smoothing length $h$. 
 The particles in this radius are then valued according to their distance using a smoothing function $W$, also called a kernel\index{Smoothing Kernel}. 
-The fundamental SPH formulation computes the physical value of any quantity $A$ of a particle $a$ regarding its neighbors particles $b$ by:
+The fundamental SPH formulation computes the physical value of any quantity $A$ of a particle $a$ regarding its neighbors’ particles $b$ by:
 \begin{equation}
 A(\vec{r})_a \simeq \sum_b \frac{m_b}{\rho_b} A(\vec{r}_b) W ( |\vec{r}-\vec{r}_b|,h)
 \end{equation}
 
 On a physics aspect, this method has several advantages:
-it can handle deformations, low densities, vacuum, and makes particle tracking easier. 
-It also conserves mass, linear and angular momenta, and energy by its construction that implies independence of the numerical resolution. 
+it can handle deformations, low densities, vacuum and makes particle tracking easier. 
+It also conserves mass, linear and angular momenta and energy by its construction that implies independence of the numerical resolution. 
 Another strong benefit of using SPH is its exact advection of fluid properties. 
 Furthermore, the particle structure of SPH easily combines with tree methods for solving Newtonian gravity through N-body simulations.
 As a mesh-free method, it avoids the need of grid to calculate the spatial derivatives. 
 
 However, there are cons to consider using SPH: 
-it cannot be extend to all PDE formulations;
+it cannot be extended to all PDE formulations;
 it requires careful setup of initial distribution of particles; 
-further, it can be struggle to resolve turbulence-dominated flows and special care must be taken when handling high gradients such as shocks and surface structure of neutron stars.
-Many works are leading to handle more cases and to push the limitations of this method \cite{dai2017dual,lind2016incompressible,ren2016dual}.\\
+further, it can be difficult to resolve turbulence-dominated flows and special care must be taken when handling high gradients such as shocks and surface structure of neutron stars.
+Many works are exploring how to handle more cases and to push the limitations of this method \cite{dai2017dual,lind2016incompressible,ren2016dual}.\\
 
-In this work, we are solving Lagrangian conservation equations (Euler equations) for density, energy and momentum of an ideal fluid ~\cite{Landau1959}  such that:
+In this work, we are solving Lagrangian conservation equations (Euler equations) for density, energy and momentum of an ideal fluid ~\cite{Landau1959} such that:
 \begin{equation}
 \frac{d \rho}{d t} = - \rho ( \nabla \cdot \vec{v}), \quad
 \frac{d u}{d t} = - \frac{P}{\rho} ( \nabla \cdot \vec{v} ), \quad
@@ -73,7 +73,7 @@ In this work, we are solving Lagrangian conservation equations (Euler equations)
 \end{equation}
 with $\rho$ the density, $P$ the pressure, $u$ the internal energy and $v$ the velocity, $\nabla$ the nabla operator and where $d/dt = \partial/\partial_t + \vec{v} \cdot \nabla$ which is convective derivative.
 
-By using the volume element $V_b = m_b / \rho_b$, we can formulate the Newtonian SPH scheme~\cite{rosswog2009} such that
+By using the volume element $V_b = m_b / \rho_b$, we can formulate the Newtonian SPH scheme~\cite{rosswog2009} such that:
 \begin{equation}
 \label{eq:rho}
 \rho_a = \sum_b m_b W_{ab} (h_a)
@@ -95,7 +95,7 @@ There are a number of way to handle this problem, but the most widespread approa
 \begin{equation}
 \left(\frac{d\vec{v}_a}{dt} \right)_{art} = - \sum_b m_b \Pi_{ab}\nabla_a W_{ab}
 \end{equation}
-In general, we can express the equations for internal energy and acceleration with artificial viscosity
+In general, we can express the equations for internal energy and acceleration with artificial viscosity as:
 \begin{equation}
 \label{eq:intern}
 \frac{d u_a}{dt} = \sum_b m_b \left(\frac{P_a}{\rho_a^2} + \frac{\Pi_{ab}}{2} \right) \vec{v}_{ab} \cdot \nabla_a W_{ab}
@@ -105,7 +105,7 @@ In general, we can express the equations for internal energy and acceleration wi
 \frac{d \vec{v}_a}{d t} = - \sum_b m_b \left(\frac{P_a}{\rho_a^2} + \frac{P_b}{\rho_b^2} + \Pi_{ab} \right) \nabla_a W_{ab}
 \end{equation}
 $\Pi_{ab}$ is the artificial viscosity tensor. 
-As long as $\Pi_{ab}$ is symmetric, the conservation of energy, linear and angular momentum is assured by the form of the equation and antisymmetry of the gradient of kernel with respect to the exchange of indices $a$ and $b$. $\Pi_{ab}$ may define in different ways and here we use~\cite{Monaghan1983} such as: 
+As long as $\Pi_{ab}$ is symmetric, the conservation of energy, linear and angular momentum is assured by the form of the equation and antisymmetric of the gradient of kernel with respect to the exchange of indices $a$ and $b$. $\Pi_{ab}$ may define in different ways and here we use~\cite{Monaghan1983} such as: 
 \begin{equation}
 \Pi_{ab} = \begin{cases}
 \frac{- \alpha \bar{c}_{ab} \mu_{ab} + \beta \mu_{ab}^2}{\bar{\rho}_{ab}} & \text{for $\vec{r}_{ab} \cdot \vec{v}_{ab} < 0$} \\
@@ -117,12 +117,12 @@ As long as $\Pi_{ab}$ is symmetric, the conservation of energy, linear and angul
 \end{equation}
 
 Using the usual form $c_s$ as $c_s = \sqrt{\frac{\partial p}{\partial \rho}}$.
-The values of $\epsilon$, $\alpha$, and $\beta$ have to be set regarding the problem targeted. 
-As an example we used for the Sod shock tube problem: $\epsilon = 0.01h^2$, $\alpha = 1.0$, and $\beta = 2.0$. 
+The values of $\epsilon$, $\alpha$ and $\beta$ have to be set regarding the problem targeted. 
+As an example, we used for the Sod shock tube problem: $\epsilon = 0.01h^2$, $\alpha = 1.0$ and $\beta = 2.0$. 
 
 
 There are many possibilities for the smoothing function, called the kernel. 
-As an example the Monaghan's cubic spline kernel is given by:
+For example, the Monaghan's cubic spline kernel is given by:
 \begin{equation}
 W(\vec{r_{ij}},h) = \frac{\sigma}{h^D} \begin{cases}
 1-\frac{3}{2} q^2 + \frac{3}{4} q^3 & \text{if} \indent 0 \leq q \leq 1 \\
@@ -139,7 +139,7 @@ where $q = r/h$, $r$ the distance between the two particles, $D$ is the number o
 \end{cases}
 \end{equation}
 
-In the computation of forces we also need to apply the gradient of the smoothing kernel. 
+In the computation of forces we need to apply the gradient of the smoothing kernel. 
 This is, in our example, for the cubic spline kernel:
 \begin{equation}
  \vec{\nabla}_iW(\vec{r_{ij}},h) = \frac{\sigma}{h^{D+1}} \times \begin{cases} ( -\frac{3}{h} + \frac{9}{4h}q) \vec{r_{ij}}, & \mbox{si } 0 \leq \frac{r}{h} < 1 \\ (\frac{-3}{r} + \frac{3}{h} - \frac{3}{4h}q ) \vec{r_{ij}}, & \mbox{si } 1 \leq \frac{r}{h} < 2\\ 0, & \mbox{si } \frac{r}{h} \geq 2 \end{cases}
@@ -171,7 +171,7 @@ This is, in our example, for the cubic spline kernel:
 \end{figure}
 
 Figure~\ref{fig:cubic_spline_function} is a representation of the cubic spline kernel with $\sigma = 1$ and $h = 1$. 
-The abscissa axis represent $r$, distance between the particles and the ordinate the value of the smoothing kernel.
+The abscissa axis represents $r$, distance between the particles and the ordinate the value of the smoothing kernel.
 When the support of the function, $2$ is reached the particles are ignored $W=0$, represented in red on the figure. 
 
 To sum up, the SPH resolution scheme and its routines are presented on algorithm \ref{alg:sph}.
@@ -193,22 +193,22 @@ The Equation of State (EOS) and the integration are problem dependent and will b
 The main downside for the implementation of this method is the requirement for local computation on every particle. 
 The particles have to be grouped locally to perform the computation of (\ref{eq:rho}), (\ref{eq:intern}) and (\ref{eq:velo}).
 A communication step is needed before and after (\ref{eq:rho}) to get the local physical data to be able to compute (\ref{eq:intern}) and (\ref{eq:velo}).
-The tree data structure allows us to perform $O(Nlog(N))$ neighbor search but also add a domain decomposition and distribution layer.
+The tree data structure allows us to perform $O(Nlog(N))$ neighbor search, but also add a domain decomposition and distribution layer.
 
 \subsection{Gravitation}
-In order to target hard irregular simulation facing both the communication and computation wall in irregular behavior we decided to simulate astrophysical events. 
+We decided to simulate astrophysical events in order to target hard irregular simulation facing both the communication and computation wall in irregular behavior. 
 This choice is also accurate since our code, FleCSPH, will be use by the LANL astrophysicists in the near future. 
-In order to perform those simulation the computation of gravitation/self-gravitation is required. 
-This part present our implementation choice and expose the main problems for HPC implementation. 
+In order to perform these simulations, the computation of gravitation/self-gravitation is required. 
+This part presents our implementation choice and expose the main problems for HPC implementation. 
 
 
-For classical problems like fluid flow the gravitation can directly be applied on the particles with the force:
+For classical problems, like fluid flow, the gravitation can directly be applied on the particles with the force:
 \begin{equation}
 	\vec{a_g} = m\vec{g}
 \end{equation}
 
-In order to consider astrophysics problems we need to introduce self-gravitation and gravitation. 
-Each particle imply an action on the others based on its distance and mass. 
+In order to consider astrophysics problems, we need to introduce self-gravitation and gravitation. 
+Each particle implies an action on the others based on its distance and mass. 
 The equation of gravitation for a particle $i$ with $j$ other particles is: 
 \begin{equation}
 	\vec{f_a}_i = \sum_j -G \frac{m_i m_j}{|\vec{r_i}-\vec{r_j}|^3} \vec{r_{ij}}
@@ -216,7 +216,7 @@ The equation of gravitation for a particle $i$ with $j$ other particles is:
 \end{equation}
 
 This computation involve an $O(N^2)$ complexity and thus is not applicable directly. 
-We applied the method called Fast Multipole Method, FMM and discussed in \cite{beatson1997short}.
+We applied the method called Fast Multipole Method (FMM) discussed in \cite{beatson1997short}.
 This method is perfectly adapted to a tree representation of the domain and particles. 
 
 \begin{figure}[ht!]
@@ -225,18 +225,18 @@ This method is perfectly adapted to a tree representation of the domain and part
 \label{fig:gravitation_fmm}
 \end{figure}
 
-This method aim to compute the gravitation up to an approximation determined by the user. 
+This method aims to compute the gravitation up to an approximation determined by the user. 
 Details are given in figure~\ref{fig:gravitation_fmm}, from left bottom to right bottom for a group of particles.
 We identify three main actors in this method: \\
 
 \begin{description}[noitemsep,nolistsep]
 \item[Particles: ] the bodies on which we need to compute the gravitation regarding the other particles. 
-In figure~\ref{fig:gravitation_fmm} we separate the green particles, on which we are computing the gravitation, from the other, blue, particles. 
+In figure~\ref{fig:gravitation_fmm} we separate the green particles, on which we are computing the gravitation, from the other blue particles. 
 \item[Multipoles: ] the center of mass for a group of particles.
-In our example they regroup the mass and barycenter of the sub-particles. 
-There are several level of multipoles: particles' multipole and multipoles' multipole.
+In our example, they regroup the mass and barycenter of the sub-particles. 
+There are several levels of multipoles: particles' multipole and multipoles' multipole.
 \item[Locals: ] the center of mass for the reduction on the particles concerned in this walk. 
-They have the same behavior as the multipoles but the information goes down to particles instead of up.\\ 
+They have the same behavior as the multipoles, but the information goes down to particles instead of up.\\ 
 \end{description}
 
 In order to compute the gravitation for a group of particles in the domain the steps are: \\
@@ -244,21 +244,21 @@ In order to compute the gravitation for a group of particles in the domain the s
 \begin{description}[noitemsep,nolistsep]
 	\item[Particles to Particles (P2P): ] For the particles that are close, use the direct $O(N^2)$ algorithm.  
 	This is the part that grow if the user desires more accurate results. 
-	\item[Particles to Multipoles (P2M): ] Gather the data of all the sub-particles to the centers of mass, the multipoles.
+	\item[Particles to Multipoles (P2M): ] Gathers the data of all the sub-particles to the centers of mass, the multipoles.
 	This is the first layer of the tree, the leaves. 
-	\item[Multipoles to Multipole (M2M): ] Gather the data of multipoles on higher level of the tree from the leaves to the root. 
-	\item[Multipoles to Local (M2L): ] Compute the gravitation part of all the distant multipole to the local. 
-	\item[Local to Local (L2L): ] Go down in the tree and spread the component to sub-locals.
-	\item[Local to Particles (L2P): ] When a leaf of the tree is reached, compute the application of the local for all sub-particles. 
+	\item[Multipoles to Multipoles (M2M): ] Gathers the data of multipoles on higher level of the tree from the leaves to the root. 
+	\item[Multipoles to Local (M2L): ] Computes the gravitation part of all the distant multipole to the local. 
+	\item[Local to Local (L2L): ] Goes down in the tree and spread the component to sub-locals.
+	\item[Local to Particles (L2P): ] When a leaf of the tree is reached, computes the application of the local for all sub-particles. 
 	\item[Summation: ] At the end of the computation for both P2P and L2P the two interactions can be summed up to compute the gravitation applied to the particles. \\
 \end{description}
 
-This scheme have to be repeat for every group of particles. 
+This scheme has to be repeat for every group of particles. 
 The P2M-M2M steps are done just once before the FMM method for all the groups of particles.
-For the choice between either P2P or M2L we use a criterion call MAC, Multipole Acceptance Criterion. 	
+We use a criterion call Multipole Acceptance Criterion (MAC) for the choice between either P2P or M2L. 	
 In this study we used an angle between the local center of mass and the edge of distant multipole. 
 If the angle fits the criterion we use the current multipole, otherwise we go lower in the tree to consider smaller multipole.
-If the criterion never match, we are too close and consider P2P.\\
+If the criterion never matches, we are too close and consider P2P.\\
 
 For the P2P step, the classical gravitation computation is used, like presented in equation~\ref{eq:gravitation}.
 But for the interaction with distant multipoles, we use a Taylor series.\\
@@ -295,7 +295,7 @@ With $\delta_{ab}$ the Kronecker delta:
   \end{cases}
 \end{equation}
 
-We note that $a$ and $b$ variate from 0 to 2 and $r^0=x$, $r^1=y$, and $r^2=z$ as usual sense. 
+We note that $a$ and $b$ variate from 0 to 2 and $r^0=x$, $r^1=y$ and $r^2=z$ as usual sense. 
 
 For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we give the compact version by:
 \begin{equation}
@@ -307,11 +307,11 @@ For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we gi
 \end{equation} 
 
 The equations~\ref{eq:jacobi} and \ref{eq:hessian} are use during the M2L step. 
-Then to go down in the tree and apply the gravitation to locals and then particles in L2L and L2P we use equation~\ref{eq:taylor_series}.\\
+We use equation~\ref{eq:taylor_series} during the tree traversal and apply the gravitation to locals and then particles in L2L and L2P.\\
 
-This methods impose a lot of communications and exchanges between the processes. 
-In our distributed version the particles are separate for each processes. 
-Indeed, as each of them will hold part of the particles, the multipole in M2L computation imposes to share data. 
+This method imposes a lot of communications and exchanges between the processes. 
+The particles are separate for each process in our distributed version.
+Indeed, as each of the processes will hold part of the particles, the multipole in M2L computation imposes to share data. 
 The P2P computation will face issues on the edge of each sub-domain. 
 The irregular behavior is also present for the choice of the multipole to consider during the M2L step based on the MAC criterion.
 
@@ -361,7 +361,7 @@ Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gam
 \end{figure}
 
 An example of our Sedov Blast wave experimentation is presented on figure~\ref{fig:sedov} and shows physically correct results.
-This problem have the same conclusion as the Sod shock tube, his purpose is the test the tree behavior with 2 dimensions. 
+This problem has the same conclusion as the Sod shock tube, his purpose is the test the tree behavior with 2 dimensions. 
 
 \subsection{High number of particles and specific formulation}
 
@@ -390,11 +390,11 @@ On our first implementation we used repulsive forces, but they imposed a lot of 
 
 For the current implementation we used the dummies particles method.
 This method is accurate and allows us to consider all the shape of boundaries.
-The wall particles are just considered as normal particles, with specific equations, and their quantities are evolved during the run. 
+The wall particles are just considered as normal particles, with specific equations and their quantities are evolved during the run. 
 The main difference is that their position does not evolve at the end of the step.
 They are identified in the code with a specific type, provided during the data generation.\\ 
 
-In this fluid flow example we were able to go up to a high number of particles with 2 or 3 dimensions. 
+In this fluid flow example, we were able to go up to a high number of particles with 2 or 3 dimensions. 
 The handling of boundaries conditions added a pressure on the irregularity behavior. 
 
 \subsection{SPH and gravitation}
@@ -404,24 +404,24 @@ The final aim of our tests is to simulate astrophysical events.
 We are interested in one of the most important event recently discovered. 
 Last year the Laser Interferometer Gravitational Wave, LIGO, detected the first gravitational wave generated by binary neutron stars merging \cite{abbott2017gw170817} and also more complexes event with Binary Black Holes coalescence in \cite{abbott2017gw170814}.
 We decided to conduct tests on Binary Neutron Star, BNS, coalescence. 
-This problem represent all the aspect needed in our benchmark with the SPH method but also the self-gravitation and gravitation computation. 
-In order to perform realistic simulations we consider two stars that are stable. 
+This problem represents all the aspect needed in our benchmark with the SPH method but also the self-gravitation and gravitation computation. 
+In order to perform realistic simulations, we consider two stars that are stable. 
 We give details on the way to generate those data and the physics of the fusion itself. 
-A lot of work have been involve in this understanding since it is quite out of the field of the primary researches. 
+A lot of work have been involved in this understanding since it is quite out of the field of the primary researches. 
 
 The generation of initial data for binary neutron star merging is quite complicated. 
 THe first step is to generate the profile of mass regarding the radius of the star. 
 This is made using the Lane-Emden equation. 
 As those data are generated based on a grid with a fixed smoothing length in our case we need to add an extra step for relaxation. 
 We used two relaxation methods with the Roche Lobe and Darwin problems. 
-The last step before the merging is to positioned the stars and add the rotation velocity. 
+The last step before the merging is to position the stars and add the rotation velocity. 
 
 \subsubsection{Solving Lane-Emden Equation}
 
 In order to consider BNS we first consider two individual stars. 
 The star is characterized by its radius and mass but also the density repartition inside.
 Indeed, we have to determine the density function based on the radius. 
-For this purpose we used the so called Land-Emden equation.\\
+For this purpose, we used the so called Land-Emden equation.\\
 
 As we consider the star as a polytropic fluid, we use the equation of Lane-Emden which is a form of the Poisson equation: 
 
@@ -430,7 +430,7 @@ As we consider the star as a polytropic fluid, we use the equation of Lane-Emden
 \end{equation}
 
 With $\xi$ and $\theta$ two dimensionless variables. 
-There is only exact solutions for a polytropic index $n = 0.5$, $1$ and $2$.
+There are only exact solutions for a polytropic index $n = 0.5$, $1$ and $2$.
 In our work we use a polytropic index of $1$ which can correspond to a NS simulation.
 
 For $n=1$ the solution of equation \ref{eq_LaneEmden} is: 
@@ -457,7 +457,7 @@ R = \sqrt{\frac{K(n+1)}{4\pi G}}\rho_c^{(1-n)/2}\xi_1 = \sqrt{ \frac{K}{2\pi G} 
 
 We note that for $n=1$ the radius does not depend of the central density.
 
-Here as an example we use dimensionless units as $G=R=M=1$ (for the other results we use CGS with $G = 6.674 \times 10^{-8} cm^3g^{-1}s^{-2}$) 
+Here as an example, we use dimensionless units as $G=R=M=1$ (for the other results we use CGS with $G = 6.674 \times 10^{-8} cm^3g^{-1}s^{-2}$) 
 We can compute K as: 
 \begin{equation}
 \label{eq:constant}
@@ -501,7 +501,7 @@ The mass associate to each particle $i$ of the total $N$ particles:
 
 $$ m_i = \frac{\rho(\vec{r_i})}{n_r} \mbox{ with } n_r = \frac{3N}{4 \pi R^3}$$ 
 
-The smoothing length is define constant and the same for all particles for all the simulation:
+The smoothing length is defined constant and the same for all particles for all the simulation:
 
 $$ h = \frac{1}{2}\sqrt{\frac{3N_N}{4\pi n}} $$ 
 
@@ -509,12 +509,12 @@ Here we choose $N_N$, the average number of neighbors, to be 100.
 
 \subsubsection{Relaxation}
 The last step is to perform a relaxation on the raw data. 
-There is two methods we used: the Roche lobe and Darwin problems. 
+There are two methods we used: the Roche lobe and Darwin problems. 
 In each of them we apply specific forces during a determined time for the particles to be stabilized. 
 
 \paragraph{Roche lobe problem: }
 The Roche Lobe version is used to simulate the halo around the stars which is shaped like a tear-drop. 
-For this Hydrostatic Equilibrium Models we use a different equation of motion:
+For this Hydrostatic Equilibrium Models, we use a different equation of motion:
 
 \begin{equation}
 \frac{d\vec{v_i}}{dt} = \frac{\vec{F}_i^{Grav}}{m_i} + \frac{\vec{F}_i^{Hydro}}{m_i} + \vec{F}_i^{Roche} - \frac{\vec{v_i}}{t_{relax}}
@@ -527,7 +527,7 @@ where $\vec{F}_i^{Roche}$ is:
 $$\vec{F}_i^{Roche} = \mu (3+q) x_i \hat{\vec{x}} + \mu q y_i \hat{\vec{y}}-\mu z_i \hat{\vec{z}}$$ 
 
 With $\mu$ to be determined (for us $\mu = 0.069$) and $q = \frac{M'}{M}=1$ as the two polytropes have the same total mass.
-This is apply to each star to get the equilibrium and the simulate the tidal effect. 
+This is applied to each star to get the equilibrium and the simulate the tidal effect. 
 
 \paragraph{Darwin problem: }
 This is the way we use to generate the final simulation. 
@@ -548,7 +548,7 @@ Using it during the relaxation we can compute $\Omega$ as: $\Omega = \frac{L_z}{
 Here the scheme is in $N^2$ but just for the relaxation step. 
 
 For this relaxation we use two stars generated as before, applying equation of motion \ref{eq:darwin}.
-Using $a$ as the distance between the two polytropes  (Here $a=2.9$ for $R=1$) and $\vec{\hat{x}}$ going for the center of the first to the second star, and $\vec{\hat{z}}$ is like the rotation vector.\\
+Using $a$ as the distance between the two polytropes  (Here $a=2.9$ for $R=1$) and $\vec{\hat{x}}$ going for the center of the first to the second star and $\vec{\hat{z}}$ is like the rotation vector.\\
 
 After the generation we are able to perform BNS coalescence. 
 This provides us a code using SPH, self-gravity and gravitation. 
@@ -565,16 +565,16 @@ The computation wall is targeted via the physics and gravitation computation.
 The communication wall on the other hand is central regarding the exchanges needed for SPH and the fast multipole method. 
 This problem is also very irregular for both cases. 
 Indeed, the particles moves at every iteration without any prediction on their new position and data. 
-In the same time the locality impose a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
-This implies the usage of a tree data structure, the work of our two metrics can be apply in this context. 
+In the same time the locality imposes a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
+This implies the usage of a tree data structure, the work of our two metrics can be applied in this context. 
 
 As the SPH method is used in a large panel of fields from astrophysics to fluid mechanic, there are numerous related works. 
 We can cite a code developed in the LANL, 2HOT \cite{warren20132hot} that introduced the Hashed Oct Tree structure used in our implementation. 
 There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014gizmo} and the most recent publication is GASOLINE \cite{wadsley2017gasoline2} based on PKDGRAV, a specific tree+gravity implementation. 
-Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems  \cite{harada2007smoothed,crespo2011gpus}.
+Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems\cite{harada2007smoothed,crespo2011gpus}.
 We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
 Several other works gave us hint for the best implementation of parallel and accelerated SPH\cite{ihmsen2011parallel,ihmsen2014sph}
 
-Our implementation have not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
-This study provide a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.
-This tool will allows us to push forward and provide different type of accelerator in the future keeping a full transparency for the user. 
+Our implementation has not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
+This study provides a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.
+This tool will allow us to push forward and provide different type of accelerator in the future keeping a full transparency for the user.

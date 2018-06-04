@@ -114,7 +114,7 @@ We use the tools from Cinch\footnote{\url{http://github.com/laristra/cinch}} dev
 It also provides the GoogleTests API for our unit tests. 
 The FleCSPH code is currently public and available on github under the \textit{laristra} (Los Alamos Ristra) project.
 The continuous integration is ensured by using Travis based on Docker and \textit{Dockerfiles} provided in the Docker folder. 
-In addition to Travis for the unit tests we use use tools as CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
+In addition to Travis for the unit tests we use tools as CodeCov\footnote{\url{http://codecov.io}} for the code coverage and SonarQube\footnote{\url{http://sonarqube.org/}} for the quality gates. 
 In the current version we use external libraries: HDF5, H5hut and a specific library for I/O based on H5hut. 
 Those elements are present and installed using scripts in \textit{third-part-library} folder. 
 
@@ -370,10 +370,10 @@ An example is given for 2 processes on figure~\ref{fig:coloring_particles} and o
 
 \subsubsection{Exchange Shared and Ghosts particles}
 
-The previous distribution shares the particles and the general information about neighbors particles. 
+The previous distribution shares the particles and the general information about neighbors’ particles. 
 Then each process is able to do synchronously or asynchronously communications to gather distant particles. 
 In the current version of FleCSPH an extra step is required to synchronously share data of the particles needed during the next tree traversal and physics part. 
-Then after this step, the ghosts data can be exchanged as wanted several times during the same time step. 
+Then after this step, the ghosts’ data can be exchanged as wanted several times during the same time step. 
 
 \subsection{Fast Multipole Methods}
 
@@ -474,8 +474,8 @@ The first step was to find the best repartition between the host and device.
 
 Figure~\ref{fig:cpu_gpu_rep} shows the work balancing. 
 With the smallest distribution the CPU and GPU keep exchange data for very small amount of computation. 
-Art the opposite, if the CPU value is too high the $O(n^2)$ part is too important. 
-We choose the value to be configured by the user and defaulted at  XX.
+At the opposite, if the CPU value is too high the $O(n^2)$ part is too important. 
+We choose the value to be configured by the user and defaulted at 7.
 
 \begin{figure}[t!]
 \centering
@@ -496,7 +496,7 @@ We choose the value to be configured by the user and defaulted at  XX.
 On figure~\ref{fig:cpu_gpu_time} and figure~\ref{fig:cpu_gpu_scala} we find the strong scaling and scalability tests for CPU and GPU version using the empiric best depth of repartition.
 The time comparison with strong scaling shows us that the GPU version go faster than the CPU one with a peak of 5 times faster. 
 On the other hand, the scalability graph present that the CPU version is more scalable than the GPU version. 
-This can be explain in two ways.
+This can be explained in two ways.
 
 \subsection{Simulations}
 The results and tests were done on several physical and astrophysical simulations in order to check the code behavior and reliability. 
@@ -539,4 +539,4 @@ We showed the advantage of using hybrid architecture on this kind of application
 It is important to notice that the GPU usage is not the best in this case. 
 Indeed, a dedicated application for each specific SPH problem would be more efficient. 
 The aim is to provide a framework that can be use on a large set of cluster and architectures. 
-Even with those limitations, the GPU was able to provide an acceleration of up to 5 times faster compare to the full-CPU computation. 
+Even with those limitations, the GPU was able to provide an acceleration of up to 5 times faster compare to the full-CPU computation.
