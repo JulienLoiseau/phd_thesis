@@ -461,6 +461,37 @@ The threads then iterate on the local particles and output together in global me
 In this part we compare the results of the multi-GPU version and the multi-CPU version of FleCSPH. 
 We show the benefit of using hybrid architecture even on irregular problem with high communications and computations.
 
+\subsection{Simulations}
+The results and tests were done on several physical and astrophysical simulations in order to check the code behavior and reliability. 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
+\caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
+\label{fig:fluid_simulation}
+\end{figure}
+
+The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous chapter, showed perfect results. 
+
+The fluid simulation is presented on figure~\ref{fig:fluid_simulation}.
+In this figure we can see a 40,000 particles simulation executed on multiples node of the ROMEO supercomputer. 
+This dam break simulation gave us the opportunity to represent the behavior of boundary conditions with a high number of particles. 
+
+In order to target a problem with both SPH and gravitation we decided to work on Astrophysics events like Binary Neutron Stars.
+The initial data were generated using python 3.5 to compute the position, mass and smoothing length of every particles. 
+A first step is done for the relaxation, the particles take their location. 
+The system relaxed then evolve following the merging equations proposed in the previous chapter. 
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{\locpath/figures/flecsph/bns_merger}
+\caption{Binary Neutron Stars coalescence with 40.000 particles.}
+\label{fig:bns_simulation}
+\end{figure}
+
+Figure~\ref{fig:bns_simulation} presents the binary neutron star coalescence for 40,000 particles. 
+The computation took 5 hours on four nodes of the supercomputer ROMEO. 
+This simulation is done with a total of 750 outputted steps with more than 100,000 iterations. 
+
+
 \subsection{Performances}
 The two metrics we worked on, in part II, gave us hint in order to reach performances in this simulation code. 
 The first step was to find the best repartition between the host and device.
@@ -494,39 +525,10 @@ We choose the value to be configured by the user and defaulted at 7.
 \end{figure}
 
 On figure~\ref{fig:cpu_gpu_time} and figure~\ref{fig:cpu_gpu_scala} we find the strong scaling and scalability tests for CPU and GPU version using the empiric best depth of repartition.
+These tests have been done on 500,000 particles binary neutron star merging during the coalescence step, when the particles are very close. 
 The time comparison with strong scaling shows us that the GPU version go faster than the CPU one with a peak of 5 times faster. 
-On the other hand, the scalability graph present that the CPU version is more scalable than the GPU version. 
-This can be explained in two ways.
-
-\subsection{Simulations}
-The results and tests were done on several physical and astrophysical simulations in order to check the code behavior and reliability. 
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
-\caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
-\label{fig:fluid_simulation}
-\end{figure}
-
-The first tests, done on Sod shock tube and Sedov blast wave were presented in the previous chapter, showed perfect results. 
-
-The fluid simulation is presented on figure~\ref{fig:fluid_simulation}.
-In this figure we can see a 40,000 particles simulation executed on multiples node of the ROMEO supercomputer. 
-This dam break simulation gave us the opportunity to represent the behavior of boundary conditions with a high number of particles. 
-
-In order to target a problem with both SPH and gravitation we decided to work on Astrophysics events like Binary Neutron Stars.
-The initial data were generated using python 3.5 to compute the position, mass and smoothing length of every particles. 
-A first step is done for the relaxation, the particles take their location. 
-The system relaxed then evolve following the merging equations proposed in the previous chapter. 
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\textwidth]{\locpath/figures/flecsph/bns_merger}
-\caption{Binary Neutron Stars coalescence with 40.000 particles.}
-\label{fig:bns_simulation}
-\end{figure}
-
-Figure~\ref{fig:bns_simulation} presents the binary neutron star coalescence for 40,000 particles. 
-The computation took 5 hours on four nodes of the supercomputer ROMEO. 
-This simulation is done with a total of 750 outputted steps with more than 100,000 iterations. 
+On the other hand, the scalability graph presents that the CPU version is more scalable than the GPU version. 
+Indeed, the number of particles to handle by GPU get too small regarding their computational power and the transfers between CPU and GPU take a more important part of time. 
 
 \section{Conclusion}
 In this section we presented a tool completing our metric. 

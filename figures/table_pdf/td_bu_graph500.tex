@@ -1,0 +1,35 @@
+\documentclass[
+  convert={
+    density=300 -alpha deactivate,
+    size=1080x800,
+    outext=.png
+  },
+]{standalone}
+
+\usepackage{xcolor}
+
+\begin{document}
+
+\begin{tabular}{c||r|r|r}
+    %\hline 
+    \textbf{Iteration} & \textbf{Top-down} & \textbf{Bottom-up} & \textbf{Hybridization} \\ 
+    \hline 
+    \hline 
+    0 & \color{red}{27} & 22 090 111 & \color{red}{27} \\ 
+    %\hline 
+    1 & \color{red}{8 156} & 1 568 798 & \color{red}{8 156} \\ 
+    \hline 
+    2 & 3 695 684 & \color{blue}{587 893} & \color{blue}{587 893} \\ 
+    %\hline 
+    3 & 19 565 465 & \color{blue}{12 586} & \color{blue}{12 586} \\ 
+    %\hline 
+    4 & 214 578 & \color{blue}{8 256} & \color{blue}{8 256} \\ 
+    %\hline 
+    5 & 5 865 & \color{blue}{1 201} & \color{blue}{1 201} \\ 
+    \hline 
+    6 & \color{red}{12} & 156 & \color{red}{12} \\ 
+    \hline
+    \textbf{Total} & 23,489,787 & 24,269,001 & 618,131 
+    %\hline 
+\end{tabular} 
+\end{document}
