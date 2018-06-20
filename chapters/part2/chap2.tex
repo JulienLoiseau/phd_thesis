@@ -7,16 +7,16 @@
 \chapter{Computational Wall: Langford Problem}
 
 \section{Introduction}
-Our goal is to determine the behavior of accelerators compared to classical processor in case of irregular-computationally heavy problems.
+Our goal is to determine the behavior of accelerators compared to classical processor in case of heavy irregular-computationally problems.
 For this purpose we choose the Langford problem which is an academic problem of combinatorial counting.
 
 We present the problem and expose the two possible methods to solve it:
 \begin{itemize}[noitemsep,nolistsep]
-\item[-] The tree traversal, call Miller's method, providing us benchmark targeting irregular memory and computation. 
-\item[-]The algebraic version, calls Godfrey's method, showing the performances of many-core vs multi-core architectures in respect to computationally heavy and memory irregular behaviors.  
+\item[-] The tree traversal, called Miller's method, providing us benchmark targeting irregular memory and computation. 
+\item[-]The algebraic version, called Godfrey's method, showing the performances of many-core versus multi-core architectures in respect to computationally heavy and memory irregular behaviors.  
 \end{itemize}
 We show the optimizations made to the regular processor algorithm to efficiently implement this application on GPU. 
-We compare the two approaches with classical processor and GPU implementation. 
+We compare the two approaches for classical processor and GPU implementation. 
 The results are then presented to show the acceleration using the whole ROMEO supercomputer.
 %The Miller's method shows very good results for many-core architecture and the Godfrey's one allows us to beat a world record of computation speed for the two last instances. 
 
@@ -805,31 +805,31 @@ Thus we are confident in good perspectives for the $L(2,31)$ instance if compute
 \section{Conclusion}
 %\todo{Refaire la conclusion pour mettre en avant les resultats}
 
-This first benchmark presents two methods to solve the Langford pairing problem on multi-GPU clusters. 
-Those methods are presented as the Miller's and Godfrey's algorithms.
+We propose as a benchmark the two methods to solve the Langford pairing problem on multi-GPU clusters, presented as the Miller's and Godfrey's algorithms.
 
 \subsection{Miller's method: irregular memory + computation}
-In this first implementation we showed that the accelerator can target irregularity in memory and computation. 
-The tree traversal, even with branch cutting, gives us excellent results on many-core architecture.
+In this first implementation we showed that the accelerators can target irregularity in memory and computation. 
+The tree traversal, even with branch cutting, gives us excellent results on many-core architectures.
 They GPUs handle 80\% of the computation effort.
 Also as any combinatorial problem can be represented as a CSP, the Miller algorithm can be seen as general resolution scheme based on the backtrack tree browsing. 
 A three-level tasks generation allows to fit the multiGPU architecture. 
 MPI or Best-Effort are used to spread tasks over the cluster, OpenMP for the CPU cores distribution and then CUDA to take advantage of the GPU computation power.
-We were able to compute $L(2,20)$ with this regularized method and to get an even better time with the basic backtrack. 
-This proves the proposed approach and also exhibits that the GPU scheduler is very efficient at managing highly divergent threads.
+We were able to compute $L(2,20)$ with this regularized method and to get an even better computation time with the basic backtrack. 
+The proposed approach exhibits that the GPU scheduler is very efficient at managing highly divergent threads.
 
 \subsection{Godfrey's method: irregular memory + heavy computation}
-We also presented the Godfrey's method which target irregular memory accesses but also heavy computational behavior. 
-The results shows that the many-core version completely exceed the classical processor best performances. 
+We also presented the Godfrey's method which targets irregular memory accesses but also heavy computational behavior. 
+The results show that the many-core version completely exceed the classical processor best performances. 
 The GPU handle 65\% of the computation effort. 
 In addition we beat the Langford limits using multi-GPUs. 
-In order to use the supercomputer ROMEO, which is shared by a large scientific community, we have implemented a distribution that does not affect the machine load, using a best-effort queue. The computation is fault-tolerant and totally asynchronous.
-The utilization of this technology also show the reliability of nowadays accelerators technologies. 
-Indeed, they can be use at demand on specific tasks without specific warm-up. 
+In order to use the ROMEO supercomputer, which is shared by a large scientific community, we have implemented a work distribution that does not affect the machine load, using a best-effort queue. 
+The computation is fault-tolerant and totally asynchronous.
+The utilization of this technology also shows the reliability of nowadays accelerators technologies. 
+Indeed, they can be used at demand for specific tasks without specific warm-up. 
 
 \paragraph{Langford problem results: }
 This work also enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. 
-This is the fastest time on those problems nowadays.
+This is nowadays the fastest time for those problems.
 The total number of solutions is: \\
 
 \hspace{3cm} L(2,27) = 111,683,611,098,764,903,232
@@ -837,4 +837,4 @@ The total number of solutions is: \\
 \hspace{3cm} L(2,28) = 1,607,383,260,609,382,393,152\\
 
 This first benchmark implementation is clearly in favor of hybrid architecture. 
-The many-core architecture shows a perfect handling of irregularity and heavy computations. 
+The many-core architectures show a perfect handling of irregularity and heavy computations. 
