@@ -2,32 +2,32 @@
 
 \chapter*{Introduction}
 The first part of this thesis presented the tools needed to understand and target performances in HPC. 
-The second part exposed our metric showing the benefit of accelerators, in this case GPUs, over classical processors in two contexts: irregular computation and irregular communication/memory behaviors.
-We showed that accelerators gave a real advantage on these two problems and even allowed us to push the limits of performances.
+The second part exposed our metric benchmarks provided to test HPC architectures when confronted to the main performances walls, and then showing the benefit of accelerators, in this case GPUs, over classical processors in the two contexts addressed: irregular computation and irregular communication/memory behaviors.
+We showed that accelerators give a real advantage on these two problems and even allow us to push the limits of performances.
 We are confident that hybrid architectures will be the way to reach exascale in 2020.
 
 In order to validate our previous results and our metric we decided to target another irregular behavior problem embedding both computation and communication/memory wall over an irregular behavior. 
-This problem can also be considered as a \textit{realistic}, \textit{production} code as it targets current problems of domain scientists. 
+This problem can also be considered as a \textit{realistic production} code as it targets current problems of domain scientists. 
 In order to show how accelerators handle real world problems, we searched for an application fulfilling our needs. 
 Our choice fell on the Smoothed Particle Hydrodynamics problem applied to fluid and astrophysics simulation. 
 
 We targeted this problem for several reasons. 
-We show in the first chapter the computer science implementation issues and limitations.
+In the first chapter of this part we show the computer science implementation issues and limitations.
 We present the elements making this application a perfect choice for our metric.
 This project is also part of an exchange with the Los Alamos National Laboratory in New Mexico, USA. 
 This laboratory is part of the U.S. Department of Energy, DoE, and groups thousands of researchers working on the most advanced nowadays problems.
 The Los Alamos National Laboratory, LANL, is also one of the three nuclear research facilities of the U.S. National Nuclear Security Administration (NNSA). 
-In the summer of 2016, I had my first internship three months during a program called: \textit{Co-Design Summer School}.
-This allowed us to discover a particular class of problems, Smoothed Particle Hydrodynamics and exchange with computer scientists and domain scientists.
-We extrapolate after the internship and saw what this problem means in a production context and its utility for our study. 
-It makes a perfect example of realistic problem confronting computation and communication wall with irregular behavior. 
-In order to characterize what physicists requested for this problem, I had a second internship with the LANL in the summer of 2017 during three months. 
+In the summer of 2016, I had my first internship for a three months period during a program called: \textit{Co-Design Summer School}.
+This allowed us to discover a particular class of problems, Smoothed Particle Hydrodynamics, and exchange with computer scientists and domain scientists.
+We extrapolated after the internship and saw what this problem means in a production context and its utility for our study. 
+It represents a perfect example of realistic problem confronting computation and communication walls, with irregular behavior. 
+In order to characterize what physicists requested for this problem, I had a second internship at the LANL in the summer of 2017 for three months. 
 
 In this part, we first present the Smoothed Particle Hydrodynamics method from a physical point of view and draw a parallel with the computer science problems involved. 
-Indeed, a huge amount of time have been spend on the understanding of the physics side to be able to do realistic simulations and thus realistic behavior. 
-The second chapter presents a distributed SPH code working for multi-CPU and multi-GPU. 
-This program is called FleCSPH. 
-Starting from the framework which is the base of FleCSPH, FleCSI, we introduce the algorithm and methods needed to efficiently solve this problem on classical processor and the acceleration generated adding GPUs. 
+Indeed, a huge amount of time has been spent on the understanding of the physics side to be able to do realistic simulations and thus realistic behavior. 
+The second chapter presents a distributed SPH implementation designed for multi-CPU and multi-GPU. 
+The program is called FleCSPH. 
+Starting from FleCSI, the framework which is the base of FleCSPH, we introduce the algorithm and methods needed to efficiently solve this problem on classical processor and the acceleration generated adding GPUs. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                   %
@@ -46,26 +46,32 @@ Starting from the framework which is the base of FleCSPH, FleCSI, we introduce t
 
 
 \chapter*{Conclusion}
-This part highlights our study and shows the advantages of hybrid architectures compared to classical CPU centric architectures. 
-We showed that the GPU can handle part of the computation even in the case of computation and communication walls with irregular behavior application. 
+This third part of the thesis highlights our study and shows the advantages of hybrid architectures compared to classical CPU centric architectures. 
+We showed that the GPU can handle part of the computation even in the case of combined computation and communication walls with irregular behavior application. 
 We took for this last metric a simulation problem. 
-As simulation is intrinsically linked with HPC for a lot of field this application find perfectly its place in our metric.\\
+As the simulation is intrinsically linked with HPC for a lot of fields this application perfectly finds its place in our metric.\\
 
-A huge amount of time had been spend on the comprehension and implementation of the physics itself. 
+A huge amount of time has been spent on the comprehension and implementation of the physics itself. 
 This was required to provide realistic test cases and show the benefit of hybrid architecture even in the most complex case. 
-We propose simulation for classical physics problems but also complex astrophysical phenomenons like binary neutron star merging. 
+We propose simulation for classical physics problems but also complex astrophysical phenomenon's like binary neutron star merging. 
 Based on this physics knowledge and the target of completing our metric we create a dedicated distributed application.
 
 This application is called FleCSPH and is based on the FleCSI framework developed at LANL. 
 The intent of this project is to provide a distributed and reliable framework for multi physics purpose to domain scientists.
-Indeed, with the fast evolution of technologies and the complexity of new supercomputers, new tools needed to be developed. 
+Indeed, with the fast evolution of technologies and the complexity of new supercomputers, new tools need to be developed. 
 FleCSPH is a first step to reach this goal and target tree topologies. 
 It provides a domain decomposition, a tree data structure, I/O and efficient gravitation computation.
 
 Our hybrid version of the code is based on GPU utilization. 
-It follows the principles we described in the second part for Langford tree structure with GPUs. 
+It follows the principles we described in the second part for the Langford tree structure with GPUs. 
 A subpart of the tree traversal is dedicated to the GPUs which handle all the physics computation.  
 
-This implementation is not the best and better results can be done using exclusively GPUs for the resolution. 
+This implementation is not the best and better results can be obtained using exclusively GPUs for the resolution. 
 In this case we limited the code transformation to stay in a realistic usable code for the domain scientists. 
-The overall transformation would have create a SPH dedicated program and this is not the aim of this work, targeting realistic production applications. 
+The overall transformation would have led to create a SPH dedicated program, but this is not the aim of this work, targeting realistic production applications. 
+
+The last version, accelerated using multi-GPUs, is confronted to both computation and communication wall with the physics computation and the particle load balancing, respectively. 
+The irregularity is present in all the layer with the neighbors’ search, the physics computation and the communication steps to share EXCLUSIVE, GHOSTS and SHARED particles. 
+The results using classical architecture are very good and the scalability is maintained for one million particles. 
+The multi-GPU approach gives an acceleration of at least two times faster. 
+These results show the real benefit of hybrid architectures even in a problem representing all the limitation and walls aspects studies before in this thesis.

@@ -3,7 +3,7 @@
 %	CHAPTER ONE, CHOICES AND SPH                                    %
 %                                                                   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Complex system modelization}
+\chapter{Complex system choice and modelization}
 
 \section{Introduction}
 In this chapter, we give details on our choice for a generic complex system which encounters several problematics. 
@@ -12,10 +12,10 @@ In our case, these complexities are the physics modelization and the computer sc
  
 The problem we choose, the Smoothed Particle Hydrodynamics simulation method, is described on a physical aspect.
 We point out the difficulties involved in the implementation on supercomputers and especially hybrid architectures.  
-A lot of work was spent on the comprehension of the physical aspects to produce a code that met the behavior of real astrophysics simulations.
+A lot of work was spent on the comprehension of the physical aspects to produce a code that meets the behavior of real astrophysics simulations.
 
-The first section is a presentation of the SPH method and the overall limitation we face. 
-Then we describe different types of specific simulations we used as a benchmark of the application. 
+The first section is a presentation of the SPH method and the overall limitations we have to face. 
+Then we describe different types of specific simulations we used as a benchmark of the application, and the application obtained is a good benchmark candidate for testing architectures for computational and communication walls combined with irregular behavior.
 
 \section{Physical modelization and downsides}
 We identified two main walls in our metric.
@@ -139,7 +139,7 @@ where $q = r/h$, $r$ the distance between the two particles, $D$ is the number o
 \end{cases}
 \end{equation}
 
-In the computation of forces we need to apply the gradient of the smoothing kernel. 
+In the computation of forces, we need to apply the gradient of the smoothing kernel. 
 This is, in our example, for the cubic spline kernel:
 \begin{equation}
  \vec{\nabla}_iW(\vec{r_{ij}},h) = \frac{\sigma}{h^{D+1}} \times \begin{cases} ( -\frac{3}{h} + \frac{9}{4h}q) \vec{r_{ij}}, & \mbox{si } 0 \leq \frac{r}{h} < 1 \\ (\frac{-3}{r} + \frac{3}{h} - \frac{3}{4h}q ) \vec{r_{ij}}, & \mbox{si } 1 \leq \frac{r}{h} < 2\\ 0, & \mbox{si } \frac{r}{h} \geq 2 \end{cases}
@@ -410,7 +410,7 @@ We give details on the way to generate those data and the physics of the fusion 
 A lot of work have been involved in this understanding since it is quite out of the field of the primary researches. 
 
 The generation of initial data for binary neutron star merging is quite complicated. 
-THe first step is to generate the profile of mass regarding the radius of the star. 
+The first step is to generate the profile of mass regarding the radius of the star. 
 This is made using the Lane-Emden equation. 
 As those data are generated based on a grid with a fixed smoothing length in our case we need to add an extra step for relaxation. 
 We used two relaxation methods with the Roche Lobe and Darwin problems. 
@@ -421,7 +421,7 @@ The last step before the merging is to position the stars and add the rotation v
 In order to consider BNS we first consider two individual stars. 
 The star is characterized by its radius and mass but also the density repartition inside.
 Indeed, we have to determine the density function based on the radius. 
-For this purpose, we used the so called Land-Emden equation.\\
+For this purpose, we used the so-called Land-Emden equation.\\
 
 As we consider the star as a polytropic fluid, we use the equation of Lane-Emden which is a form of the Poisson equation: 
 
@@ -481,7 +481,7 @@ K & 0.636619 & 95598.00 & 83576.48 & 39156.94\\
 Figure~\ref{tab:example_radius_k} give example of radius and the proportionality constant $K$.
 
 
-Then we deduce the density function of $r$ as :
+Then we deduce the density function of $r$ as:
 
 $$\rho(\xi) = \frac{sin(A\times r)}{A \times r} \times \rho_c \mbox{ with } A = \sqrt{\frac{2\pi G}{K}}
 $$
@@ -560,21 +560,24 @@ Secondly, a lot of communications for both SPH and FMM to share local particles 
 In completion of those two aspect, the irregularity provided by a huge number of particles moving in a 2D or 3D space at every iteration, making impossible the prediction of their position and values. 
 
 \section{Conclusion}
-The problem we presented in this part fulfill all the objectives for our metric. 
+The problem we presented in this part fulfills all the objectives for our metric. 
 The computation wall is targeted via the physics and gravitation computation. 
 The communication wall on the other hand is central regarding the exchanges needed for SPH and the fast multipole method. 
 This problem is also very irregular for both cases. 
-Indeed, the particles moves at every iteration without any prediction on their new position and data. 
+Indeed, the particles move at every iteration without any prediction on their new position and data. 
 In the same time the locality imposes a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
-This implies the usage of a tree data structure, the work of our two metrics can be applied in this context. 
+This implies the usage of a tree data structure and the work of our two metrics can be applied in this context. 
 
 As the SPH method is used in a large panel of fields from astrophysics to fluid mechanic, there are numerous related works. 
 We can cite a code developed in the LANL, 2HOT \cite{warren20132hot} that introduced the Hashed Oct Tree structure used in our implementation. 
 There is also GADGET-2 \cite{springel2005cosmological}, GIZMO \cite{hopkins2014gizmo} and the most recent publication is GASOLINE \cite{wadsley2017gasoline2} based on PKDGRAV, a specific tree+gravity implementation. 
-Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems\cite{harada2007smoothed,crespo2011gpus}.
-We also note that these implementations focus on SPH problems and does not provide a general purpose and multi-physics framework like we intent to provide through FleCSPH and FleCSI. 
-Several other works gave us hint for the best implementation of parallel and accelerated SPH\cite{ihmsen2011parallel,ihmsen2014sph}
+Several implementations already implement GPU code and tree construction and traversal, one can cite GOTHIC \cite{miki2017gothic}, presenting gravitational tree code accelerated using the latest Fermi, Kepler and Maxwell architectures. 
+But a lot of GPU accelerated work still focused on fluid problems and not on astrophysical problems\cite{harada2007smoothed,crespo2011gpus}.
+We also note that these implementations focus on SPH problems and do not provide a general purpose and multi-physics framework as we intend to provide through FleCSI and FleCSPH. 
+Several other works gave us hint for the best implementation of parallel and accelerated SPH\cite{ihmsen2011parallel,ihmsen2014sph}.
 
 Our implementation has not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
 This study provides a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.
-This tool will allow us to push forward and provide different type of accelerator in the future keeping a full transparency for the user.
+As it will be shown in next, this tool will allow us to push forward and provide different types of accelerators in the future keeping a full transparency for the user.
+The application obtained, ready to be parallelized for HPC CPU architectures and then for hybrid HPC architectures, fulfills both computational and memory/communication walls. 
+Thus, it seems to be a good candidate for testing HPC architectures.
