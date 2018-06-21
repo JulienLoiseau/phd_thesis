@@ -26,65 +26,70 @@
 \input{\locpath/chapters/part2/chap3}
 
 \chapter*{Conclusion}
-In this part we showed the real advantage of accelerators, hybrid architectures, toward classical processors in HPC environment. 
+In this part we showed the real advantage of accelerators used in hybrid architectures, toward classical processors in HPC environment. 
 In the two examples presented in this part we confronted both architectures to complex problems representing characteristic walls: irregular applications in computation and communications. 
-In the first one, with the problem of Langford, we worked on an irregular and computationally heavy application that does not requires much communications. 
-The second one, the Graph500 BFS, was based on irregular communication over irregular memory usage. 
+In the first one, with the problem of Langford, we worked on an irregular and computationally heavy application that does not requires much communication. 
+The second one, the Graph500 BFS, characterized as on irregular communication over irregular memory usage. 
+These two applications are confronted to all the walls that may face realistic applications.
+
 In both cases we showed better results using accelerator, in this case GPU, compared to classical multi-core processors systems. 
 
 \subsection{Computational wall}
-We studies the Langford problem under two methods of resolution. 
-In the first one, the Miller algorithm, the resolution was based on a tree traversal. 
-We showed that even using the irregular algorithm directly on the GPU gave us way better results than on multi-core processors. 
+We studied the Langford problem under two methods of resolution. 
+In the first one, the Miller algorithm, the resolution is based on a tree traversal. 
+We showed that even using the irregular algorithm directly on the GPU gave us better results than on multi-core processors. 
 We showed an acceleration of quad times using the GPUs with the backtrack method.
 
 For the second method, the Godfrey algorithm, we were able to beat a new speed record for the last instances $L(2,27)$ and $L(2,28)$.
-We used the whole ROMEO supercomputer and were able to recompute them in 23 days using best-effort on the cluster: an average of 38\% of the machine.
-This result can be theoretically reduce to a maximum of 10 days by using the whole cluster in the same time, using a linear scaling. 
+We used the whole ROMEO supercomputer and were able to recompute them in 23 days using best-effort on the cluster, with 38\% of the machine on average.
+Then, this result could be theoretically reduced to a maximum of 10 days using the whole cluster in the same time, with a linear scaling. 
 
 \subsection{Communication wall}
-Several aspect of the Graph500 BFS makes it a good metric in our study. 
-The graph generated is completely random and we cannot know in advance the exact number of edges and thus the perfect behavior for distribute the data. 
+Several aspects of the Graph500 BFS make it a good metric candidate in our study. 
+The graph generated is completely random and we cannot know in advance the exact number of edges and thus the perfect behavior for distributing the data. 
 During the search of the BFS algorithm the memory is completely traversed with an irregular behavior due to the random generation of the graph. 
 
-In order to get performances we imposed regularization over our data.
-The Compressed Sparse Row and Compressed Sparse Column compression methods were used and the communications were based on bitmap transfers. 
+In order to get performances, we imposed regularization over our data.
+The Compressed Sparse Row and Compressed Sparse Column compression methods were used together and the communications were based on bitmap transfers. 
+The communication intensity presents a huge wall for realistic application on large architectures. 
+Proposing an appropriate parallelization scheme can reduce the disadvantage but only well-balanced architectures can fight the problem and allows to reach good performances. 
 
-We showed that despite of the irregularity downside we were able to provide an efficient GPU algorithm, faster that the CPU algorithm and the reference code from Graph500 itself.
-We provided an acceleration of two times using our CPU algorithm and quad times using our GPU algorithm.\\
+We showed that despite of the irregularity downside and larger memory used we were able to provide an efficient GPU algorithm, faster that the CPU one and the reference code proposed by the Graph500 consortium itself.
+We provided an acceleration of two times using our CPU algorithm and quad times using our GPU algorithm.
+This benchmark confirmed that hybrid architectures allow to solve communication-intensive problems with convenient performances.\\
 
-\subsection{Reaching performances on accelerators}
-From those two metrics we extracted the main factors that leads us the performances on accelerators like GPU. 
-\subsubsection{Regularization vs high number of tasks}
+\subsection{Reaching performances on accelerators based architectures}
+From those two metrics we extracted the main factors that allowed us to reach good performances on accelerators like GPUs. 
+\subsubsection{Regularization versus high number of tasks}
 We showed in both cases that the regularization of the tasks to fit the GPU execution model, based on synchronized execution, is not always the best way to reach performances.
-Indeed, if the number of tasks to solve on the GPU is high enough the SIMT models allows all the computational core to stay busy while fetching data. 
+Indeed, if the number of tasks to solve on the GPUs is high enough, the SIMT model allows all the computational cores to keep busy while fetching data. 
 The number of blocks in the grid and threads per blocks have to be very high to allow the coordinator to switch from WARPS and cover the data fetching time.
 \subsubsection{Memory usage}
-All the kind of memory have to be consider and have their own interests. 
+All the kinds of memory have to be considered and have their own interests. 
 We used the constant memory to store the Gray code in the Langford problem.
-Despite its small amount of space it was a critical factor avoiding necessary re-computations.
-The texture memory, perfect for irregular data fetching, was a perfect area to store the neighbors informations for the Graph500 problem.
+Despite its small size, it was a critical factor avoiding necessary re-computations.
+The texture memory, perfect for irregular data fetching, was a perfect area to store the neighbors’ information for the Graph500 problem.
 Another very important part of the work is to focus on shared memory usage. 
-Using the same data fetching instruction for all the threads of a WARP and provide shared memory informations like for the neighbor search will lead to performances. 
-Another care have to be taken while considering the bank conflict during fetching data. 
+Using the same data fetching instruction for all the threads of a WARP and providing shared memory information like for the neighbor search will lead to better performances. 
+Another care has to be taken while considering the bank conflicts during fetching data. 
+
 \subsubsection{Communication/computation overlapping}
 For accelerator programming, and especially GPUs, the execution on the device is asynchronous regarding the host. 
 That behavior allows the host to either prepare more data or compute part of the solutions itself. 
-We studies both cases in our two studies. 
+We studied both cases for our benchmarks. 
 This repartition shows interest in the computationally heavy problem like Langford and both CPU and GPU were computing part of the result simultaneously. 
-In the Graph500 the GPU itself had to be considered and using the CPU leads to lowest performances. 
+For the Graph500 benchmark we were able to have an intensive usage of GPUs even if the communications are important and introducing CPUs in the computation did not allow to reach better performances.
 Empiric tests have to be made for the work distribution regarding the targeted problem. 
-Another critical factor for performance was the utilization of streams. 
-This feature allows to hide communication between the host and device by dividing the communication in smaller chucks and starting the computation while the data are sent. 
+Another critical factor for performance was the utilization of streams since this feature allows to hide communication between the host and device by dividing the communication into smaller chunks and starting the computation while the data are sent. 
 
 \subsubsection{Distribution on multi-GPU clusters}
-We showed that the hybrid architecture handle multiple distributions strategies. 
-The classical synchronous communications is perfectly handle and lead to good performances. 
-We also used more complex start-stop systems like the best-effort used in the Langford problem. 
-The GPU-Direct technology can be vital in data driven applications like the Graph500.
-This tool fits perfectly in the HPC environment and allows to reach even better performances. \\
+We showed that hybrid architectures handle multiple distribution strategies. 
+The classical synchronous communications are perfectly handled and lead to good performances. 
+We also used more complex start-stop systems, like best-effort, for the Langford problem. 
+The GPU-Direct technology can also be vital in data driven applications like the Graph500 benchmark.
+This tool perfectly fits in the HPC environment and allows to reach even better performances. \\
 
-From this first study, on both applications, we shows that the hybrid architecture gives really good results on different representative problems of HPC. 
-The question that arise is now: what will be the behavior of GPUs confronted to both of those aspect ? 
-In order to answer this question we present in the next part the Smoothed Particle Hydrodynamics problem on which we base the last part of this study. 
-We show that GPUs can also be use in this context, targeting domain scientists codes.\\
+From this preliminary study, on both applications, we showed that the hybrid architectures give really good results on different representative problems of HPC. 
+The question that arises is now: what will be the behavior of GPUs confronted to both of those aspects together? 
+In order to answer this question, we present in the next part the Smoothed Particle Hydrodynamics problem on which we base the last part of this study. 
+We show that GPUs can also be used in this context, targeting domain scientists codes.\\

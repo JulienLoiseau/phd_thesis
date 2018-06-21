@@ -7,17 +7,17 @@
 \chapter{Communication Wall: Graph500} 
 
 \section{Introduction}
-In order to face the communication wall in our metric for accelerators, we choose the Graph500 problem. 
+In order to face the communication wall in our metric for multi-accelerator's architectures, we choose the Graph500 problem. 
 This benchmark is based on huge tree traversal through a randomly generated graph. 
-We already work on this kind of example with the first implementation of the Langford algorithm.
-The Graph500 push this example to its limits using terabyte to petabytes of data to represent the graph on which the traversal is executed. 
+We already work on this kind of memory intensive problem with the first implementation of the Langford algorithm.
+The Graph500 pushes this example to its limits using terabytes to petabytes of data to represent the graph on which the traversal is executed. 
 In this case the computation is absent or just reduce to tests on datum.
-This metric targets directly the memory and communication wall in irregular case. 
+This metric directly targets the memory and communication wall in an irregular case. 
 
-In this part we present the benchmark itself, from the graph generation to the traversal. 
+In this part we present the benchmark itself, from the graph generation to its traversal. 
 We focus on the BFS part, we do not work on the latest Graph500 using SSSP. 
 We explain why this benchmark is perfect to target communication wall and memory wall. 
-We present our implementation on GPUs and the results compared to the multi-core processor version.
+We present our implementation on multi-GPUs architectures and the results are compared to the multi-core processor version.
 
 \subsection{Breadth First Search}
 The most commonly used search algorithms for graphs are Breadth First Search (BFS) and Depth First Search (DFS).
@@ -66,26 +66,26 @@ The sequential and basic algorithm is well known and is presented on Algorithm~\
 This algorithm is presented on figure~\ref{fig:part2_chap3:BFS}.
 At each step from the current queue we search through the neighbors of nodes. 
 All the new nodes, not yet traversed, are added in the queue for the next step.
-We keep the information of neighbors exploration in order to recreate the predecessor array. 
+We keep the information of neighbors’ exploration in order to recreate the predecessor array. 
 
 This algorithm is very famous thanks to its use in many applications but also thanks to the world supercomputer ranking called Graph500\footnote{\url{http://www.graph500.org}}.
 This benchmark is designed to measure the performance on very irregular problems like BFS on a large scale randomized generated graph. 
 The first Graph500 list was released in November 2010.
 The last list, issued in November 2017, is composed of 235 machines ranked using a specific metric: Traversed Edges Per Second, denoted as TEPS. 
-The aim is to perform a succession of 64 BFS on a large scale graph in the fastest possible way.
+The aim is to perform a succession of 64 BFS on a large-scale graph in the fastest possible way.
 Then the ratio of edges traversed per the time of computation is used to rank the machines.
 
 This benchmark is more representative of communication and memory accesses than computation itself. 
 Other benchmarks can be used to rank computational power such as LINPACK for the TOP500 list.
-Indeed the best supercomputers (K-Computer, Sequoia, Mira, ...) on the ladder have a very specific communication topology and sufficient memory, and are large enough to quickly visit all the nodes of the graph. 
+Indeed, the best supercomputers (K-Computer, Sequoia, Mira, ...) on the ladder have a very specific communication topology and sufficient memory, and are large enough to quickly visit all the nodes of the graph. 
 
 This benchmark is conduct using GPUs as accelerators.
 There are many CPU algorithms available, which are listed on the Graph500 website. 
-In order to rank the ROMEO supercomputer we had to create a dedicated version of the Graph500 benchmark in order to fit the supercomputer architecture. 
+In order to rank the ROMEO supercomputer, we had to create a dedicated version of the Graph500 benchmark in order to fit the supercomputer architecture. 
 As this supercomputer is accelerated by GPUs, three successive approaches had to be applied:  first create an optimized CPU algorithm; second provide a GPU specific version and third take advantage of both CPU and GPU computation power. 
 
 The first section performs a survey of graph representation and analysis; it also describes some specific implementations.
-The second section  describes the Graph500 protocol and focuses on the Kronecker graph generation method and the BFS validation.
+The second section describes the Graph500 protocol and focuses on the Kronecker graph generation method and the BFS validation.
 The third section presents the chosen methods to implement graph representation and work distribution over the supercomputer nodes. It particularly focuses on the interest of a hybrid CSR and CSC representation.
 We compare the results for different graph scales and load distributions.\\
 
@@ -103,7 +103,7 @@ We use another key study in order to build our Graph500 CPU/GPU implementation.
 \cite{merrill2015high} proposes various effective methods on GPU for BFS. 
 Merrill \& al. explaine and teste a few efficient methods to optimize memory access and work sharing between threads on a large set of graphs. 
 It focuses on Kronecker graphs in particular. 
-First they propose several methods for neighbor-gathering with a serial code versus a warp-based and a CTA-based approach. 
+First, they propose several methods for neighbor-gathering with a serial code versus a warp-based and a CTA-based approach. 
 They also use hybridization of these methods to reach the performance level. 
 In a second part they describe the way to perform label-lookup, to check if a vertex is already visited or not. 
 They propose to use a bitmap representation of the graph with texture memory on the GPU for fast random accesses. 
@@ -136,7 +136,7 @@ The Graph500 benchmark is based on the following stages:
 	\item \textit{BFS verification.} The user-computed BFS is validated. The number of traversed edges is determined during this stage.  
 \end{itemize}
 
-The process is fairly simple and sources can be found at \url{http://www.graph500.org}.
+The process is fairly simple, and sources can be found at \url{http://www.graph500.org}.
 The real problem is to find an optimized way to use parallelism at several levels: node distribution, CPU and GPU distribution and then massive parallelism on accelerators.
 
 
@@ -161,7 +161,7 @@ As presented on figure~\ref{fig:kron_gen_scheme}, the generation is based on edg
 For the Graph500 the probabilities are $a = 0.57$, $b = c = 0.19$ and $d = 0.05$.
 The generator handle can be stored in a file or directly split in the RAM memory of each process. 
 The first option is not very efficient and imposes a lot of I/O for the generation and verification stage but can be very useful for large scale problems.
-The second option is faster but uses a part of the RAM thus less ressources are available for the current BFS execution.
+The second option is faster but uses a part of the RAM thus less resources are available for the current BFS execution.
 
 
 \subsection{Validation}
@@ -183,9 +183,9 @@ In a first part we introduce the data structure; then we present the algorithm a
 
 \subsection{Data structure}
 We performed tests of several data structures.
-In a first work we tried to work with bitmap. Indeed the regularity of computation can fit very well with the GPU architecture. But this representation imposes a significant limitation on the graph size. 
+In a first work we tried to work with bitmap. Indeed, the regularity of computation can fit very well with the GPU architecture. But this representation imposes a significant limitation on the graph size. 
 This representation is used on the BlueGene/Q architecture. 
-Indeed they have some specific hardware bit-wise operations implemented in their processors and have a large amount of memory, allowing them to perform very large scale graph analysis. 
+Indeed, they have some specific hardware bit-wise operations implemented in their processors and have a large amount of memory, allowing them to perform very large scale graph analysis. 
 
 In a second time we used common graph representations, Compressed Sparse Row (CSR) and Compressed Sparse Column (CSC) representation, which fit very well with sparse graphs such as the Graph500 ones.
 
@@ -204,7 +204,7 @@ This representation is very compact and very efficient to work with sparse graph
 \subsection{General algorithm}
 
 When looking at the latest Graph500 list we see that the best machines are the BlueGene ones. 
-We count about 26 BlueGene/Q and BlueGene/P machines in the first 50  machines.
+We count about 26 BlueGene/Q and BlueGene/P machines in the first 50 machines.
 This is due to a quite specific version of the BFS algorithm proposed in \cite{6468459}. 
 It proposes a very specific 2D distribution for parallelism and massive use of the 5D torus interconnect. 
 
@@ -212,8 +212,8 @@ In the BFS algorithm, like other graph algorithms, parallelism can take several 
 We can split the vertices into partitions using 1D partition. 
 Each thread/machine can then work on a subset of vertices. 
 The main issue with this method is that the partitions are not equal since the number of edges per vertex can be very different; 
-moreover in graphs like Kronecker ones where some vertices have a very high degree compared to other ones.
-Thus we are confronted with a major load balancing problem. 
+moreover, in graphs like Kronecker ones where some vertices have a very high degree compared to other ones.
+Thus, we are confronted with a major load balancing problem. 
 
 In \cite{6468459} they propose a new vision of graph traversal, here BFS, on distributed-memory machines. 
 Instead of using standard 1D distribution their BFS is based on a 2D distribution. 
@@ -230,9 +230,9 @@ Each bloc $A_{x,y}$ is a subset of edges.
 We notice that blocks $A_{0,l-1}$ and $A_{l-1,0}$ have the same edges but in a reverse direction for undirected graphs. 
 Based on this distribution they use \textit{virtual processors}, which are either machines or nodes, each associated with a block.
 This has several advantages.
-First we reduce the load balancing overhead and a communication pattern can be set up. 
-Indeed each column shares the same $in\_queue$ and each row will generate an $out\_queue$ in the same range. 
-Thus for all the exploration stages, communications are only on line and we just need a column communication phase to exchange the queues for the next BFS iteration.  
+First, we reduce the load balancing overhead and a communication pattern can be set up. 
+Indeed, each column shares the same $in\_queue$ and each row will generate an $out\_queue$ in the same range. 
+Thus, for all the exploration stages, communications are only on line and we just need a column communication phase to exchange the queues for the next BFS iteration.  
 Algorithm~\ref{alg:bfs_bluegene} presents the BlueGene/Q and BlueGene/P parallel BFS.
 
 
@@ -291,7 +291,7 @@ This algorithm, which is the basis of many implementations, is the main structur
 \subsection{Direction optimization}
 
 In order to get an optimized computation in terms of TEPS we decided to sacrifice a small part of the memory for storing both the CSC and CSR representations. 
-Indeed during the different BFS iterations the $in\_queue$ size varies a lot and, taking this into account, it is wiser to perform exploration from \textit{top-down} or \textit{bottom-up}. 
+Indeed, during the different BFS iterations the $in\_queue$ size varies a lot and, taking this into account, it is wiser to perform exploration from \textit{top-down} or \textit{bottom-up}. 
 So, as proposed in \cite{beamer2013direction}, we perform a direction-optimized BFS.
 
 In the first case, \textit{top-down}, we start from the vertices in the $in\_queue$ and check all the neighbors verifying each time if this neighbor has ever been visited. 
@@ -299,8 +299,8 @@ Then if not, it is added to the $out\_queue$.
 When the $in\_queue$ is sparse, like for the first and latest iterations, this method is very efficient. 
 In the second case, \textit{bottom-up}, we start the exploration by the not-yet-visited vertices and verify if there is a link between those vertices and the $in\_queue$ ones. 
 If yes, the not-yet-visited vertex is added to the $out\_queue$. 
-Table~\ref{table:direction_optimized} shows the advantages of swithing from top-dowm to bottom-up regarding the number of edges travered.
-Figure~\ref{fig:csr_csc} presents the two approches, whith the time visiting all the edges, and the benefits of their hybridization.
+Table~\ref{table:direction_optimized} shows the advantages of switching from top-down to bottom-up regarding the number of edges traversed.
+Figure~\ref{fig:csr_csc} presents the two approaches, with the time visiting all the edges, and the benefits of their hybridization.
 
 \begin{table}[t!]
 \centering
@@ -348,17 +348,17 @@ Figure~\ref{fig:csr_csc} presents the two approches, whith the time visiting all
 
 \subsection{GPU optimization}
 
-In algorithm~\ref{alg:bfs_bluegene}, two parts are not developed. namely \textit{ExploreFrontier()} and \textit{WritePred()}. Indeed these phases are optimized using the GPU. 
+In algorithm~\ref{alg:bfs_bluegene}, two parts are not developed. namely \textit{ExploreFrontier()} and \textit{WritePred()}. Indeed, these phases are optimized using the GPU. 
 Based on the Merill et al. implementation, the algorithm is optimized to use the shared memory and the texture memory of the GPU. 
-For our version we decided to keep the bitmap implementation for the communications and the queues. So we have to fit the CSR and CSC implementations. 
+For our version we decided to keep the bitmap implementation for the communications and the queues. So, we have to fit the CSR and CSC implementations. 
 On algorithm~\ref{alg:csr} we present the CSR algorithm;
 CSC is based on the same approach but starting from the $visited$ queue. 
 
-In the CSR version each warp is attached to a 32 bit word of the $in\_queue$ bitmap. 
+In the CSR version each warp is attached to a 32-bits word of the $in\_queue$ bitmap. 
 Then if this word is empty the whole warp is released; 
 if it contains some vertices, the threads collaborate to load the entire neighbor list. 
 Then they access the coalescent area in the main memory to load the neighbor list. 
-A texture memory is used to accelerate the verification concerning this vertex. Indeed this memory is optimized to be randomly accessed. 
+A texture memory is used to accelerate the verification concerning this vertex. Indeed, this memory is optimized to be randomly accessed. 
 Then the vertex is added in the bitmap $out\_queue$.
 
 \begin{algorithm}
@@ -433,7 +433,7 @@ Indeed all the cores can be used for the Exploration phase.
 
 \subsection{Strong and weak scaling}
 
-On figure~\ref{fig:bfs_strong_scaling} and figure~\ref{fig:bfs_weak_scaling} we see the result of strong and weak scaling. 
+Figure~\ref{fig:bfs_strong_scaling} and figure~\ref{fig:bfs_weak_scaling} present the results of strong and weak scaling, respectively. 
 In the strong scaling we used a $SCALE$ of $21$ for different numbers of GPUs. 
 The application scales up to 16 GPUs but then the data exchanges are too penalizing;
 performance for 64 GPUs is lower. 
@@ -476,46 +476,46 @@ On figure~\ref{fig:full_vs_gpu0}, the tests are based on the GPU-only implementa
 First we worked with the two GPUs of the nodes. 
 We were able to perform up to to $SCALE$ 29 with 12 GTEPS. 
 The GPUDirect implementation does not allow the communication with a QPI link. 
-So in order to compare the results, we used only the GPU 0 of each node of the supercomputer. 
-Based on our algorithm implementation we need to use a number $2^{2n}$ of GPUs. 
-Then the tests on figure~\ref{fig:full_vs_gpu0} are for 256 GPUs (with GPU 0 and GPU 1) and with 64 GPUs (using just GPU 0 only). 
-Thus we were able to reach a better value of GTEPS. 
-As the major limitation is the communications stage, using only GPU 0 allowed us to obtain about 13.70 GTEPS on the ROMEO supercomputer. 
+So, in order to compare the results, we only used the GPU \#0 of each node of the supercomputer. 
+Based on our algorithm implementation we need to use a number of $2^{2n}$ GPUs. 
+Then the tests on figure~\ref{fig:full_vs_gpu0} are for 256 GPUs (with GPU \#0 and GPU \#1) and with 64 GPUs (using GPU \#0 only). 
+Thus we were able to reach a better GTEPS rate. 
+The major limitation is the communications part, using only GPU \#0 allowed us to obtain about 13.70 GTEPS on the ROMEO supercomputer compared to 12.05 GTEPS with GPU \#0 and GPU \#1 and the QPI link communications reducing the GPUDirect interest.
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=.5\columnwidth]{\locpath/figures/graph500/full_vs_gpu0}
-\caption[]{Full node GPUs \textit{vs} GPU 0. The GPU 0 implementation not use the QPI link of the two CPU socket.}
+\caption[]{Full node GPUs \textit{vs} GPU \#0. The GPU \#0 implementation not use the QPI link of the two CPU socket.}
 \label{fig:full_vs_gpu0}
 \end{figure}
 
 \section{Conclusions}
 
-The Graph500 is already a benchmark and focus on memory and communication wall in an irregular behavior.
+The Graph500 is already a benchmark that focuses on memory and communication wall in an irregular behavior.
 We presented an optimized implementation of the Graph500 benchmark for the ROMEO  multi-GPU cluster for the purpose of our metric to emphasis behavior of hybrid architectures.
-It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal by Merrill et al. 
+It is based on the BlueGene/Q algorithm and GPU optimization for BFS traversal introduced by Merrill et al. 
 This work highlights different key points.
-First, we have chosen a hybrid memory representation of graphs using both CSR and CSC. 
-Although this representation requires more memory, it significantly reduces  the computation workload and allows us to achieve outstanding performance.
-Second, the inter-node and intra-node communication is a critical bottleneck. 
-Each compute node has two GPUs, however only one shares the same PCIe bridge with the Infiniband HCA that allows to take advantage of the GPUDirect technology.
-Third, due to the low compute power needed for BFS traversal, we get better performance by fully loading GPUs.
+First, we have chosen a hybrid memory representation of the graphs using both CSR and CSC. 
+Although this double representation requires more memory, it significantly reduces the computation workload and allows us to achieve outstanding performance.
+Secondly, the inter-node and intra-node communication is a critical bottleneck. 
+Each computation node has two GPUs, however only one shares the PCIe bridge with the Infiniband HCA that allows to take advantage of the GPUDirect technology.
+Thirdly, due to the low computation power required for BFS traversal, we get better performance by fully loading the GPUs.
 Otherwise communication time cannot be overlapped with computation time. 
-Thus to achieve the best performance we had to use only half of each node.
+Thus, to achieve the best performance we had to use only one GPU on each node.
 Finally, using all these optimizations, we achieved satisfactory results. 
-Indeed, by using GPUDirect on 64 GPUs,  we are able to achieve 13,70 GTEPS. 
+Indeed, by using GPUDirect on 64 GPUs, we are able to achieve 13.70 GTEPS. 
 In this configuration CPUs are only used to synchronize GPUs kernels. 
-All the communications are directly GPU to GPU using a CUDA-aware MPI library and GPUDirect.
+All the communications are directly GPU to GPU using a CUDA-aware MPI library with GPUDirect.
 
-These results have been published in the Graph500 list of November 2016 list. 
+These results have been published in the Graph500 list published in November 2016. 
 The ROMEO supercomputer was ranked 105th.\\ 
 
 Another library appears in the same time that our study. 
 The Gunrock library\cite{wang2015gunrock} provides a very efficient framework for graph traversal on NVIDIA GPUs. 
-Unfortunately this work is not implemented in a distributed way. 
-A next part of this work would be to use our distributions strategies on top of Gunrock.\\
+Unfortunately, this work is not implemented in a distributed way. 
+A next part of this work would be to use our distribution strategies on top of Gunrock.\\
 
-In addition to the previous benchmarks proposed in our thesis, the Graph500 complete the communication and memory irregular behavior. 
+In addition to the previous benchmarks proposed in our thesis, the Graph500  benchmark completes the communication and memory irregular behavior. 
 It shows the benefit of using many-core architectures in this context allowing twice better results using accelerators than CPUs.
 It shows the advantage of using GPU even up to the scale. 
- 
+
