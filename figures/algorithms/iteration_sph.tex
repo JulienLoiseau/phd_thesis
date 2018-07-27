@@ -1,0 +1,35 @@
+\documentclass[preview,border=5pt]{standalone}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{python}
+\usepackage{algpseudocode,algorithm}
+\usepackage{tikz}
+\usepackage{makeidx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+\begin{algorithmic}[1]
+\While{$iteration \neq max\_iteration$}
+\State Generate keys + sort + exchange particles 
+\State 1. Exchange branches 
+\State 2. Compute Ghosts in buffer
+\State 3. Exchange Ghosts 
+\State {\color{red}{$\rho$, $P$, $c_s$, ...}}
+\State 3. Exchange Ghosts 
+\State {\color{red}{$f_{hydro}$, $f_{visc}$, $\frac{du}{dt}$,...}}
+\State {\color{red}{Integration, move particles}}
+\State {\color{red}{Output}}
+\EndWhile
+\end{algorithmic}
+\end{document}
