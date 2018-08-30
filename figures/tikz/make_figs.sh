@@ -31,6 +31,7 @@ find . -name "*.tex" | while read f; do
   \\usetikzlibrary{matrix}
   \\usetikzlibrary{positioning}
   \\usetikzlibrary{decorations.pathreplacing}
+  \\usetikzlibrary{shapes.geometric}
   \\usetikzlibrary{patterns}" > $TEMP
   echo "\\begin{document}" >> $TEMP
   cat $f >> $TEMP
