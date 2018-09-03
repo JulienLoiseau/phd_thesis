@@ -458,7 +458,7 @@ E_n = \frac{1}{n\times Seq + Par}
 
 \begin{figure}
 \includegraphics[width=\textwidth]{\locpath/figures/chap1/speedup_laws.png}
-\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) law}
+\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) law. $n$ represents the number of processes growing from 1 to 500 and each line represents a percent of serial part in the code.}
 \label{fig:1_HPC:speedup_laws}
 \end{figure}
 
@@ -468,7 +468,7 @@ A representation of Amdahl's speedup is presented on Fig.~\ref{fig:1_HPC:speedup
 \subsubsection{Gustafson's law}
 \index{Gustafson's law}
 The Amdahl's law focuses on time with problem of the same size. 
-John L. Gustafson's idea is that using more computational units and the same amount of time, the problem size can grow accordingly. 
+John L. Gustafson's idea \cite{gustafson1988reevaluating} is that using more computational units and the same amount of time, the problem size can grow accordingly. 
 He considered a constant computation time with evolving problem, growing the size accordingly to the number of processes. 
 Indeed the parallel part grows as the problem size does, reducing the percentage of the serial part for the overall resolution.
 

@@ -14,6 +14,18 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
+\usepackage[backend=biber,
+style=alphabetic,
+citestyle=authoryear,maxnames=99]{biblatex}
+
+\addbibresource{biblio/my_all.bib}
+\addbibresource{biblio/biblio_langford.bib}
+\addbibresource{biblio/biblio_graph.bib}
+\addbibresource{biblio/biblio_sph.bib}
+\addbibresource{biblio/biblio_hpc.bib}
+\addbibresource{biblio/biblio_part2_chap1.bib}
+
+
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
@@ -21,6 +33,9 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{patterns}
 \usepackage{emptypage}
+
+\DeclareUnicodeCharacter{302}{\^{}}
+
 
 \setcounter{tocdepth}{2}
 
@@ -203,6 +218,12 @@
 % Table of tables
 \addcontentsline{toc}{chapter}{List of Tables}
 \listoftables
+%\clearpage
+
+% Publications
+\addcontentsline{toc}{chapter}{Related Publications}
+\printbibliography[title={Related Publications},keyword={mypaper}]
+
 
 % Introduction
 \addcontentsline{toc}{chapter}{Introduction}
@@ -225,9 +246,7 @@
 
 % Bibliography,
 \addcontentsline{toc}{chapter}{Bibliography}
-\bibliographystyle{alpha}
-%\nocite{*}
-\bibliography{biblio/my_papers.bib,biblio/biblio_langford,biblio/biblio_graph,biblio/biblio_sph,biblio/biblio_hpc,biblio/biblio_part2_chap1}
+\printbibliography
 
 \pagenumbering{gobble}
 % index just in case it is useful 
@@ -237,7 +256,6 @@
 
 \markboth{}{}
 \cleartoleftpage
-\addcontentsline{toc}{chapter}{Abstract}
 \input{chapters/abstract}
 
 

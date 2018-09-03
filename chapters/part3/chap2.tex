@@ -146,10 +146,10 @@ On one hand, to spread the particles over all the MPI processes and provide a de
 On the other hand, it is also used locally to store efficiently the particles and provide a $O(N log(N))$ neighbor search complexity, instead of $O(N^2)$, using a tree representation describe in part \ref{sec:trees}. 
 
 Several space filling curves can fit our purposes:
-\subsubsection*{The Morton curves} \cite{morton1966computer}, or Z-Order, is the most spread method. 
+\subsubsection*{The Morton curves} The Morton's curve~\cite{morton1966computer}, also called Z-Order, is the most spread method. 
 This method can produce irregular shape domain decomposition like shown in green on figure~\ref{fig:space_filling}. 
 The main advantage is to be fast to compute, the key is made by interlacing directly the X, Y and Z bits without rotations. 
-\subsubsection*{The Hilbert curves} \cite{sagan2012space} are constructed by interlacing bits but also adding rotation based on the Gray code.
+\subsubsection*{The Hilbert curves} The Hilbert's curves~\cite{sagan2012space} are constructed by interlacing bits but also adding rotation based on the Gray code.
 This work is based on the Peano curves and also called Hilber-Peano. 
 The construction is more complicated than Morton but allows a better distribution. 
 

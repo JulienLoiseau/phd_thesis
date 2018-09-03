@@ -11,12 +11,12 @@ display:
 .PHONY: clean
 
 clean:
-	rm -rf *~ *.idx *.lot *.toc *.lof *.aux *.blg *.out *.bbl *.log *.pdf
+	rm -rf *~ *.idx *.lot *.toc *.lof *.aux *.blg *.out *.bbl *.log *.pdf *.ilg *.ind *.run.xml *.bcf 
 
 $(FILE).pdf: $(FILE).tex chapters/abstract.tex chapters/introduction.tex chapters/conclusion.tex biblio/*.bib chapters/part1/*.tex chapters/part2/*.tex chapters/part3/*.tex 
 	pdflatex $(FILE)
 	makeindex $(FILE).idx
-	bibtex $(FILE)
+	biber --output-safechars $(FILE)
 	pdflatex $(FILE)
 	pdflatex $(FILE)
 

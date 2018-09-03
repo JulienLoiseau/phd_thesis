@@ -45,6 +45,7 @@ While observing his son manipulating blocks of different colors, he noticed that
   
 This problem has been generalized to any number $n$ of colors and any number $s$ of blocks having the same color. 
 $L(s,n)$ consists in searching for the number of solutions to the Langford problem, up to a symmetry. % ... excepted symmetric ones. 
+In a more formal description we have to arrange pairs of $n$ digits from $1,...,n$ such that there is one digit between the 1s, two digits between the 2s, etc. As an example, the unique solution for $n=3$, $L(2,3)$ is $231213$ and the unique solution for $n=4$, $L(2,4)$ is $23421314$.
 In November 1967, Martin Gardner presented $L(2,4)$ (two cubes and four colors) as being part of a collection of small mathematical games and he stated that $L(2,n)$ has solutions for all $n$ such that:
 \begin{equation}
 \text{ solutions for: }
@@ -54,6 +55,7 @@ n = 4k-1
 \end{cases}
  k \in \mathbb{N}^+
 \end{equation}
+
 The central resolution method consists in placing the pairs of cubes, one after the other, on the free places and backtracking if no place is available (see figure~\ref{backtrack} for detailed algorithm).
 
 \begin{table}[t!]
