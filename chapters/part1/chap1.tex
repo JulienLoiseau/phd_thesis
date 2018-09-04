@@ -29,7 +29,7 @@ A physicist from the EDVAC team a described the logical model of this computer a
 \begin{figure}
 \centering 
 \input{\locpath/figures/tikz/part1/von_neumann.tex}
-\caption{Von Neumann model}
+\caption{The Von Neumann's architecture schematic. It represents the concepts behind all modern computer's architecture. }
 \label{fig:1_HPC:von_neumann_model}
 \end{figure}
 
@@ -104,13 +104,13 @@ Multiple Instruction (MI) & MISD & MIMD \textit{SPMD/MPMD} \\
 %\draw[decoration={brace,raise=5pt},line width=1pt,decorate]
 %  (5,0.4) -- node[right=6pt,yshift=5pt] {\textit{SIMT}} (5,-1.5);
 \end{tikzpicture}
-\caption{Flynn taxonomy for execution models completed with SPMD and SIMT models}
+\caption{Flynn's taxonomy presentation the execution models from Instructions and Data. The table is completed with SPMD and SIMT models.}
 \label{tab:1_HPC:taxonomy_flynn}
 \end{table}
 
 \begin{figure}
 \input{\locpath/figures/tikz/part1/flynn_taxo.tex}
-\caption{Flynn taxonomy schematic representation of execution models}
+\caption{Flynn taxonomy schematic representation of the execution models presented in table~\ref{tab:1_HPC:taxonomy_flynn}.}
 \label{fig:1_HPC:flynn_taxonomy}
 \end{figure}
 
@@ -189,7 +189,7 @@ This classification has been pointed out in the Johnson's taxonomy\cite{johnson1
    child { node {NoRMA}}
    };
 \end{tikzpicture}
-\caption{MIMD memory models}
+\caption{The MIMD memory models with the distinction of shared and distributed memory.}
 \label{fig:1_HPC:mimd_memory_model}
 \end{figure}
 
@@ -340,7 +340,7 @@ The next milestone, the exascale, is expected to be reach near 2020.
 	\hline
 	\end{tabular}
 	\]
-	\caption{Floating-point Operation per Second and years of reach in HPC.}
+	\caption{Floating-point Operation per Second scales name and values over years in HPC.}
 	\label{tab:1_HPC:flops_year}
 \end{table}
 
@@ -404,7 +404,7 @@ The speedup can be defined using the latency by the formula:
    \draw[black!20] (0,1.5) -- (3,1.5);
    \draw[black!20] (0,2) -- (4,2);
 \end{tikzpicture}
-\caption{Observed speedup: linear, typical and hyper-linear speedups}
+\caption{The different types of obeerved speedup: linear, typical and hyper-linear speedups}
 \label{fig:1_HPC:speedup_obs}
 \end{figure}
 
@@ -458,7 +458,7 @@ E_n = \frac{1}{n\times Seq + Par}
 
 \begin{figure}
 \includegraphics[width=\textwidth]{\locpath/figures/chap1/speedup_laws.png}
-\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) law. $n$ represents the number of processes growing from 1 to 500 and each line represents a percent of serial part in the code.}
+\caption{Theoretical speedup for Amdahl's (left) and Gustafson's (right) laws. $n$ represents the number of processes growing from 1 to 500 and each line represents a percent of serial part in the code.}
 \label{fig:1_HPC:speedup_laws}
 \end{figure}
 

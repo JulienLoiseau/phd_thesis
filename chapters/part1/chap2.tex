@@ -131,7 +131,7 @@ It was the fastest supercomputer in 1978 and due to its shape and price it was h
 \node[thick] at ([yshift=15pt,]op10.north) {Vector machine};
 \end{tikzpicture}
 \end{center}
-\caption{Vectorized processeur example on 4 integer addition: 128 bits wide bus}
+\caption{Example of a vectorized processor with a 128 bits wide bus, addition of 4 integers.}
 \label{fig:2_HARD:vector}
 \end{figure}
 
@@ -197,7 +197,7 @@ It can now be find in the NVIDIA GPUs, named 3D-stacked in P100 and V100.
 \draw[<->,thick] (1,1.6) node[above]{Words} -- (12,1.6) node[above] {Blocks};
 \node[above] at (6,1.6) {Transfer}; 
 \end{tikzpicture}
-\caption{Cache memory technology on three levels L1, L2 and L3}
+\caption{The cache memory technology on three levels: L1, L2 and L3}
 \label{fig:2_HARD:caches}
 \end{figure}
 Cache is a memory mechanism that is useful to consider when targeting performance. 
@@ -232,7 +232,7 @@ Compared to the core inside multi-CPU, multi-core CPU shared one of the material
 \begin{figure}
 \centering 
 \input{\locpath/figures/tikz/part1/multi_core.tex}
-\caption{Multi-core CPU with 4 cores based on Von Neumann Model}
+\caption{The multi-core CPU with 4 cores based on the Von Neumann Model}
 \label{fig:2_HARD:von_neumann_model_multi-core}
 \end{figure}
 
@@ -266,7 +266,7 @@ In 2007, Intel adopted a production model called the "Tick-Tock", presented on f
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[width=.8\textwidth]{\locpath/figures/chap1/intel_tick_tock.png}
-\caption{Intel Tick-Tock model, from Intel website \protect\footnotemark}
+\caption{Intel Tick-Tock model, from Intel's website \protect\footnotemark}
 \label{fig:1_HPC:intel_tick_tock}
 \end{center}
 \end{figure}

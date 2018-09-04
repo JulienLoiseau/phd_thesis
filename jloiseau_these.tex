@@ -14,9 +14,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
-\usepackage[backend=biber,
-style=alphabetic,
-citestyle=authoryear,maxnames=99]{biblatex}
+\usepackage[backend=biber,style=alphabetic,maxnames=99]{biblatex}
 
 \addbibresource{biblio/my_all.bib}
 \addbibresource{biblio/biblio_langford.bib}
@@ -166,10 +164,10 @@ citestyle=authoryear,maxnames=99]{biblatex}
 		Pr. Michaël Krajecki & Université de Reims Champagne-Ardenne & Directeur \\
 		Dr. François Alin & Université de Reims Champagne-Ardenne & Co-directeur  \\
 		Dr. Christophe Jaillet & Université de Reims Champagne-Ardenne & Co-directeur \\
+		Pr. Françoise Baude & Université de Nice Sophia Antipolis& Examinateur\\
 		Pr. William Jalby & Université de Versailles Saint-Quentin & Rapporteur\\
 		Dr. Christoph Junghans & Ingénieur au Los Alamos National Laboratory, USA & Rapporteur \\
-		Pr. Laurent Philippe & Université de Franche-Comté & Rapporteur \\ 
-		Pr. Françoise Baude & Université de Nice Sophia Antipolis& Examinateur\\
+		Pr. Laurent Philippe & Université de Franche-Comté & Rapporteur \\ 		
 		Guillaume Colin de Verdiere & Ingénieur au CEA & Invit\'e
 \end{tabular}
 \vspace{0.5cm}
@@ -198,6 +196,9 @@ citestyle=authoryear,maxnames=99]{biblatex}
 \frontmatter
 
 % resumes
+\newgeometry{left=1cm,right=1cm,top=2.0cm,bottom=2.5cm}
+\input{chapters/abstract}
+\newgeometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.5cm}
 
 
 % Acknoledgments, thanks everybody !
