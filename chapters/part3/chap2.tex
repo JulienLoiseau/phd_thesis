@@ -94,7 +94,7 @@ The demand is high for astrophysics simulation regarding the recent discoveries 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/flecsi_flecsph}
-\caption{FleCSI and FleCSPH frameworks }
+\caption[FleCSI and FleCSPH framework]{FleCSI and FleCSPH frameworks. FleCSPH focuses on the FleCSI tree topology data structure. It intents to provide a parallel and distributed version of it. FleCSPH also provides a working framework for data scientists to simulate Physics and Astrophysics events using SPH and FMM.}
 \label{fig:flecsi_flecsph_framework}
 \end{figure}
 Figure~\ref{fig:flecsi_flecsph_framework} presents how FleCSI and FleCSPH are integrated. 
@@ -106,7 +106,7 @@ Those MPI functions can then be integrated to FleCSI to generate group of partic
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/flecsph_file_system}
-\caption{FleCSPH structures and files}
+\caption[FleCSPH repository structuration]{FleCSPH repository structuration: FleCSPH uses Cinch API for cmake. FleCSPH provides the MPI code for tree data structure in \textit{mpisph/} directory. The user application are located in the \textit{app/} directory.}
 \label{fig:files_flecsph}
 \end{figure}
 
@@ -122,7 +122,7 @@ Those elements are present and installed using scripts in \textit{third-part-lib
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/morton_hilbert_generation}
-\caption{Morton order key generation}
+\caption[Morton order keys generation]{The Morton order keys are generated using the position of the particle. This position is converted in integer and the bits are mixed to generate the key.}
 \end{figure}
 
 For the first implementation we present the code without considering accelerators. 
@@ -156,7 +156,7 @@ The construction is more complicated than Morton but allows a better distributio
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/morton_hilbert}
-\caption{Morton and Hilbert space filling curves}
+\caption[Morton and Hilbert space filling curves.]{The figure presents Morton's and Hilbert's space filling curves. It shows the "jump" in the space for the Morton order that can lead to less good locality compared to the Hilbert space filling curves.}
 \label{fig:space_filling}
 \end{figure}
 
@@ -196,7 +196,7 @@ The construction of those trees is directly based on the domain decomposition us
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/flecsph/quadtree}
-\caption{Quadtree, space and data representation}
+\caption[Particles and quadtree representation. ]{This figure represents the particles and the space division used to create the quadtree on the right. The node are the intermediate division and the leaves the particle's data.}
 \label{fig:quadtree}
 \end{figure}
 
@@ -223,7 +223,7 @@ Beside of being easy to implement and to use in parallel this algorithm requires
 \begin{figure}[ht!]
 \centering
 \input{\locpath/figures/tikz/part3/tree_traversal}
-\caption{Neighbors search using a tree traversal per particle vs a group of particle and computing an interaction list}
+\caption[Neighbor search in the tree data structure]{Neighbors search using a tree traversal per particle vs a group of particle and computing an interaction list. The second version allows us to perform less tree traversal for the total number of particles and reduce the computation time.}
 \label{fig:arbre}
 \end{figure}
 
@@ -334,7 +334,7 @@ The main distributed algorithm is presented on algorithm \ref{alg:main_distribut
 \begin{figure*}
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/flecsph/algo.png}
-\caption{Binary tree for a 2 processes system. Exclusive, Shared and Ghosts particles resp. red, blue, green.}
+\caption[Binary tree and distribution over two processes]{Binary tree distributed over 2 processes. the Exclusive, Shared and Ghosts particles  are respresented in red, blue, green, respectively.}
 \label{fig:big_tree}
 \end{figure*}
 
@@ -358,7 +358,7 @@ Depending on the user problem, the choice can be to distribute the particles on 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/particles_repartition}
-\caption{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
+\caption[Particle coloring based on FleCSI]{Particles "coloring" with local particles: exclusive, shared and distant particles useful during run: ghost particles}
 \label{fig:coloring_particles}
 \end{figure}
 
@@ -394,8 +394,8 @@ Three main functions are used:
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=.45\columnwidth]{\locpath/figures/flecsph/fmm_mac.png}
-\caption{Evolution of time regarding the multipole acceptance criterion for FMM method.}
+\includegraphics[width=.6\columnwidth]{\locpath/figures/flecsph/fmm_mac.png}
+\caption[Search for optimal MAC criterion]{Evolution of time regarding the multipole acceptance criterion for FMM method.}
 \label{fig:mac_angle}
 \end{figure}
 
@@ -441,7 +441,7 @@ We decided to offload the physics computation on accelerators.
 
 \begin{figure}[t!]
 \input{\locpath/figures/tikz/part3/tree_topology_gpu}
-\caption{Task resolution using GPUs}
+\caption[Tasks distribution using GPUs]{The tasks' distribution strategy to use the GPU follows the same idea as our Langford implementation. The CPU precompute tasks and during other tasks being compute the GPU process the low levels of the tree.}
 \label{fig:multi_gpu_implementation}
 \end{figure}
 Figure~\ref{fig:multi_gpu_implementation} presents the distribution of tasks with the accelerator. 
@@ -467,7 +467,7 @@ The results and tests were done on several physical and astrophysical simulation
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/sph/fluid_flow}
-\caption{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds}
+\caption[3D Fluid flow simulation using FleCSPH]{Fluid flow simulation, the dam break. For $t=0$, $t=0.4$, $t=0.8$ and $t=1$ seconds. The boundary conditions are based on dummy particles. }
 \label{fig:fluid_simulation}
 \end{figure}
 
@@ -484,7 +484,7 @@ The system relaxed then evolve following the merging equations presented in the 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/flecsph/bns_merger}
-\caption{Binary Neutron Stars coalescence with 40.000 particles.}
+\caption[Binary Neutron Star coalescence using FleCSPH]{Binary Neutron Stars coalescence with 40.000 particles.}
 \label{fig:bns_simulation}
 \end{figure}
 
@@ -499,8 +499,8 @@ The first step was to find the best repartition between the host and device.
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=.45\textwidth]{\locpath/figures/flecsph/task_gpu.png}
-\caption{CPU-GPU tasks work balancing}
+\includegraphics[width=.6\textwidth]{\locpath/figures/flecsph/task_gpu.png}
+\caption[CPU-GPU tasks blancing]{The task balacing between the CPU and GPU is determined by the depth in which the CPU will generate the tasks. If it is too high the GPU will have too much work to handle and to low the tasks will be too small to use the potential of the GPU.}
 \label{fig:cpu_gpu_rep}
 \end{figure}%
 
@@ -511,19 +511,21 @@ We choose the value to be configured by the user and defaulted at 7.
 
 \begin{figure}[t!]
 \centering
-\begin{minipage}[b]{.44\textwidth}
+%\begin{minipage}[b]{.44\textwidth}
 \centering
-	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/time_CPU_vs_GPU.png}
+	\includegraphics[width=.6\textwidth]{\locpath/figures/flecsph/time_CPU_vs_GPU.png}
 	\caption{CPU vs GPU time per iteration}
 	\label{fig:cpu_gpu_time}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{.44\textwidth}
+%\end{minipage}
+\end{figure}
+
+\begin{figure}[t!]
+%\begin{minipage}[b]{.44\textwidth}
 \centering
-	\includegraphics[width=\textwidth]{\locpath/figures/flecsph/scalability_CPU_vs_GPU.png}
+	\includegraphics[width=.6\textwidth]{\locpath/figures/flecsph/scalability_CPU_vs_GPU.png}
 	\caption{CPU vs GPU scalability per iteration}
 	\label{fig:cpu_gpu_scala}
-\end{minipage}
+%\end{minipage}
 \end{figure}
 
 On figure~\ref{fig:cpu_gpu_time} and figure~\ref{fig:cpu_gpu_scala} we find the strong scaling and scalability tests for CPU and GPU versions using the empiric best depth of repartition.

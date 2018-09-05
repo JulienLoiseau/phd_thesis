@@ -40,7 +40,7 @@ While observing his son manipulating blocks of different colors, he noticed that
 \draw (p1_1.south) -- ([yshift=-10pt]p1_1.south) -- ([yshift=-10pt]p1_2.south) -- (p1_2.south) ;
 \end{tikzpicture}  
 \end{center}
-\caption{L(2,3) arrangement} \label{fig:lang}  
+\caption[L(2,3) arrangement]{L(2,3) arrangement. Each pair of cube is represented by both the color and the digit in this figure.} \label{fig:lang}  
 \end{figure}
   
 This problem has been generalized to any number $n$ of colors and any number $s$ of blocks having the same color. 
@@ -84,7 +84,7 @@ The central resolution method consists in placing the pairs of cubes, one after 
   \hline
 \end{tabular}
 \]
-\caption{Solutions and time for Langford problem using different methods}
+\caption[Solution and times for Langford problem]{Solutions and time for Langford problem using different methods. The Miller's algorithm cannot sustain more than L(2,19) since the Godfrey's algorithm is the method we used to break new instances with L(2,27) and L(2,28).}
 \label{tab:result_base}
 \end{table}
 
@@ -203,7 +203,7 @@ As explained, CSP formalized problems can be transformed into tree evaluations. 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part2/tree_lgf_l2_3.tex}
-\caption{Search tree for $L(2,3)$}
+\caption[Search tree for L(2,3)]{Search tree for $L(2,3)$. Each level represents a pair and each branch of the level a possible position of this pair. The backtracking is used when a position is already used and the branch cannot lead to a valid solution.}
 \label{fig:arbre}
 \end{figure}
 In order to solve $L(2,n)$, we consider a tree of height $n$: see example of $L(2,3)$ in figure~\ref{fig:arbre}.
@@ -238,8 +238,9 @@ while not done do
  else
    higher pair        <- add
 \end{verbatim}
-\caption{Backtrack algorithm}\label{backtrack}
+\caption[Backrack algorithm for Miller's method]{Backtrack algorithm. In this case we perform the backtrack search avoiding invalid branches.}\label{backtrack}
 \end{minipage}
+\hspace{.05\linewidth}
 \begin{minipage}[b]{0.45\linewidth}
 \footnotesize
 \begin{verbatim}
@@ -253,7 +254,7 @@ for pair 1 positions
         if final test ok then  
           count solution
 \end{verbatim}
-\caption{Regularized algorithm}\label{regularized}
+\caption[Regularized algorithm for Miller's method]{Regularized algorithm. In this case we perfom all the computation without testing if the branch will be valid or not.}\label{regularized}
 \end{minipage}
 \end{figure}
 
@@ -263,13 +264,13 @@ for pair 1 positions
 \begin{minipage}[b]{0.40\linewidth}
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/langford/positions_lgf}
-\caption{ Bitwise representation of pairs positions in $L(2,3)$} \label{fig:comb1}
+\caption[Bitwise representation of pairs positions]{ Bitwise representation of pairs positions in $L(2,3)$. 1s are positions of the pair. They are spaced by 1, 2 and 3 empty spaces, respectively.} \label{fig:comb1}
 \end{minipage}
-\hfill
+\hspace{.05\linewidth}
 \begin{minipage}[b]{0.55\linewidth}
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/langford/pos_lgf_v2}
-\caption{Bitwise representation of the Langford $L(2,3)$ placement tree}\label{fig:pos_lgf}
+\caption[Bitwise representation of the search tree]{Bitwise representation of the Langford $L(2,3)$ placement tree. The bitwise representation of the pairs are added incrementaly while going down in the tree.}\label{fig:pos_lgf}
 \end{minipage}
 \end{figure}
 
@@ -294,15 +295,16 @@ The second one, allowing to check if a pair can be added to a given partial assi
 The last one is used for testing if a global assignment is an available solution: it is involved in the regularized version of the Miller algorithm.
 
 \begin{figure}[t!]
-\begin{minipage}[b]{0.5\linewidth}
+\begin{minipage}[b]{0.45\linewidth}
 \centering
 \includegraphics[scale=.5]{\locpath/figures/langford/test_gen}
-\caption{Testing and adding position} \label{fig:test_et}
+\caption[Test of valid position and addition of pairs]{Testing and adding position of pairs. The adding test is based on \textit{or} bitwise operation and the test on a \textit{and} bitwise operation.} \label{fig:test_et}
 \end{minipage}
-\begin{minipage}[b]{0.5\linewidth}
+\hspace{.05\linewidth}
+\begin{minipage}[b]{0.50\linewidth}
 \centering 
 \includegraphics[scale=.75]{\locpath/figures/langford/graphe_repartition}   
-\caption{Server client distribution} \label{fig:parallel} 
+\caption[Client-Server distribution of tasks]{The server and client distribution of tasks. The server generates tasks up a depth. From these tasks the clients generate sub-tasks for their CPUs and GPUs.} \label{fig:parallel} 
 \end{minipage}
 \end{figure}
 
@@ -384,8 +386,8 @@ The optimal number of registers ($57$ registers) is obtained by setting 9 pairs 
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=.4]{\locpath/figures/langford/graphe_15_9}
-\caption{Time depending on grid and block size on $n=15$}
+\includegraphics[width=\linewidth]{\locpath/figures/langford/graphe_15_9}
+\caption[Grid and block size for GPU tuning]{This graph represents time depending on grid and block size for $n=15$. This size depends on the number of registers used during the computation. That factor limits the number of blocks running simultaneously on an SMX.}
 \label{f7}
 \end{figure}
 
@@ -400,18 +402,20 @@ This allows us to use the total available memory for the L1 cache for each threa
 A client has to prepare work for GPU. There are four main steps: generate the tasks, load them into the device memory, process the task on the GPU and then get the results.
 
 \begin{figure}[t!]
-\begin{minipage}[b]{0.48\linewidth}
+%\begin{minipage}[b]{0.48\linewidth}
 \centering
-\includegraphics[width=\columnwidth]{\locpath/figures/langford/streams.jpeg}
-\caption{Computing time depending on streams number}
+\includegraphics[width=.7\linewidth]{\locpath/figures/langford/streams.jpeg}
+\caption[Number of streams tuning]{Computing time depending on the number of streams. After more than three streams there is an overhead coming from control of the streams.}
 \label{fig:streams}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.48\linewidth}
+%\end{minipage}
+%\hfill
+%\begin{minipage}[b]{0.48\linewidth}
+\end{figure}[t!]
+\begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{\locpath/figures/langford/graphe_cores.pdf}
-\caption{CPU cores optimal distribution for GPU feeding}\label{cores_rep}
-\end{minipage}
+\includegraphics[width=.7\linewidth]{\locpath/figures/langford/graphe_cores.pdf}
+\caption[Number of CPU cores used to feed the GPU]{Research of the optimal number of CPU cores used to feed the GPU. We find an optimal using both CPU and GPU with 4 cores feeding the GPU.}\label{cores_rep}
+%\end{minipage}
 \end{figure}
 
 CPU-GPU memory transfers cause huge time penalties (about 400 cycles latency for transfers between CPU memory and GPU \emph{device memory}). 
@@ -462,7 +466,7 @@ In addition, the GPUs compute $200,000\times$ more nodes of the search tree than
 					19  & 22594.2 & 13960.8 & \\ 
 					\hline
 \end{tabular}
-\caption{Regularized method (seconds)}
+\caption[Results for regularized method]{Results for the regularized method (seconds)}
 \label{tab:result_base_regu}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\linewidth}
@@ -479,10 +483,10 @@ In addition, the GPUs compute $200,000\times$ more nodes of the search tree than
 					21  & -- & 118512.4& \\ 
 					\hline
 \end{tabular}	
-\caption{Backtrack  (seconds)}
+\caption[Results for the bacntrack method]{Results for the backtrack method  (seconds)}
 \label{tab:result_backtrack}
 \end{subfigure}
-\caption{Comparison between multi-core processors and GPUs for regularized and backtrack method}
+\caption[Comparison on regularized and backtrack method for Miller's algorithm]{Comparison between multi-core processors and GPUs for regularized and backtrack  on Miller's method.}
 \end{table}
 
 The computation time between two different consecutive instances being multiplied by $10$ approximately, this could allow us to obtain $L(2,20)$ in a reasonable time.
@@ -589,7 +593,7 @@ In the summation, for example, as maintaining carries has an important time pena
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=.5]{\locpath/figures/langford/lgf_grands_entiers}
-\caption{Big integer representation, 64 bits words}
+\caption[Big integer representation]{Big integer representation, 64 bits words. A part of the words is used to store the data and the carries on the other half are propagate only when requested. The words are contiguous in memory for faster access.}
 \label{fig:big-integer}
 \end{figure}
 Figure~\ref{fig:big-integer} represents this big integer handling.
@@ -653,25 +657,27 @@ In order to take advantage of the GPU computation power, we have to determine th
 Figure~\ref{fig:graphe_threads} presents the tests performed on the $n=20$ problem: the best distribution is around $128$ threads per block. 
 \begin{figure}[t!]
 \centering 
-\includegraphics[scale=.55]{\locpath/figures/langford/graphe_threads}
-\caption{$L(2,20)$, number of threads per block}
+\includegraphics[width=.7\linewidth]{\locpath/figures/langford/graphe_threads}
+\caption[Number of threads per blocks for L(2,20)]{$L(2,20)$, search of the optimal number of threads per block.}
 \label{fig:graphe_threads}
 \end{figure}
 
 \begin{figure}[t!]
-\begin{subfigure}[b]{0.5\linewidth}
+%\begin{subfigure}[b]{0.5\linewidth}
 \centering 
-\includegraphics[scale=.5]{\locpath/figures/langford/graphe_prof}
-\caption{Influence on server generation depth}
+\includegraphics[width=.7\linewidth]{\locpath/figures/langford/graphe_prof}
+\caption[Server generation depth]{Search of the optimal server depth to generate the tasks for clients.}
 \label{fig:graphe_prof}
-\end{subfigure}
-\begin{subfigure}[b]{0.5\linewidth}
+\end{figure}
+%\end{subfigure}
+\begin{figure}
+%\begin{subfigure}[b]{0.5\linewidth}
 \centering
-\includegraphics[scale=.5]{\locpath/figures/langford/graphe_cpu_gpu}
-\caption{Influence of tasks repartition}
+\includegraphics[width=.7\linewidth]{\locpath/figures/langford/graphe_cpu_gpu}
+\caption[Tasks repartition between CPU and GPU]{Search of the optimal distribution of tasks between CPU and GPU.}
 \label{fig:graphe_rep}
-\end{subfigure}
-\caption{Influences of repartitions of depths and CPU-GPU tasks}
+%\end{subfigure}
+%\caption[Server depth and client distribution of the tasks]{Search of optimzal distribution over the tree for the server depth and the client distribution among the CPU and GPU.}
 \end{figure}
 
 \subsubsection{CPU vs GPU distribution: }
@@ -709,8 +715,8 @@ At the end the outputs of the different tasks are merged and the global result c
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=.6]{\locpath/figures/langford/best_effort}
-\caption{Best-effort distribution}
+\includegraphics[scale=.7]{\locpath/figures/langford/best_effort}
+\caption[Best-effort workflow]{This schematic represents the Best-effort workflow we used on the ROMEO supercomputer using SLURM. We fixed a manimum number of elements in the working queue to avoid overflooding the submission queue. While the tasks is not completed, it is requeued.}
 \label{fig:graphe_besteffort}
 \end{figure}
 
@@ -787,16 +793,16 @@ Figure~\ref{fig:graphe_15minutes_28} presents the tasks resolution flow during t
 \begin{subfigure}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=.6]{\locpath/figures/langford/graphe_15minutes_petit}
-\caption{$L(2,27)$ tasks grouped by 15" slots}
+\caption[Best-Effort tasks per 15" slots for L(2,27)]{Best-Effort tasks per 15" slots for L(2,27).}
 \label{fig:graphe_15minutes_27}
 \end{subfigure}
 \begin{subfigure}[b]{0.5\linewidth}
 \centering
 \includegraphics[scale=.6]{\locpath/figures/langford/graphe_15minutes_petit_28}
-\caption{$L(2,28)$ tasks grouped by 1 hour slots}
+\caption[Best-Effort tasks per 1 hour slots for L(2,28)]{Best-Effort tasks per 1 hour slots for L(2,28).}
 \label{fig:graphe_15minutes_28}
 \end{subfigure}
-\caption{Task repartition for $L(2,27)$ and $L(2,28)$ }
+\caption[Best-Effort distribution of tasks for L(2,27) and L(2,28)]{Best-Effort distribution of tasks for L(2,27) and L(2,28).}
 \end{figure}
 
 For $L(2,27)$, these results confirm that the computation took great advantage of the low occupancy of the cluster during the experiment. 

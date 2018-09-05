@@ -40,7 +40,7 @@ The development of new reliable, parallel and distributed tools for this method 
 \centering
 \input{\locpath/figures/tikz/part3/general_sph}
 %\includegraphics[scale=.4]{\locpath/figures/flecsph/sph.pdf}
-\caption{SPH kernel $W$ and smoothing length $h$ representation}
+\caption[Smoothed Particle Hydrodynamics method schematic]{SPH kernel $W$ and smoothing length $h$ representation. In the case of cubic spline kernel the radius of neighbors' search is $r\leq2*h$, as the kernel have a support of 2.}
 \label{fig:sph_base}
 \end{figure}
 %
@@ -166,7 +166,7 @@ This is, in our example, for the cubic spline kernel:
     \draw[very thick,scale=2,domain=2:3,smooth,variable=\r,red] plot ({\r},{0});
     \draw[very thick,scale=2,domain=2:3,smooth,variable=\r,red] plot ({-\r},{0});
 \end{tikzpicture}
-\caption{Cubic spline kernel example with $\sigma = 1$ and $h = 1$}
+\caption[Example of kernel, the Cubic Spline]{The cubic spline kernel with $\sigma = 1$ and $h = 1$. The particles falling into a distance of $[0,2]$ will interact and the onces in the range $[2,\inf]$ will be ignored for small range forces. }
 \label{fig:cubic_spline_function}
 \end{figure}
 
@@ -221,7 +221,7 @@ This method is perfectly adapted to a tree representation of the domain and part
 
 \begin{figure}[ht!]
 \input{\locpath/figures/tikz/part3/gravitation}
-\caption{Fast Multipole Method schematics. Particles to Multipole (P2M), Multipole to Multipole (M2M), Multipole to Particles (M2P), Multipole to Local (M2L), Local to Local (L2L) and Particles to Particles (P2P). Schematic inspired from \cite{yokota2011treecode}}
+\caption[Highlights of the Fast Multipole Method]{Fast Multipole Method schematics. Particles to Multipole (P2M), Multipole to Multipole (M2M), Multipole to Particles (M2P), Multipole to Local (M2L), Local to Local (L2L) and Particles to Particles (P2P). Schematic inspired from \cite{yokota2011treecode}}
 \label{fig:gravitation_fmm}
 \end{figure}
 
@@ -339,8 +339,8 @@ where $\Gamma$ is the adiabatic index of the gas, we set $\Gamma = 5/3$.
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{\locpath/figures/sph/{sodtube_width}.png}
-\caption{Sod shock tube with FleCSPH}
+\includegraphics[width=.7\textwidth]{\locpath/figures/sph/{sodtube}.png}
+\caption[Sod Shock tube results using FleCSPH]{The Sod shock tube problem solved using FleCSPH. This problem is based on a two phases liquid that enter in contact at $t=0$. The results fit the analytics solutions.}
 \label{fig:sodtube}
 \end{figure}
 
@@ -356,7 +356,7 @@ Here, we test 2D blast wave. In this simulation, we use ideal gas EOS with $\Gam
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{\locpath/figures/sph/{sedov_flecsph_results}}
-\caption{Sedov Blast Wave with FleCSPH at respectively $t=0.01$, $t=0.03$, $t=0.06$ and $t=0.1$}
+\caption[Sedov Blast Wave solved using FleCSPH]{Sedov Blast Wave with FleCSPH at respectively $t=0.01$, $t=0.03$, $t=0.06$ and $t=0.1$. In this case we generate a uniform set of particles and add an instability with high energy in the middle.}
 \label{fig:sedov}
 \end{figure}
 
@@ -377,7 +377,7 @@ with $\gamma = 7$ and $B = c_0\rho_0/\gamma$ being $\rho_0 = 1000 \, kg.m^{-3}$ 
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part3/boundaries}
-\caption{Different boundaries condition methods}
+\caption[Boundary conditions methods]{This figure represents different boundary conditions methods: the repulsive force, the mirror particles and the dummy particles. The dummy particle one is easier to use for complex shape.}
 \label{fig:SPH:boundaries}
 \end{figure}
 

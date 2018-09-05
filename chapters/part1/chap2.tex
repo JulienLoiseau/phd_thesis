@@ -131,7 +131,7 @@ It was the fastest supercomputer in 1978 and due to its shape and price it was h
 \node[thick] at ([yshift=15pt,]op10.north) {Vector machine};
 \end{tikzpicture}
 \end{center}
-\caption{Example of a vectorized processor with a 128 bits wide bus, addition of 4 integers.}
+\caption[Vector processor computation, example of addition]{Example of a vectorized processor with a 128 bits wide bus. It shows the addition of 4 integers using serial and vectorized approach.}
 \label{fig:2_HARD:vector}
 \end{figure}
 
@@ -197,7 +197,7 @@ It can now be find in the NVIDIA GPUs, named 3D-stacked in P100 and V100.
 \draw[<->,thick] (1,1.6) node[above]{Words} -- (12,1.6) node[above] {Blocks};
 \node[above] at (6,1.6) {Transfer}; 
 \end{tikzpicture}
-\caption{The cache memory technology on three levels: L1, L2 and L3}
+\caption[Architecture of cache memory]{The cache memory technology on three levels: L1, L2 and L3. The closest memory to the CPU is the fastest but also the most expensive.}
 \label{fig:2_HARD:caches}
 \end{figure}
 Cache is a memory mechanism that is useful to consider when targeting performance. 
@@ -232,7 +232,7 @@ Compared to the core inside multi-CPU, multi-core CPU shared one of the material
 \begin{figure}
 \centering 
 \input{\locpath/figures/tikz/part1/multi_core.tex}
-\caption{The multi-core CPU with 4 cores based on the Von Neumann Model}
+\caption[Multi-core processor representation]{The multi-core CPU with 4 cores based on the Von Neumann Model. The L1/L2 caches are private but the L3 and the global memory have to be shared by the computation cores.}
 \label{fig:2_HARD:von_neumann_model_multi-core}
 \end{figure}
 
@@ -266,7 +266,7 @@ In 2007, Intel adopted a production model called the "Tick-Tock", presented on f
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[width=.8\textwidth]{\locpath/figures/chap1/intel_tick_tock.png}
-\caption{Intel Tick-Tock model, from Intel's website \protect\footnotemark}
+\caption[Intel Tick-Tock model]{Intel Tick-Tock model, image from Intel's website \protect\footnotemark. A \textit{Tick} represents a better engraving method while a \textit{Tock} delivers a new micro-architecture.}
 \label{fig:1_HPC:intel_tick_tock}
 \end{center}
 \end{figure}
@@ -372,7 +372,7 @@ The cores are grouped and must share the same instruction at the same clock time
 \node[yshift=7pt,anchor=west] at (0,3.5) {GPU};
 \end{tikzpicture}
 \end{center}
-\caption{Multi-core versus Many-core architecture, case of GPUs}
+\caption[Multi-core versus Many-core architectures]{Multi-core versus Many-core architecture, case of GPUs. The figure presents in both case the cores, the control units, the cache memory and the DRAM.}
 \label{fig:2_HARD:gpu}
 \end{figure}
 
@@ -401,7 +401,7 @@ We describe here the Kepler brand GPU and more specifically the K20Xm GPU on whi
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{\locpath/figures/chap1/kepler_architecture.jpeg}
-\caption{NVIDIA Tesla Kepler architecture. Single-precision in green and double-precision in yellow}
+\caption[NVIDIA Tesla Kepler architecture]{NVIDIA Tesla Kepler architecture. Single-precision cores in green and double-precision cores in yellow. Image from NVIDIA white-paper about the Kepler architecture\cite{nvidia2012nvidias}}
 \label{fig:2_HARD:kepler_arch}
 \end{figure}
 This NVIDIA Tesla Kepler GPU is based on the GK110 graphics processor describes in the white-paper\cite{nvidia2012nvidias} on 28nm process.
@@ -486,7 +486,7 @@ Several topologies exist from point to point to multi-dimensional torus.
 \begin{figure}[t!]
 \centering
 \input{\locpath/figures/tikz/part1/topologies.tex}
-\caption{Torus, Fat-Tree, HyperX, DragonFly}
+\caption[Schematics of famous interconnection topologies]{Representation of different type of interconnects. The most famous with Torus, Fat-Tree, HyperX and DragonFly, respectively from left to right.}
 \label{fig:1_HPC:topology}
 \end{figure}
 %
@@ -523,7 +523,7 @@ Fourth DR & 14 & 2011 & & &  \\
 \hline
 \end{tabular}
 \]
-\caption{InfiniBand technologies name, year and bandwidth}
+\caption{InfiniBand technologies name, year and bandwidth.}
 \label{fig:1_HPC:infiniband}
 \end{center}
 \end{table}
@@ -548,7 +548,7 @@ The Sunway CPUs were designed and built in China by the Shanghai High Performanc
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=1]{\locpath/figures/Chap1/report_sunway_CPE}
-\caption{Sunway Taihulight node architecture from \textit{Report on the Sunway TaihuLight System}, Jack Dongarra, June 24, 2016.}
+\caption[Sunway Tahulight node architecture]{Sunway Taihulight node architecture from \textit{Report on the Sunway TaihuLight System}, Jack Dongarra, June 24, 2016.}
 \label{fig:chap1_report_sunway_CPE}
 \end{figure}
 
@@ -579,7 +579,7 @@ The TOFU interconnect network makes the K-Computer unique~\cite{ajima2009tofu} a
 \begin{center}
 \includegraphics[width=\textwidth]{\locpath/figures/chap1/6d_torus}
 \end{center}
-\caption{TOFU Interconnect schematic from \textit{The K-Computer: System Overview}, Atsuya Uno, SC11}
+\caption[The TOFU Interconnect]{TOFU Interconnect schematic from \textit{The K-Computer: System Overview}, Atsuya Uno, SC11}
 \label{fig:1_HPC:tofu}
 \end{figure}
 \index{Interconnection}
@@ -597,6 +597,14 @@ It is based on BlueGene from IBM.
 The BlueGene project made up to three main architectures with BlueGene/L, BlueGene/P and BlueGene/Q.
 It is very interesting to note the BlueGene architecture because 15 machine utilizing this architecture were in the top 200 in the last GRAPH500 list in November 2017.
 The algorithm used on these supercomputers will be our basis in the Part II regarding our implementation of the GRAPH500 benchmark.
+
+\subsubsection{IBM Roadrunner}
+\index{Roadrunner}
+The Roadrunner supercomputer, that was installed in the Los Alamos National Laboratory, is interesting in many aspects. 
+It was the first machine to sustain one petaflop and \#1 system in the TOP500 list of 2008. 
+It was one of the first hybrid approach featuring 6,480 AMD Opteron dual-core processors accelerated by 12,960 IBM PowerXCell and connected by Infiniband. 
+Every blade is built with two Opterons with 16GB RAM and four PowerXCell CPUs. 
+The supercomputer faced downside regarding its power consumption with a consumption of 444 MFlops per Watt compared to the 2,143 GFlops per Watt of consumption of GPU's accelerated Titan supercomputer.
 
 \section{ROMEO Supercomputer}
 \index{ROMEO Supercomputer}

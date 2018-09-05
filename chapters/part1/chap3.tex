@@ -155,7 +155,7 @@ As the reading is not critical for data concurrency the standard model will be C
 
 \end{tikzpicture}
 }
-\caption{PRAM model example on minimum and reduction computation}
+\caption[PRAM model example]{PRAM model example on minimum and reduction computation. These reductions for $n$ values are performed in $log(n)$ steps and $n-1$ operations. }
 \label{fig:pram_reduction}
 \end{figure}
 
@@ -182,7 +182,7 @@ This is an intermediate model between PRAM and DRAM having a set of shared memor
 \begin{center}
 \input{\locpath/figures/tikz/part1/fj_bsp.tex}
 \end{center}
-\caption{Bulk Synchronous Parallel model and Fork-Join model}
+\caption[BSP and Fork-Join model]{The Bulk Synchronous Parallel model and Fork-Join model, respectively top and bottom figure. The BSP is composed of computation steps, synchronizations and  exchanges in global communication steps. The Fork-Join model is based on a master thread that fork into sub-threads to delegate work and join them when the tasks are completed.} 
 \label{fig:3_SOFT:bsp_fj}
 \end{figure}
 
@@ -279,7 +279,7 @@ for(int i = 0 ; i < X ; ++i){
 }
 ...
 \end{lstlisting}
-\caption{OpenMP reduction code for minimum}
+\caption[OpenMP Reduction code]{OpenMP reduction code to compute minimum. Each thread search for the smallest value in a sub-set of the overall array. The reduction from the local minimum is then handle by the API.}
 \label{code:openmp_reduction}
 \end{figure}
 
@@ -331,8 +331,7 @@ The advantage is its presence on all the cluster and the control over the data t
 \begin{figure}
 \begin{center}
 \includegraphics[width=.8\textwidth]{\locpath/figures/chap1/GPUDirectRDMA.png}
-\caption{GPUDirect RDMA from NVIDIA Developer Blog, \textit{An Introduction to CUDA-Aware MPI
-}}
+\caption[GPUDirect RDMA from NVIDIA]{GPUDirect RDMA from NVIDIA Developer Blog: \textit{An Introduction to CUDA-Aware MPI}. On the right, without GPUDirect RDMA, the data have to be copied multiple times from GPU to CPU and then reach the network. On the left, by using GPUDirect RDMA, the data can directly be send on the network without extra copies.}
 \label{fig:1_HPC:gpudirect_rdma}
 \end{center}
 \end{figure}
@@ -384,7 +383,7 @@ __inline__ __device__ void warpReduceMin(int& val, int& idx)
     }
 }
 \end{lstlisting}
-\caption{CUDA kernel for reduction of minimum}
+\caption[CUDA kernel for reduction]{CUDA kernel for reduction of minimum, the same example as with OpenMP code. The reduction is performed exactly as presented in the PRAM model, the domain is divided by 2 successively to reach the minimum on the thread 0. This operation is realised at WARP size in this example. }
 \label{code:cuda_reduction}
 \end{figure}
 
@@ -406,7 +405,7 @@ As the ISA is simpler than CPU ones and able the user to work directly in assemb
 \setlength\fboxsep{0pt}
 \setlength\fboxrule{0.25pt}
 \includegraphics[scale=0.6]{\locpath/figures/chap1/smx}
-\caption{NVIDIA GPU and CUDA architecture overview}
+\caption[NVIDIA GPU architecture and CUDA paradigms]{NVIDIA GPU and CUDA architecture overview. The right figure presents a logical view of the architecture of the GPU with the SMs, the processor, memory position. The left figure provides the CUDA paradigms to divide the threads in blocks and the blocks in a grid. The grid is at GPU level, the block is at SM level and the threads are at core level.}
  \label{fig:chap1_gpu}
 %\vspace{-0.8cm} 
 \end{figure*}
@@ -473,7 +472,7 @@ for (int i=0; i<n; i++) {
 }
 ...
 \end{lstlisting}
-\caption{OpenACC code for reduction of minimum}
+\caption[OpenACC code for reduction]{OpenACC code for reduction of minimum. This example is very similar to the OpenMP code since OpenACC is following the same paradigm. The reduction will be handle directly on the GPU. }
 \label{code:openacc_reduction}
 \end{figure}
 
@@ -518,7 +517,7 @@ Indeed, this approach works in most of the case but for specific ones CUDA might
       child {node {OpenACC}}
     };
 \end{tikzpicture}
-\caption{Runtimes, libraries, frameworks or APIs}
+\caption[Runtimes, libraries, framework and APIs]{Position of Runtimes, libraries, frameworks or APIs regarding their usage in HPC. We find shared memory, distributed memory and accelerator specific tools.}
 \label{fig:1_HPC:software}
 \end{figure}
 
@@ -610,8 +609,19 @@ This benchmark is presented and features:
 \item[-] Reference implementation is written in C++ with MPI and OpenMP support.\\
 \end{itemize}
 
+\subsection{SPEC}
+\index{SPEC Benchmark}
+The \textit{Standard Performance Evaluation Corporation} is a non-profit corporation that provides benchmarks for a wide range of architectures. 
+The benchmark proposes a specific set of tests for HPC.
+The SPEC ACCEL, SPEC MPI and SPEC OMP are focused on OpenCL, OpenACC, MPI and OpenMP API, respectively. 
+In every case multiple sub-benchmarks are proposed to target a large set of limitation like computational or data-intensive problems. 
+The benchmark is done to be representative of "real life" problems. 
+
+A recent study~\cite{8430508} shows through the utilization of this benchmark the art of supercomputers with the current limitations. 
+It also shows which can be the solution for future machine and to reach the Exascale.\\
+
 The benchmarks presented in this section are the most famous of HPC world. 
-Indeed, they are not the perfect representative of the nowadays application. 
+Indeed, they are not the perfect representative of the nowadays application or does not fit our need for optimized GPU using CUDA. 
 The upcoming of big data and artificial intelligence in addition to classical "real life" applications impose HPC to evolute and find new ways to target new architectures. 
 The TOP500 target the computational problem but does not handle a lot of irregularity. 
 Indeed, solving dense linear equation is straight forward and also use the memory in a regular way.

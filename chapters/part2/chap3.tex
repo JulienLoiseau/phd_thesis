@@ -57,7 +57,7 @@ The sequential and basic algorithm is well known and is presented on Algorithm~\
 \begin{figure}
 \centering
 \input{\locpath/figures/tikz/part2/bfs_example.tex}
-\caption{Example of Breadth First Search in an undirected graph}
+\caption[The Breadth First Search and generation of predecessors]{Example of a Breadth First Search on an undirected graph. The queue stores the current frontier. At the end we can create the covering tree using the stored information about all the predecessors.}
 \label{fig:part2_chap3:BFS}
 \end{figure}
 
@@ -151,8 +151,8 @@ The Graph500 generator uses Stochastic Kronecker graphs, avoiding large scale ma
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[scale=.9]{\locpath/figures/graph500/rmat_generation}
-	\caption{Kronecker generation scheme based on edge probability}
+	\includegraphics[width=.5\textwidth]{\locpath/figures/graph500/rmat_generation}
+	\caption[Kronecker scheme to generate the graph]{The Kronecker generation scheme based on edge probability. Starting from probabilities of presence of an edge $a$, $b$, $c$ and $d$ the recursively generates the graph.}
 	\label{fig:kron_gen_scheme}
 \end{figure}
 
@@ -192,7 +192,7 @@ In a second time we used common graph representations, Compressed Sparse Row (CS
 \begin{center}
 \input{\locpath/figures/tikz/part2/csr_example.tex}
 \end{center}
-\caption{Compressed Sparse Row example}
+\caption[Compressed Sparse Row data representation]{Compressed Sparse Row matrix representation. This data structure is perfect to handle sparse matrices like we work on in this case.}
 \label{fig:csr_representation}
 \end{figure}
 
@@ -333,14 +333,14 @@ Figure~\ref{fig:csr_csc} presents the two approaches, with the time visiting all
 \begin{subfigure}[t]{.48\textwidth}
 	\centering
 	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/csr_csc_hybrid_iteration}
-	\caption{CSR and CSC approach comparison. On a 6 iterations BFS, the time with the two method is compared. The hybridization just takes the best time of each method}
+	\caption[Comparison of CSR and CSC approaches]{CSR and CSC approach comparison. On a 6 iterations BFS, the time with the two method is compared. The hybridization just takes the best time of each method}
 	\label{fig:csr_csc}
 \end{subfigure}
 \hfill
 \begin{subfigure}[t]{.48\textwidth}
 	\centering
 	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/comparatif_GPU}
-	\caption[]{Single CPU and accelerators comparison. CPU Graph500 represent the best implementation proposed by the Graph500 website. }
+	\caption[CPU versus GPU comparison on one node]{Single CPU and accelerators comparison. CPU Graph500 represent the best implementation proposed by the Graph500 website.}
 	\label{fig:single_cpu_accelerators}
 \end{subfigure}
 \end{figure}
@@ -467,7 +467,7 @@ Another problem is that the two GPUs have to share the same HCA for their commun
 \caption[]{CPU \textit{vs} GPU strong scaling. The $SCALE$ is showed on the GPU line. The number of CPUs is the same as the number of GPUs.}
 \label{fig:bfs_strong_scaling}
 \end{subfigure}
-\caption{Weak and Strong scaling between CPU and GPU}
+\caption[Weak and Strong scaling comparison up to $64$ GPUs]{Weak and Strong scaling between CPU and GPU with up to $64$ GPUs. The weak scaling allowed us to reach up to the SCALE $27$ using half the GPUs of ROMEO.}
 \end{figure}
 
 
@@ -484,7 +484,7 @@ The major limitation is the communications part, using only GPU \#0 allowed us t
 \begin{figure}[!t]
 \centering
 \includegraphics[width=.5\columnwidth]{\locpath/figures/graph500/full_vs_gpu0}
-\caption[]{Full node GPUs \textit{vs} GPU \#0. The GPU \#0 implementation not use the QPI link of the two CPU socket.}
+\caption[Comparison using GPU \#0 and GPU \#0 + \#1]{Full node GPUs \textit{vs} GPU \#0. The GPU \#0 implementation not use the QPI link of the two CPU socket.}
 \label{fig:full_vs_gpu0}
 \end{figure}
 
