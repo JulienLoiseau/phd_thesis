@@ -43,9 +43,9 @@
 
 \begin{scope}[shift={(21,0.95)}]
 % Add the base of the card 
-\node[fill=nodecolor,trapezium, draw, minimum width=3cm,
-trapezium left angle=46, trapezium right angle=-46,draw,
-minimum width=6cm,minimum height=9cm,inner sep=0] at (7,2) {A};
+%\node[fill=nodecolor,trapezium, draw, minimum width=3cm,
+%trapezium left angle=46, trapezium right angle=-46,draw,
+%minimum width=6cm,minimum height=9cm,inner sep=0] at (7,2) {A};
 
 % Card base copied n times 
 \foreach \i in {7,...,0}{
@@ -71,17 +71,17 @@ minimum width=6cm,minimum height=9cm,inner sep=0] at (7,2) {A};
 % The Rack 
 \begin{scope}[shift={(55,6)}]
 % Top of the RACK 
-\node (top) at (4.3,27.8) [thick,fill=nodecolor,trapezium, draw, minimum width=3cm,
-trapezium left angle=46, trapezium right angle=-46,draw,
-minimum width=6cm,minimum height=9cm,inner sep=0]  {};
+%\node (top) at (4.3,27.8) [thick,fill=nodecolor,trapezium, draw, minimum width=3cm,
+%trapezium left angle=46, trapezium right angle=-46,draw,
+%minimum width=6cm,minimum height=9cm,inner sep=0]  {};
 % Add the node cards 
 \foreach \i in {0,1,...,15}{
 	\node (rect) at (0,\i*1.5) [thick,fill=nodecolor,inner sep=0pt,draw,minimum width=18.5cm, minimum height=1.5cm] {};
 }
 % Side door of the Rack 
-\node[thick,fill=nodecolor,trapezium, draw, minimum width=3cm,
-trapezium left angle=46, trapezium right angle=-46,draw,
-minimum width=6cm,minimum height=9cm,inner sep=0] at (4.3,27.8) {A};
+%\node[thick,fill=nodecolor,trapezium, draw, minimum width=3cm,
+%trapezium left angle=46, trapezium right angle=-46,draw,
+%minimum width=6cm,minimum height=9cm,inner sep=0] at (4.3,27.8) {A};
 
 \end{scope}
 
