@@ -45,7 +45,7 @@ While observing his son manipulating blocks of different colors, he noticed that
   
 This problem has been generalized to any number $n$ of colors and any number $s$ of blocks having the same color. 
 $L(s,n)$ consists in searching for the number of solutions to the Langford problem, up to a symmetry. % ... excepted symmetric ones. 
-In a more formal description we have to arrange pairs of $n$ digits from $1,...,n$ such that there is one digit between the 1s, two digits between the 2s, etc. As an example, the unique solution for $n=3$, $L(2,3)$ is $231213$ and the unique solution for $n=4$, $L(2,4)$ is $23421314$.
+In a more formal description we have to arrange pairs of $n$ digits from $1,...,n$ such that there is one digit between the 1s, two digits between the 2s, etc. As an example, the unique solution for $n=3$, $L(2,3)$ is the pattern $231213$ and the unique solution for $n=4$, $L(2,4)$ is $23421314$.
 In November 1967, Martin Gardner presented $L(2,4)$ (two cubes and four colors) as being part of a collection of small mathematical games and he stated that $L(2,n)$ has solutions for all $n$ such that:
 \begin{equation}
 \text{ solutions for: }
@@ -91,18 +91,18 @@ The central resolution method consists in placing the pairs of cubes, one after 
 The Langford problem has been approached in different ways: discrete mathematics results, specific algorithms, specific encoding, constraint satisfaction problem (CSP), inclusion-exclusion~\ldots~\cite{Mil00,apes-26,Smi00,larsen2009counting}.
 In 2004, the last solved instance, $L(2,24)$, was computed by our team \cite{CReSTIC-711} using a specific algorithm. 
 Table \ref{tab:result_base} presents the latest results and number of solutions. 
-$L(2,27)$ and $L(2,28)$ have just been computed but no details were given. 
+$L(2,27)$ and $L(2,28)$ have just been computed but no details were given on the time of computation~\cite{DBLP:journals/corr/AssarpourBL15}. 
 
 The most efficient known algorithms are: the Miller backtrack method, the Godfrey algebraic method and the Larsen inclusion-exclusion method.
-The Miller one is based on backtracking and can be modeled as a CSP\cite{HKS00,habbas2005decomposition}; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go further. 
+The Miller one is based on backtracking and can be modeled as a CSP\cite{HKS00,habbas2005decomposition}; it allowed us to move the limit of explicits solutions building up to $L(2,21)$ but combinatorial explosion did not allow us to go any further. 
 Then, we use the Godfrey method to achieve $L(2,24)$ more quickly and then recompute $L(2,27)$ and $L(2,28)$, presently known as the last instances.
 The Larsen method is based on inclusion-exclusion \cite{larsen2009counting}; although this method is effective, practically the Godfrey one is better. 
-The latest known work on the Langford Problem is a GPU implementation proposed in \cite{ASS_LGF} in 2015. Unfortunately this study does not provide any performance considerations but just gives the number of solution of $L(2,27)$ and $L(2,28)$.
+The latest known work on the Langford Problem is a GPU implementation proposed in \cite{ASS_LGF} in 2015. Unfortunately this study does not provide any performance considerations but just gives the number of solutions of $L(2,27)$ and $L(2,28)$.
 
 \section{Miller algorithm}
 
 The Miller's method is based on a tree traversal to be able to check all the cubes positions.
-This method finds its limits because even using branch cutting algorithm to traverse the tree, the number of branches to explore stay very high. 
+This method finds its limits because even using branch cutting algorithm to traverse the tree, the number of branches to explore stays very high. 
 We implemented a multi-core and many-core version of it for the purpose of our benchmark. 
 Indeed, this huge tree traversal requires irregular computation and memory accesses: two elements fitting the wall we want to confront to our architectures. 
 
@@ -387,7 +387,7 @@ The optimal number of registers ($57$ registers) is obtained by setting 9 pairs 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{\locpath/figures/langford/graphe_15_9}
-\caption[Grid and block size for GPU tuning]{This graph represents time depending on grid and block size for $n=15$. This size depends on the number of registers used during the computation. That factor limits the number of blocks running simultaneously on an SMX.}
+\caption[Grid and block size for GPU tuning]{This graph represents time as a function of grid and block size for $n=15$. This size depends on the number of registers used during the computation. That factor limits the number of blocks running simultaneously on an SMX.}
 \label{f7}
 \end{figure}
 
@@ -519,7 +519,7 @@ Even if the application does not seemed to fit with the direct tree traversal, t
 
 \section{Godfrey's algebraic method}
 The previous part presents the Miller algorithm for the Langford problem, this method cannot achieve bigger instances than the $L(2,21)$.
-It allows us the target specific walls with memory and computation irregularities.\\
+It allows us to target the specific walls with memory and computation irregularities.\\
 An algebraic representation of the Langford problem has been proposed by M. Godfrey in 2002.
 This example is perfect in our study to target computationally heavy context with irregular memory behavior.
 %In order to break the limitation of $L(2,24)$ we already used this very efficient problem specific method.
@@ -715,7 +715,7 @@ At the end the outputs of the different tasks are merged and the global result c
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=.7]{\locpath/figures/langford/best_effort}
+\includegraphics[scale=.4]{\locpath/figures/langford/best_effort_2}
 \caption[Best-effort workflow]{This schematic represents the Best-effort workflow we used on the ROMEO supercomputer using SLURM. We fixed a manimum number of elements in the working queue to avoid overflooding the submission queue. While the tasks is not completed, it is requeued.}
 \label{fig:graphe_besteffort}
 \end{figure}
@@ -833,7 +833,6 @@ In addition we beat the Langford limits using multi-GPUs.
 In order to use the ROMEO supercomputer, which is shared by a large scientific community, we have implemented a work distribution that does not affect the machine load, using a best-effort queue. 
 The computation is fault-tolerant and totally asynchronous.
 The utilization of this technology also shows the reliability of nowadays accelerators technologies. 
-Indeed, they can be used at demand for specific tasks without specific warm-up. 
 
 \paragraph{Langford problem results: }
 This work also enabled us to compute $L(2,27)$ and $L(2,28)$ in respectively less than 2 days and 23 days on the University of Reims ROMEO supercomputer. 

@@ -14,19 +14,19 @@ On one hand, the exascale supercomputer will need to fit the energy envelope imp
 This is made by vendors and is a specific area of optimization.
 On the other hand, we focus on the performances we obtained using a specific architecture/accelerator to fit the targeted application with the best resources usage. 
 The need of regular memory accesses, synchronization and the host-device memory separation put some constraint on their usage.
-As many-core architectures presented nowadays come with several downsides we need to confront them to classical processors on a specific set of problems, a metric, a dedicated benchmark suite.
+As many-core architectures presented nowadays come with several downsides, we need to confront them to classical processors on a specific set of problems, a metric, a dedicated benchmark suite.
 
 In benchmarks like the TOP500 the target is to solve a problem with regular computation and communication behavior. 
 We think that this behavior does not fit realistic and production applications.
 In many domains like meteorology, oceanography, astrophysics, big data, \dots the underlying issue are the irregular input and behavior.
 The irregularity in an application can have several definitions. 
-This is defined by \cite{javairregular} as a problem which: can not be characterize a priori, is input data dependent and evolves with the computation itself. 
+This is defined by \cite{javairregular} as a problem which: can not be characterize \textit{a priori}, is input data dependent and evolves with the computation itself. 
 In \cite{suss2006implementing} the author specifies that the work involves subcomputations which cannot be determined before and implies work distribution during runtime.
 The irregularity can then spread on all the layers of the resolution:
 the communications, the computation and the memory searches. 
 
-In order to target more representative applications of nowadays realistic problems, we identify several bottlenecks and limitations in HPC. 
-Those limitations are called \textit{walls} against which nowadays architectures are confronted to reach exascale. 
+In order to target more representative applications of current realistic problems, we identify several bottlenecks and limitations in HPC. 
+Those limitations are called \textit{walls} against which modern architectures are confronted to reach exascale. 
 
 \paragraph{Memory Wall: }
 This problem was targeted for the first time in \cite{wulf1995hitting}.
@@ -49,7 +49,7 @@ It is then accessed in an irregular way during all the computation.
 \paragraph{Communication wall: } 
 We showed that the supercomputers' architecture is based on a set of racks, composed of nodes composed of computation units. 
 The network topology can never be perfect for all the kinds of problems and even the fastest technologies are limited to the software handling. 
-Limiting the big synchronization steps, like in the BSP model, allows the system to be asynchronous and hide computation by communications. 
+Limiting the big synchronization steps, like in the BSP model, allows the system to be asynchronous and hide communications by computation. 
 Unfortunately this is not applicable to all the applications and a huge care have to be taken to approach perfect scaling.\\
 
 We decided to target this problem in two main ways. 
@@ -58,10 +58,10 @@ The tasks can be solved independently and then merged at the end.
 We show that the accelerators can also take advantage of specific distribution methods like Best-Effort. 
 In the second problem communications are central because the data are too big to be represented on a single machine and cannot be computed independently. 
 The irregularity in communication is very high.
-In this benchmark the amount of data shared is never known before reaching the end of a superstep.
+In this benchmark, the amount of data shared is never known before reaching the end of a superstep.
 
 \paragraph{Power wall: }
-The energy consumption of nowadays and future supercomputers is the main wall in HPC. 
+The energy consumption of present and future supercomputers is the main wall in HPC. 
 Indeed, an exascale supercomputer could be built using several petascale supercomputers but, with todays architectures, will require a full nuclear plant to operate. 
 In this objective low energy consumption and innovative architectures need to be found. 
 The energy considered is required to power the machine itself but also handle the heat generated.\\
@@ -71,7 +71,7 @@ The hybrid architectures seem to deliver better performances for less watts.
 This thesis shows through different benchmarks what the real benefit of accelerators is on realistic problems and that the performances can be even better for less watts of power consumption.
 
 \paragraph{Computational wall: }
-The computational wall is a combination of the wall presented before. 
+The computational wall is a combination of the walls presented before. 
 By increasing the memory wall, the energy consumption and the communications we can increase the overall computation power of the supercomputer. 
 The limitation in computational power also comes from the fact that the Moore's law seems to be over. 
 Vendors have more difficulties to shrink transistors due to physical side effects. 

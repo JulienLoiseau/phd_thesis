@@ -255,7 +255,7 @@ The most world spread architecture in public and high performance computing is t
 Most present-day accelerators require a classical processor to offload tasks and data on it. 
 
 We start this presentation from the most popular processors in HPC world from the Intel company ones. 
-We also present ARM which is a different multi-core architecture based on RISC instructions set.
+We also present Arm which is a different multi-core architecture based on RISC instructions set.
 
 \subsubsection{Intel}
 \index{Intel}
@@ -291,31 +291,31 @@ Adding more computation per node can technically allow the cores to switch conte
 Multiple studies have been published on HT from Intel itself~\cite{marr2002hyperthreading} to independent researchers~\cite{bononi2006exploring,leng2002empirical}.
 This optimization does not fit to all the cases of applications and can be disabled for normal use of the processors in the context of general purpose HPC architectures.
 
-\subsubsection{ARM}
+\subsubsection{Arm}
 \index{Advanced RISC architecture}
-Back in the 1980s, ARM stood for Acorn RISC Machine in reference to the first company to implement this kind of architecture, Acorn Computers. 
-This company later changed the name to Advanced RISC Machine (ARM). 
-ARM is a specific kind of processors based on RISC architecture as its ISA, despite usual processors using CISC.
+Back in the 1980s, Arm stood for Acorn RISC Machine in reference to the first company to implement this kind of architecture, Acorn Computers. 
+This company later changed the name to Advanced RISC Machine (Arm). 
+Arm is a specific kind of processors based on RISC architecture as its ISA, despite usual processors using CISC.
 The downside of CISC machines are they are difficult to create and they require way more transistor and thus more energy to work. 
 The ISA from the RISC is simpler and requires multiple many transistors to operate and thus a smaller silicon area on the die.
 Therefore, the energy required and the heat dissipated is less important. 
-It becomes easier to create massively parallel processors based on ARM. 
+It becomes easier to create massively parallel processors based on Arm. 
 On the other hand, simple ISA imposes more work on the source code compilation to fit the simple architecture. 
 This makes the instructions sources longer, and therefore, more single instructions to execute. 
 
-The ARM company provides several versions of ARM processors named Cortex-A7X (2015), Cortex-A5X (2014) and Cortex-A3X (2015) featured for highest-performances, for balancing performances and efficiency or for less power consumption, respectively. 
+The Arm company provides several versions of Arm processors named Cortex-A7X (2015), Cortex-A5X (2014) and Cortex-A3X (2015) featured for highest-performances, for balancing performances and efficiency or for less power consumption, respectively. 
 
 \index{Mont-Blanc project}
-The new ARMv8 architecture starts to provide the tools to target HPC context~\cite{rico2017arm}.
-The European approach towards energy efficient HPC, Mont-Blanc project\footnote{http://montblanc-project.eu/}, already constructs ARM based supercomputers. 
-The exascale project in Horizon 2020 this project focuses on using ARM-based systems for HPC with many famous contributors, such as Atos/Bull as a project coordinator, ARM, French Alternative Energies and Atomic Energy Commission (CEA), Barcelona Supercomputing Center (BSC), etc.
+The new Armv8 architecture starts to provide the tools to target HPC context~\cite{rico2017arm}.
+The European approach towards energy efficient HPC, Mont-Blanc project\footnote{http://montblanc-project.eu/}, already constructs Arm based supercomputers. 
+The exascale project in Horizon 2020 this project focuses on using Arm-based systems for HPC with many famous contributors, such as Atos/Bull as a project coordinator, Arm, French Alternative Energies and Atomic Energy Commission (CEA), Barcelona Supercomputing Center (BSC), etc.
 The project is separated into several steps to finally reach Exascale near 2020. 
-The last step, Mont-Blanc 3, is about to work on a pre-Exascale prototype powered by Cavium’s ThunderX2 ARM chip based on 64-bits ARMv8.
+The last step, Mont-Blanc 3, is about to work on a pre-Exascale prototype powered by Cavium’s ThunderX2 Arm chip based on 64-bits Armv8.
 
 \subsection{Intel Xeon Phi}
 \index{Xeon Phi}
 Another specific HPC product from Intel is the Xeon Phi. 
-This device can be considered as a Host or Device/Accelerator machine. 
+This device can be considered as a Host or Device/Accelerator machine (for the earliest versions). 
 Intel describes it as "a bootable host processor that delivers massive parallelism and vectorization".
 This architecture embed multiple multi-cores processors interconnected and is called Intel's Many Integrated Core (MIC).
 We placed this architecture here because it provides hundreds of conventional computation core but the program counter is not shared between them. 
@@ -324,7 +324,7 @@ This is the technology on which Intel bases its Exascale machines.
 
 The architectures names are Knights Ferry, Knights Corner and Knight Landing~\cite{sodani2016knights}. 
 The last architecture, Knight Hill, was recently canceled by Intel due to low performances and to focus the Xeon Phi for Exascale.
-The main advantage of this architecture compared to GPGPUs is the x86 compatibility of the embedded cores and the fact this device can boot and use to drive other accelerators. 
+The main advantage of this architecture compared to GPGPUs is the x86 compatibility of the embedded cores and the fact this device can either be bootable or used as an accelerator. 
 They also feature more complex operations and handle double precision natively.
 
 \subsection{Many-core architecture, SIMT execution model}
@@ -360,7 +360,7 @@ We present here the two main companies providing GPGPUs for HPC world: NVIDIA an
 
 \paragraph{NVIDIA GPU architecture}
 \index{NVIDIA}
-The NVIDIA company was founded in April 1993 in Santa Clara, Carolina by three persons, one being the current CEO, Jensen Huang.
+The NVIDIA company was founded in April 1993 in Santa Clara, California by three persons, one being the current CEO, Jensen Huang.
 The company name originated from \textit{invidia} the Latin word for Envy and vision for graphical rendering. 
 
 NVIDIA is known as the pioneer in graphics, cryptocurrency, portable devices, and now Artificial Intelligence (IA) and appears to be even the creator of the name "GPU".
@@ -581,6 +581,7 @@ This can be explain by the choice of the accelerated, other CPUs instead of the 
 
 \section{ROMEO Supercomputer}
 \index{ROMEO Supercomputer}
+\label{sec:ROMEO}
 The ROMEO supercomputer center is the computation center of the Champagne-Ardenne region in France. 
 Hosted since 2002 by the University of Reims Champagne-Ardenne, this so called meso-center (Medium size HPC center) is used for HPC in theoretic research and domain science like applied mathematics, physics, biophysics and chemistry. 
 
@@ -639,7 +640,7 @@ The aim is to provide a performance of 964.6 TFLOPS in LINPACK and to be present
 \section{Conclusion}
 
 In this chapter, we reviewed the most important modern day hardware architectures and technologies. 
-In order to use the driver or API in the most efficient way, we need to keep in mind the way the data and instructions are proceed by the machine. 
+This knowledge on the architectures and hardware is essential to be able to reach the highest-level optimization and thus the best performance for a dedicated machine. 
 
 Efficiency is based on computation power, but also communications, we showed different interconnection topologies and their specificities. 
 We present perfect use cases of the technologies in the current top ranked systems.

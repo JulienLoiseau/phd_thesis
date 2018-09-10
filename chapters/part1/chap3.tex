@@ -7,7 +7,7 @@
 \chapter{Software in HPC}
 
 \section{Introduction}
-After presenting the rules of HPC and the hardware that compose the cluster, we introduce the most famous ways to target those architectures and supercomputers with programming models.
+After presenting the rules of HPC and the hardware that compose the cluster, we introduce the most common ways to target those architectures and supercomputers with programming models.
 Then, fitting those models, we present the possible options in the language, the API, the distribution and the accelerators code. 
 
 This chapter details the most important programming models and the software options for HPC programming and include the choices we made for our applications.
@@ -168,7 +168,7 @@ We will give example of those reductions in different languages and API.
 \index{Distributed Random Access Machine}
 \index{No Remote Memory Access}
 For machine that base their memory model on NoRMA the execution model can be qualify of Distributed Random Access Machine, DRAM.
-It is based on NoRMA memories detailed in part \ref{sec:NORMA}.
+It is based on NoRMA memories detailed in section \ref{sec:NORMA}.
 This model is in opposition to PRAM because the synchronization between processes is made by communications and messages. 
 Those communications can be of several kind and depend of physical architecture, interconnection network and software used.
 
@@ -196,7 +196,7 @@ Being the link of HRAM and PRAM, the Bulk Synchronous Parallelism model is based
   \item[-] a unit allowing global synchronization and barriers.
 \end{itemize}
 This model is the most common on HPC clusters. 
-It can be present event on node themselves: a process can be assign on a core or set of cores and the shared memory is separated between the processes. 
+It can be present even on node themselves: a process can be assign on a core or set of cores and the shared memory is separated between the processes. 
 The synchronization can be hardware but in most cases it is handle by the runtime used.
 A perfect example of runtime, presented later, is MPI. 
 
@@ -229,7 +229,7 @@ The BSP model estimates the cost of one super-step with:
 \end{equation}
 
 With $T$ a measure of time, a wall clock that measure elapsed time. 
-We also note that usually $g$ and $I$ are function of the number of processes involved. 
+We also note that usually $g$ and $l$ are function of the number of processes involved. 
 
 It can then be use to compute the overall cost in BSP model summing all super-steps $s$: 
 \begin{equation}
@@ -241,13 +241,13 @@ The processes with less than $w$ of work will be idle.
 
 \subsection{Fork-Join model}
 \index{Fork-Join model}
-The Fork-Join model or pattern is presented in figure~\ref{fig:3_SOFT:bsp_fj}.
+The Fork-Join model (or pattern) is presented in figure~\ref{fig:3_SOFT:bsp_fj}.
 A main thread pilot the overall execution. 
 When requested by the application, typically following the idea of \textit{divide-and-conquer} approach, the main thread will fork and then join other threads. \index{Divide-and-conquer approach}
 The \textit{Fork} operation, called by a logical thread parent, creates new logical threads children working in concurrency.
 There is no limitations in the model and we find nested fork-join where a child can also call fork to generate sub-child and so on. 
-The \textit{Join} can be called by both parents and child. Children call join when done and the parent join by wait until children completion.
-The Fork operation increase concurrency and join decrease concurrency.
+The \textit{Join} can be called by both parents and child. Children call join when done and the parent join by waiting until children completion.
+The Fork operation increases concurrency and join decreases concurrency.
 
 \section{Software/API}
 In this section we present the main runtime, API and frameworks use in HPC and in this study in particular. 
@@ -279,7 +279,7 @@ for(int i = 0 ; i < X ; ++i){
 }
 ...
 \end{lstlisting}
-\caption[OpenMP Reduction code]{OpenMP reduction code to compute minimum. Each thread search for the smallest value in a sub-set of the overall array. The reduction from the local minimum is then handle by the API.}
+\caption[OpenMP 4.0 Reduction code]{OpenMP 4.0 reduction code to compute minimum. Each thread search for the smallest value in a sub-set of the overall array. The reduction from the local minimum is then handle by the API.}
 \label{code:openmp_reduction}
 \end{figure}
 
@@ -319,7 +319,7 @@ Several implementations exists from Intel MPI\footnote{https://software.intel.co
 Those implementation follow the MPI standards 1.0, 2.0 or the latest, 3.0. 
 
 This runtime provides directs, collectives and asynchronous functions for process(es) to process(es) communication.
-A process can be a whole node or one or several cores on a processor.  
+A process can use a whole node or one or several cores on a processor.  
 
 Some MPI implementations offer a support for accelerators targeting directly their memory through the network without multiple copies on host memory. 
 The data go through one GPU to the other through network and PCIe.
@@ -340,7 +340,8 @@ For NVIDIA this technology is called GPUDirect RDMA and presented on figure~\ref
 
 In term of development MPI can be very efficient if use carefully. 
 Indeed, the collectives communications such as \textit{MPI\_Alltoall}, \textit{MPI\_Allgather}, etc. can be a bottleneck when scaling up to thousands of processes. 
-A specific care have to be taken in those implementation with privilege to asynchronous communications to hide computation than synchronous idle CPU time. 
+In order to hide computation steps and CPU idle time with communication a method is to use asynchrous communications with MPI.
+
 
 \subsubsection{Charm++}
 \index{Charm++}
@@ -391,14 +392,14 @@ __inline__ __device__ void warpReduceMin(int& val, int& idx)
 \label{sec:CUDA}
 \index{CUDA}
 \index{NVIDIA}
-The Compute Device Unified Architecture is the API develop in C/C++ Fortran by NVIDIA to target its GPGPUs. 
+The Compute Device Unified Architecture is the API develop in C/C++ by NVIDIA to target its GPGPUs. 
 The API provide high and low level functions. 
 The driver API allows a fine grain control over the executions.
 
 The CUDA compiler is called NVidia C Compiler, NVCC. 
 It converts the device code into Parallel Thread eXecution, PTX, and rely to the C++ host compiler for host code. 
-PTX is a pseudo assembly language translated by the GPU in binary code that is then execute. 
-As the ISA is simpler than CPU ones and able the user to work directly in assembly for very fine grain optimizations. 
+PTX is a pseudo assembly language translated by the GPU in binary code that is then execute.
+The ISA on this architecture is simple and allows to work directly in assembly for very fine grain optimizations. 
 
 \begin{figure*}[t!]
 \centering
@@ -453,10 +454,10 @@ OpenCL is a multi-platform framework targeting a large part of nowadays architec
 A large group of company already provided conform version of the OpenCL standard: IBM, Intel, NVIDIA, AMD, ARM, etc.
 This framework allows to produce a single code that can run in all the host or device architectures. 
 It is quite similar to NVIDIA CUDA Driver API and based on kernels that are written and can be used in On-line/Off-line compilation meaning Just In Time (JIT) or not. 
-The idea of OpenCL is great by rely on the vendors wrapper.
+The idea of OpenCL is great by relying on the vendors' wrapper.
 Indeed, one may wonder, what is the level of work done by NVIDIA on its own CUDA framework compare to the one done to implement OpenCL standards? 
 What is the advantage for NVIDIA GPU to be able to be replace by another component and compare on the same level? 
-Those questions are still empty but many tests prove that OpenCL can be as comparable as CUDA but rarely better\cite{karimi2010performance,fang2011comprehensive}. 
+Those questions are still unanswered but many tests prove that OpenCL can be as comparable as CUDA but rarely better\cite{karimi2010performance,fang2011comprehensive}. 
 
 In this study most of the code had been developed using CUDA to have the best benefit of the NVIDIA GPUs present in the ROMEO Supercomputer. 
 Also the long time partnership of the University of Reims Champagne-Ardenne and NVIDIA since 2003 allows us to exchange directly with the support and NVIDIA developers. 
@@ -538,19 +539,19 @@ The question that arise is: how to know if a machine is better than another?
 We answer that question with FLOPS, IPC, OPS or just the frequency of the machine. 
 The models like BSP or law's like Amdahl and Gustafson ones propose to find the best/worst case during the execution.
 
-In real application the only way to really know what will be the behavior of a supercomputer is to try, test real code on it. 
+In real application the only way to really know what will be the behavior of a supercomputer is to try, test real codes on it. 
 This is call benchmarking.
 Several kind of benchmarks exists and target a specific application of supercomputers. 
 We present here the most famous benchmarks of HPC and their specificities.
 
 \subsection{TOP500}
 \index{TOP500}
-The most famous benchmark is certainly the TOP500\footnote{http://www.top500.org}. 
+The most famous list is certainly the TOP500\footnote{http://www.top500.org}. 
 It gives the ranking of the 500 most powerful, known, supercomputers of the world as its name indicates.
 Since 1993 the organization assembles and maintains this list updated twice a year in June and November.
 
-This benchmark is based on the LINPACK\cite{dongarra1994top500} a benchmark introduced by Jack J. Dongarra.\index{LINPACK}
-This benchmark rely on solving  dense system of linear equations. 
+This list is based on the LINPACK\cite{dongarra1994top500} benchmark introduced by Jack J. Dongarra.\index{LINPACK}
+This benchmark relies on solving dense system of linear equations. 
 As specified in this document this benchmark is just one of the tools to define the performance of a supercomputer. 
 It reflects "the performance of a dedicated system for solving a dense system of linear equations".
 This kind of benchmark is very regular in computation giving high results for FLOPS. 
@@ -568,7 +569,7 @@ Tomorrow machines architectures will have to be based on hybrid with more paradi
 \index{Green500}
 \index{PEZY}
 \index{NVIDIA}
-In conjunction of the TOP500, the Green500\footnote{https://www.top500.org/green500/} focus on the energy consumption of supercomputers. 
+In conjunction of the TOP500, the Green500\footnote{https://www.top500.org/green500/} list focuses on the energy consumption of supercomputers. 
 The scale is based on FLOPS per watts~\cite{feng2007green500}.
 Indeed the energy wall is the main limitation for next generation and exascale supercomputers. 
 In the last list, November 2017, the TOP3 machines are accelerated with PEZY-SC many-core devices. 
@@ -577,10 +578,10 @@ This show clearly that the nowadays energy efficient solutions resides in many-c
 
 \subsection{GRAPH500}
 \index{GRAPH500}
-The GRAPH500\footnote{https://www.graph500.org/} benchmark\cite{murphy2010introducing} focus on irregular memory accesses, and communications.
+The GRAPH500\footnote{https://www.graph500.org/} list\cite{murphy2010introducing} focus on a benchmark featuring irregular memory accesses, and communications.
 The authors try to find ways to face the futures large-scale large-data problems and data-driven analysis.
 This can be see as a complement of the TOP500 for data intensive applications.
-The aim is to generate a huge graph to fill all the maximum memory on the machine and then operate either:
+The aim of the benchmark is to generate a huge graph to fill all the maximum memory on the machine and then operate either:
 \begin{description}
   \item[BFS:] A Breadth-First Search which is an algorithm starting from a root and exploring recursively all the neighbors. 
   This requires a lot of irregular communications and memory accesses. 
@@ -598,7 +599,7 @@ The list also offer to compare the results of Linpack compared to Conjugate Grad
 This benchmark is a first implementation of having both computation and 
 communications aspects of HPC in the same test. 
 
-This benchmark is presented and features:
+This benchmark features:
 \begin{itemize}[noitemsep,nolistsep]
 \item[-] Sparse matrix-vector multiplication;
 \item[-] Vector updates;
@@ -642,5 +643,5 @@ We show through the different benchmark that hybrid architecture start to have t
 They are the opportunity to reach exascale supercomputers in horizon 2020.  
 
 The benchmarks we presented, the most famous ones, does not represent all the types of modern domain scientists problems. 
-This study intents to provide a specific metrics representing computation and communication walls with highly irregular application. 
+This study intents to provide a specific metrics representing computation and communication walls with highly irregular applications. 
 These tools will help us to show the real advantage of hybrid architectures over classical clusters.

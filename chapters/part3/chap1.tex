@@ -18,7 +18,7 @@ The first section is a presentation of the SPH method and the overall limitation
 Then we describe different types of specific simulations we used as a benchmark of the application, and the application obtained is a good benchmark candidate for testing architectures for computational and communication walls combined with irregular behavior.
 
 \section{Physical modelization and downsides}
-We identified two main walls in our metric.
+We identified three main walls of our metric.
 The computational, the communication and the memory walls.
 We conducted tests on all aspects keeping the irregularity behavior as a good representative of production codes.
 We show how these requirements are met in the same problem with SPH and gravitation.
@@ -243,7 +243,7 @@ In order to compute the gravitation for a group of particles in the domain the s
 
 \begin{description}[noitemsep,nolistsep]
 	\item[Particles to Particles (P2P): ] For the particles that are close, use the direct $O(N^2)$ algorithm.  
-	This is the part that grow if the user desires more accurate results. 
+	This is the part that grows if the user desires more accurate results. 
 	\item[Particles to Multipoles (P2M): ] Gathers the data of all the sub-particles to the centers of mass, the multipoles.
 	This is the first layer of the tree, the leaves. 
 	\item[Multipoles to Multipoles (M2M): ] Gathers the data of multipoles on higher level of the tree from the leaves to the root. 
@@ -306,7 +306,7 @@ For the term $||\frac{\partial\vec{f}}{\partial\vec{r} \partial\vec{r}}||$ we gi
 \label{eq:hessian}
 \end{equation} 
 
-The equations~\ref{eq:jacobi} and \ref{eq:hessian} are use during the M2L step. 
+The equations~\ref{eq:jacobi} and \ref{eq:hessian} are used during the M2L step. 
 We use equation~\ref{eq:taylor_series} during the tree traversal and apply the gravitation to locals and then particles in L2L and L2P.\\
 
 This method imposes a lot of communications and exchanges between the processes. 
@@ -565,7 +565,7 @@ The computation wall is targeted via the physics and gravitation computation.
 The communication wall on the other hand is central regarding the exchanges needed for SPH and the fast multipole method. 
 This problem is also very irregular for both cases. 
 Indeed, the particles move at every iteration without any prediction on their new position and data. 
-In the same time the locality imposes a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
+At the same time the locality imposes a very high level of irregularity to reach efficiently all the neighbors of a specific particle. 
 This implies the usage of a tree data structure and the work of our two metrics can be applied in this context. 
 
 As the SPH method is used in a large panel of fields from astrophysics to fluid mechanic, there are numerous related works. 
@@ -578,6 +578,6 @@ Several other works gave us hint for the best implementation of parallel and acc
 
 Our implementation has not to be considered as a revolution for the SPH method itself, neither the use of accelerators. 
 This study provides a code easy to use by domain scientists moving the complexity of distribution, load balancing and accelerator use to the back-end framework.
-As it will be shown in next, this tool will allow us to push forward and provide different types of accelerators in the future keeping a full transparency for the user.
+As it will be shown next, this tool will allow us to push forward and provide different types of accelerators in the future while keeping a full transparency for the user.
 The application obtained, ready to be parallelized for HPC CPU architectures and then for hybrid HPC architectures, fulfills both computational and memory/communication walls. 
 Thus, it seems to be a good candidate for testing HPC architectures.

@@ -32,7 +32,7 @@ In the first one, with the problem of Langford, we worked on an irregular and co
 The second one, the Graph500 BFS, characterized as on irregular communication over irregular memory usage. 
 These two applications are confronted to all the walls that may face realistic applications.
 
-In both cases we showed better results using accelerator, in this case GPU, compared to classical multi-core processors systems. 
+In both cases we showed better results using accelerators, in this case a GPU, compared to classical multi-core processors systems. 
 
 \subsection{Computational wall}
 We studied the Langford problem under two methods of resolution. 
@@ -54,7 +54,7 @@ The Compressed Sparse Row and Compressed Sparse Column compression methods were 
 The communication intensity presents a huge wall for realistic application on large architectures. 
 Proposing an appropriate parallelization scheme can reduce the disadvantage but only well-balanced architectures can fight the problem and allows to reach good performances. 
 
-We showed that despite of the irregularity downside and larger memory used we were able to provide an efficient GPU algorithm, faster that the CPU one and the reference code proposed by the Graph500 consortium itself.
+We showed that, despite of the irregularity downside and larger memory used, we were able to provide an efficient GPU algorithm, faster that the CPU one and the reference code proposed by the Graph500 consortium itself.
 We provided an acceleration of two times using our CPU algorithm and quad times using our GPU algorithm.
 This benchmark confirmed that hybrid architectures allow to solve communication-intensive problems with convenient performances.\\
 
@@ -63,7 +63,7 @@ From those two metrics we extracted the main factors that allowed us to reach go
 \subsubsection{Regularization versus high number of tasks}
 We showed in both cases that the regularization of the tasks to fit the GPU execution model, based on synchronized execution, is not always the best way to reach performances.
 Indeed, if the number of tasks to solve on the GPUs is high enough, the SIMT model allows all the computational cores to keep busy while fetching data. 
-The number of blocks in the grid and threads per blocks have to be very high to allow the coordinator to switch from WARPS and cover the data fetching time.
+The number of blocks in the grid and threads per blocks have to be very high to allow the coordinator to switch between WARPS and cover the data fetching time.
 \subsubsection{Memory usage}
 All the kinds of memory have to be considered and have their own interests. 
 We used the constant memory to store the Gray code in the Langford problem.
@@ -92,4 +92,4 @@ This tool perfectly fits in the HPC environment and allows to reach even better 
 From this preliminary study, on both applications, we showed that the hybrid architectures give really good results on different representative problems of HPC. 
 The question that arises is now: what will be the behavior of GPUs confronted to both of those aspects together? 
 In order to answer this question, we present in the next part the Smoothed Particle Hydrodynamics problem on which we base the last part of this study. 
-We show that GPUs can also be used in this context, targeting domain scientists codes.\\
+We show that GPUs can also be used in this context, targeting scientific codes.\\

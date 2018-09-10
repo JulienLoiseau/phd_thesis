@@ -16,7 +16,7 @@ This distributed multi-accelerator SPH and gravitation implementation is called 
 This is a complex application that, beside of being interesting for our purpose, needs to be accurate on the physics aspect to be used by the domain scientists from LANL. 
 
 This section gives details about the FleCSPH framework. 
-We first present FleCSI, the base project in the Los Alamos National Laboratory on which FleCSPH is based. 
+We first present FleCSI, the base project at the Los Alamos National Laboratory on which FleCSPH is based. 
 Then, we give details on the implementation itself and the tools we implemented to reach a working and efficient code. 
 We give details on the domain decomposition strategy used with Morton Ordering. 
 The tree traversal algorithm choices are then explained. 
@@ -50,9 +50,9 @@ This implementation is based on space filling curves domain decomposition, the M
 The current version allows the user to specify the code main loop and the data distribution requested. 
 The data distribution feature is not available for the tree data structure needed in our SPH code and we provide it in the FleCSPH implementation. 
 The next step will be to incorporate it directly from FleCSPH to FleCSI as we reach a decent level of performance.
-As FleCSI is an on-development code the structure may change in the future and we keep track of these updates in FleCSPH.
+As FleCSI is an ongoing development the structure may change in the future and we keep track of these updates in FleCSPH.
 
-Based on FleCSI the intent is to provide a binary, quad and oct-tree data structure and the methods to create, search and share information for it. 
+Based on FleCSI, the intent is to provide a binary, quad and oct-tree data structure and the methods to create, search and share information for it. 
 In FleCSPH this will be dedicated, apply and tested on the SPH method. 
 In this part we first present the domain decomposition, based on space filling curves, and the tree data structure.
 We describe the HDF5 files structure used for the I/O.
@@ -89,7 +89,7 @@ FleCSPH\footnote{\url{http://github.com/laristra/flecsph}} is a framework initia
 The purpose of FleCSPH is to provide a data distribution and communications patterns to use the tree topology provided in FleCSI applied to SPH.
 The final purpose of FleCSPH is to complement the tree topology and provide the \textit{colorer} to FleCSI. 
 The distribution strategies associate to a data structure.
-As presented in the previous sections, SPH is a very good candidate to benchmark the binary, quad and oct tree topology. 
+As presented in the previous sections, SPH is a very good candidate to benchmark the binary, quad and oct tree topologies. 
 The demand is high for astrophysics simulation regarding the recent discoveries of the LIGO and the SPH method allows us to generate those simulations. 
 \begin{figure}[t!]
 \centering
@@ -134,11 +134,11 @@ We explain the tree data structure for the construction and the search of partic
 \label{sec:domain_decomposition}
 The number of particles can be high and represent a huge amount of data that does not fit in a single node memory. 
 This implies the distribution of the particles over several computational nodes. 
-As the particles moves during the simulation the static distribution is not possible and they have to be redistributed at some point in the execution. 
+As the particles moves during the simulation the static distribution is not possible and they have to be redistributed at some point of the execution. 
 Furthermore, this distribution need to keep local particles in the same computation node to optimize the exchanges and computation itself.
 
 A common approach is to distribute the particles over computational nodes using \textit{space filling curves} like in \cite{warren20132hot,springel2005cosmological,bedorf201424}. 
-It intends to assign to each particle a key which is based on its spatial coordinates, then sorting particles based on those keys keeps particles grouped locally.
+It intends to assign to each particle a key which is based on its spatial coordinates, then sort particles based on those keys keeping particles grouped locally.
 Many space filling curves exists: Morton, Hilbert, Peano, Moore, Gosper, etc.\
 
 This domain decomposition is used in several layers for our implementation. 
@@ -148,9 +148,9 @@ On the other hand, it is also used locally to store efficiently the particles an
 Several space filling curves can fit our purposes:
 \subsubsection*{The Morton curves} The Morton's curve~\cite{morton1966computer}, also called Z-Order, is the most spread method. 
 This method can produce irregular shape domain decomposition like shown in green on figure~\ref{fig:space_filling}. 
-The main advantage is to be fast to compute, the key is made by interlacing directly the X, Y and Z bits without rotations. 
+The main advantage is to be extremely fast to compute, the key is made by interlacing directly the X, Y and Z bits without rotations. 
 \subsubsection*{The Hilbert curves} The Hilbert's curves~\cite{sagan2012space} are constructed by interlacing bits but also adding rotation based on the Gray code.
-This work is based on the Peano curves and also called Hilber-Peano. 
+This work is based on the Peano curves and also called Hilbert-Peano. 
 The construction is more complicated than Morton but allows a better distribution. 
 
 \begin{figure}[t!]
@@ -170,7 +170,7 @@ In the Hilbert curve, the locality over the processes is conserved.
 In this first implementation of FleCSPH we used the Morton ordering due to the computational cost. 
 The next step of this work is to compare the computation time of different space filing curves. 
 
-Technically the keys are generated for each particle at each iteration because their position is expected to change over time. 
+Technically, the keys are generated for each particle at each iteration because their positions are expected to change over time. 
 To be more efficient, the keys can stay the same during several steps and the final comparison can be made on the real particles positions. 
 This increase the search time but allows less tree reconstructions.
 
@@ -207,9 +207,9 @@ This allows us to have up to $2^{63}$ different keys and unique particles.
 
 \subsubsection{Tree generation}
 
-After each particle get distributed on its final process using its space-filling curve key, we can recursively construct the tree.
+After each particle gets distributed on its final process using its space-filling curve key, we can recursively construct the tree.
 Each particle is added, and the branches are created recursively if there is an intersection between keys. 
-Starting from the root of key "1" the branches are added at each level until the particles are reached.
+Starting from the root of key "1" the branches are added at each level until all particles are reached.
 An example of a final tree is shown on figure~\ref{fig:quadtree}.
 
 \subsubsection{Tree search}
@@ -231,8 +231,8 @@ Our search algorithm, presented on Algorithm~\ref{alg:find_nodes}, is a two-step
 In the first step we look down for nodes with a target sub-mass of particles $tmass$. 
 Then for those branches we compute an interaction list and continue the recursive tree search. 
 When a particle is reached, we compute the physics using the interaction list as the neighbors. 
-The interaction list is computing using an opening-angle criterion comparing the boundary box and a user define angle. 
-This way we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
+The interaction list is computed using an opening-angle criterion comparing the boundary box and a user define angle. 
+This way, we will not need a full tree traversal for each particle but a full tree traversal for every group of particles.
 On figure~\ref{fig:arbre} we present the classical and the two steps algorithm. 
 We see that the first method, on left, force to do one walk per particle, compute the interaction list and then apply to particles. 
 On the left, the two-step method, only perform one tree traversal for the whole block of particles, compute the interaction list and then processed to the local computation. 
@@ -340,12 +340,12 @@ The main distributed algorithm is presented on algorithm \ref{alg:main_distribut
 
 The sort step, line \ref{alg_main:qsort}, is based on a distributed quick sort algorithm. 
 The keys are generated using the Morton order described in part \ref{sec:domain_decomposition}. 
-As we associate a unique number to each particle we are able to sort them using the keys and, in case of collision keys, using their unique ID. 
+As we associate a unique number to each particle, we are able to sort them using the keys and, in case of collision keys, using their unique ID. 
 This gives us a global order for the particles. 
 Each process sends to a master node (or submaster for larger cases) a sample of its keys. 
 We determined this size to be 256 KB of key data per process for our test cases, but it can be refined for larger simulations. 
 Then the master determines the general ordering for all the processes and shares the pivots. 
-Then each process locally sorts its local keys, and, in a global communication step, the particles are distributed to the process on which they belong. 
+Then each process locally sorts its local keys, and, in a global communication step, the particles are distributed to the process to which they belong. 
 This algorithm gives us a good partition in term of number of particles. 
 But some downside can be identified:
 \begin{itemize}
@@ -363,10 +363,10 @@ Depending on the user problem, the choice can be to distribute the particles on 
 \end{figure}
 
 After this first step, the branches are shared between the different processes, line \ref{alg_main:share_branches}. 
-Every of them send to its neighbors several boundaries boxes, defined by the user. 
+Every one of them send to its neighbors several boundaries boxes, defined by the user. 
 Then particles from the neighbors are computed, exchanged and added in the local tree. 
 Those particles are labeled as NON\_LOCAL particles. 
-At this point a particle can be referenced as: EXCLUSIVE: will never be exchanged and will only be used on this process; SHARED: may be needed by another process during the computation; GHOSTS: particles information that the process need to retrieve from another process. 
+At this point a particle can be referenced as: EXCLUSIVE: will never be exchanged and will only be used on this process; SHARED: may be needed by another process during the computation; GHOSTS: particles information that the process needs to retrieve from another process. 
 An example is given for 2 processes on figure~\ref{fig:coloring_particles} and on a tree data structure on figure~\ref{fig:big_tree}.
 
 \subsubsection{Exchange Shared and Ghosts particles}

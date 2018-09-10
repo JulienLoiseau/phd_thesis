@@ -44,8 +44,8 @@ The input and output devices can also be the same, reading and writing in the sa
 
 \paragraph{Memory} 
 Inside the computational unit we find the general memory to store program and data. 
-The most common architectures it can be considered as a Random Access Memory (RAM). 
-There are several types of memory and will be discussed later in this thesis. 
+In the case of modern architectures this can be assimilated to Random Access Memory (RAM). 
+There are several types of memories and will be discussed later in this thesis. 
 
 \paragraph{Central Processing Unit}
 \index{Central Processing Unit}
@@ -161,7 +161,7 @@ The model we describe in Part~\ref{sec:CUDA}, used for the \textit{warps} model 
 \section{Memory}
 \label{sec:NORMA}
 In addition to the execution model and parallelism, the memory access patterns have an important role in performances of SIMD and MIMD. 
-In this classification we identify three categories: UMA, NUMA and NoRMA for shared and distributed cases. 
+In this classification we identify four categories: UMA, NUMA, COMA and NoRMA for shared and distributed cases. 
 This classification has been pointed out in the Johnson's taxonomy\cite{johnson1988completing}.
 
 \begin{figure}
@@ -282,7 +282,7 @@ Second, No Cache NUMA (NC-NUMA) forces the processes to avoid cache utilization 
 \subsubsection{COMA}
 \index{Cache-Only Memory Access}
 In Cache-Only Memory Accesses, the whole memory is seen as a cache shared by all the processes processes.
-A \textit{Attraction memory} pattern is used to \textit{attract} the data near the process that will use them. 
+An \textit{Attraction memory} pattern is used to \textit{attract} the data near the process that will use them. 
 This model is less commonly used and, in best cases, leads to same results as NUMA.
 
 \subsection{Distributed memory}
@@ -320,7 +320,7 @@ With $\#nodes$ the number of computational node of the system, $\frac{\#sockets}
 
 
 Table~\ref{tab:1_HPC:flops_year} presents the scale of FLOPS and the year that the first world machine reached this step.
-The next milestone, the exascale, is expected to be reach near 2020.  
+The next milestone, the exascale, is expected to be reached near 2020.  
 
 \begin{table}
 \[\arraycolsep=1.4pt\def\arraystretch{2.2}
@@ -373,7 +373,7 @@ A scalable program will scale on as many processors as provided, whereas a poorl
 Scalability can be approached using speedup and efficiency.
 
 \subsection{Speedup and efficiency}
-The latency is the time required to complete a task in a program with lower latency being better. 
+The latency is the time that a system waits until the answer or the completion of a task, lower latency being better. 
 \index{Latency} 
 
 The speedup compares the latency of both sequential and parallel algorithm. 
@@ -431,7 +431,7 @@ The increasing number of computational power may be lost in parallel overhead re
 In some cases, we observe an hyper-linear speedup, meaning the results in parallel are even better than the ideal case. 
 This increasing efficiency can occur if the program fits exactly in memory with less data on each processor or even fit perfectly for the cache utilization. 
 The parallel algorithm can also be more efficient than the sequential one.
-For example, if the search space in an optimized application is divided over processing units, one can find good solutions more quickly.
+For example, if the search space in an optimized application is divided over processing units, one can find good solutions quicker.
 
 \subsection{Amdahl's and Gustafson's law}
 The Amdahl's and Gustafson's laws are ways to evaluate the maximal possible speedup for an application taking into account different characteristics. 

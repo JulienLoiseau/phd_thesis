@@ -70,13 +70,13 @@ We keep the information of neighbors’ exploration in order to recreate the pre
 This algorithm is very famous thanks to its use in many applications but also thanks to the world supercomputer ranking called Graph500\footnote{\url{http://www.graph500.org}}.
 This benchmark is designed to measure the performance on very irregular problems like BFS on a large scale randomized generated graph. 
 The first Graph500 list was released in November 2010.
-The last list, issued in November 2017, is composed of 235 machines ranked using a specific metric: Traversed Edges Per Second, denoted as TEPS. 
+The last list used here, issued in November 2017, is composed of 235 machines ranked using a specific metric: Traversed Edges Per Second, denoted as TEPS. 
 The aim is to perform a succession of 64 BFS on a large-scale graph in the fastest possible way.
 Then the ratio of edges traversed per the time of computation is used to rank the machines.
 
 This benchmark is more representative of communication and memory accesses than computation itself. 
 Other benchmarks can be used to rank computational power such as LINPACK for the TOP500 list.
-Indeed, the best supercomputers (K-Computer, Sequoia, Mira, ...) on the ladder have a very specific communication topology and sufficient memory, and are large enough to quickly visit all the nodes of the graph. 
+Indeed, the best supercomputers (K-Computer, Sequoia, Mira, ...) on the scale have a very specific communication topology and sufficient memory, and are large enough to quickly visit all the nodes of the graph. 
 
 This benchmark is conduct using GPUs as accelerators.
 There are many CPU algorithms available, which are listed on the Graph500 website. 
@@ -90,7 +90,7 @@ We compare the results for different graph scales and load distributions.\\
 
 This work also leads us to work on similar algorithms like the evaluation of centrality\cite{bader2006parallel,brandes2007centrality,brandes2001faster,geisberger2008better,jin2010novel,shi_fast_2011,sariyuce2013betweenness} and SSSP/APSP\cite{davidson2014work,djidjev_efficient_2014} on large graphs. 
 This similar application gave us hint for the best BFS implementation.
-The betweenness centrality computation in particular was interesting and we will to apply it in the case of power grid analysis or nowadays problems like network mapping\cite{krebs2002mapping,soman_fast_2011}. 
+The betweenness centrality computation in particular was interesting and we will apply it in the case of power grid analysis or current problems like network mapping\cite{krebs2002mapping,soman_fast_2011}. 
 
 \section{Existing methods}
 The most efficient algorithm to compute BFS traversal is used and detailed in \cite{6468459}. 
@@ -100,7 +100,7 @@ Several other work\cite{gonzalez2012powergraph} propose a distributed graph trav
 
 We use another key study in order to build our Graph500 CPU/GPU implementation. 
 \cite{merrill2015high} proposes various effective methods on GPU for BFS. 
-Merrill \& al. explaine and teste a few efficient methods to optimize memory access and work sharing between threads on a large set of graphs. 
+Merrill \& al. explains and tested a few efficient methods to optimize memory access and work sharing between threads on a large set of graphs. 
 It focuses on Kronecker graphs in particular. 
 First, they propose several methods for neighbor-gathering with a serial code versus a warp-based and a CTA-based approach. 
 They also use hybridization of these methods to reach the performance level. 
@@ -171,7 +171,7 @@ This validation is based on the following stages, presented on the official Grap
 First, the BFS tree is a tree and does not contain cycles.
 Second, each tree edge connects vertices whose BFS levels differ by exactly one.
 Third, every edge in the input list has vertices with levels that differ by at most one or that both are not in the BFS tree.
-Finally, he BFS tree spans an entire connected component's vertices, and
+Finally, the BFS tree spans an entire connected component's vertices, and
 a node and its parent are joined by an edge of the original graph.
 
 In order to meet the Graph500 requirements we use the proposed verification function provided in the official code.
@@ -182,7 +182,7 @@ In a first part we introduce the data structure; then we present the algorithm a
 
 \subsection{Data structure}
 We performed tests of several data structures.
-In a first work we tried to work with bitmap. Indeed, the regularity of computation can fit very well with the GPU architecture. But this representation imposes a significant limitation on the graph size. 
+In a first work we tried to work with a bitmap. Indeed, the regularity of computation can fit very well with the GPU architecture. But this representation imposes a significant limitation on the graph size. 
 This representation is used on the BlueGene/Q architecture. 
 Indeed, they have some specific hardware bit-wise operations implemented in their processors and have a large amount of memory, allowing them to perform very large scale graph analysis. 
 
@@ -329,21 +329,21 @@ Figure~\ref{fig:csr_csc} presents the two approaches, with the time visiting all
 \label{table:direction_optimized}
 \end{table}
 
-\begin{figure}[!t]
-\begin{subfigure}[t]{.48\textwidth}
+%\begin{figure}[!t]
+\begin{figure}[t]
 	\centering
-	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/csr_csc_hybrid_iteration}
+	\includegraphics[width=.45\columnwidth]{\locpath/figures/graph500/csr_csc_hybrid_iteration}
 	\caption[Comparison of CSR and CSC approaches]{CSR and CSC approach comparison. On a 6 iterations BFS, the time with the two method is compared. The hybridization just takes the best time of each method}
 	\label{fig:csr_csc}
-\end{subfigure}
+\end{figure}
 \hfill
-\begin{subfigure}[t]{.48\textwidth}
+\begin{figure}[t]
 	\centering
-	\includegraphics[width=1\columnwidth]{\locpath/figures/graph500/comparatif_GPU}
+	\includegraphics[width=.45\columnwidth]{\locpath/figures/graph500/comparatif_GPU}
 	\caption[CPU versus GPU comparison on one node]{Single CPU and accelerators comparison. CPU Graph500 represent the best implementation proposed by the Graph500 website.}
 	\label{fig:single_cpu_accelerators}
-\end{subfigure}
 \end{figure}
+%\end{figure}
 
 \subsection{GPU optimization}
 
@@ -475,7 +475,7 @@ On figure~\ref{fig:full_vs_gpu0}, the tests are based on the GPU-only implementa
 First we worked with the two GPUs of the nodes. 
 We were able to perform up to to $SCALE$ 29 with 12 GTEPS. 
 The GPUDirect implementation does not allow the communication with a QPI link. 
-So, in order to compare the results, we only used the GPU \#0 of each node of the supercomputer. 
+So, in order to compare the results, we only used the GPU \#0 of each node of the supercomputer\footnote{See description of the ROMEO cluster in \ref{sec:ROMEO}}. 
 Based on our algorithm implementation we need to use a number of $2^{2n}$ GPUs. 
 Then the tests on figure~\ref{fig:full_vs_gpu0} are for 256 GPUs (with GPU \#0 and GPU \#1) and with 64 GPUs (using GPU \#0 only). 
 Thus we were able to reach a better GTEPS rate. 
@@ -484,7 +484,7 @@ The major limitation is the communications part, using only GPU \#0 allowed us t
 \begin{figure}[!t]
 \centering
 \includegraphics[width=.5\columnwidth]{\locpath/figures/graph500/full_vs_gpu0}
-\caption[Comparison using GPU \#0 and GPU \#0 + \#1]{Full node GPUs \textit{vs} GPU \#0. The GPU \#0 implementation not use the QPI link of the two CPU socket.}
+\caption[Comparison using GPU \#0 and GPU \#0 + \#1]{Full node GPUs \textit{vs} GPU \#0. The GPU \#0 implementation does not use the QPI link of the two CPU socket.}
 \label{fig:full_vs_gpu0}
 \end{figure}
 
